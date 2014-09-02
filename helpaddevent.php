@@ -1,14 +1,12 @@
 <?php
-  session_start();
-  require_once('globalsettings.inc.php');
-  require_once('functions.inc.php');
+require_once('application.inc.php');
 
-  helpbox_begin();
+	helpwindow_header();
 ?>
-<h3><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0">
+<h3><IMG src="images/help.gif" width="16" height="16" alt="" border="0">
 <?php echo lang('help_addevent'); ?>
 </h3>
 <?php echo lang('help_addevent_contents'); ?>
 <?php
-  helpbox_end();
+	helpwindow_footer();
 ?>

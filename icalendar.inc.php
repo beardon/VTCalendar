@@ -1,5 +1,5 @@
 <?php
-  if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
+	if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
 
 	define("CRLF","\r\n");
 	
@@ -31,16 +31,16 @@
 	} // end: iCalPrintMultipleLines
 	
 	function getICalFormat(&$event) {
-		disassemble_eventtime($event);
+		disassemble_timestamp($event);
 	
 		$begintime = Timezone2UTC(TIMEZONE_OFFSET, $event['timebegin_year'], $event['timebegin_month'], $event['timebegin_day'], 
-												 $event['timebegin_hour'], $event['timebegin_min'], $event['timebegin_ampm']);
+			$event['timebegin_hour'], $event['timebegin_min'], $event['timebegin_ampm']);
 		$endtime = Timezone2UTC(TIMEZONE_OFFSET,$event['timeend_year'], $event['timeend_month'], $event['timeend_day'], 
-											 $event['timeend_hour'], $event['timeend_min'], $event['timeend_ampm']);
+			$event['timeend_hour'], $event['timeend_min'], $event['timeend_ampm']);
 		$dtstart = datetime2ISO8601datetime($begintime['year'], $begintime['month'], $begintime['day'],
-																				$begintime['hour'], $begintime['min'],$begintime['ampm']);
+			$begintime['hour'], $begintime['min'],$begintime['ampm']);
 		$dtend   = datetime2ISO8601datetime($endtime['year'], $endtime['month'], $endtime['day'],
-																				$endtime['hour'], $endtime['min'], $endtime['ampm']);
+			$endtime['hour'], $endtime['min'], $endtime['ampm']);
 
 		$ical = "BEGIN:VEVENT".CRLF;
 		$ical.= "DTSTAMP:".$dtstart."Z".CRLF;

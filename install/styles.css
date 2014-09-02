@@ -1,0 +1,130 @@
+body {
+	font-family: Arial;
+	font-size: 13px;
+}
+a {
+	color: #0000FF;
+}
+form {
+	margin: 0;
+	padding: 0;
+}
+h1 {
+	font-size: 24px;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #333333;
+}
+h2 {
+	font-size: 16px;
+	padding: 6px;
+	background-color: #CCDBFF;
+	border-top: 1px solid #666666;
+}
+
+blockquote {
+	margin-left: 22px;
+	margin-right: 0px;
+}
+
+label {
+	cursor: pointer;
+}
+
+code {
+	color: #0000FF;
+}
+
+div.Error, div.Success, div.Table, div.Field, div.PrimaryKey, div.Index,
+div.Unused, div.Create, div.Alter,
+div.Download, div.Question, div.Download32, div.Question32 {
+	margin-bottom: 2px;
+	padding: 5px;
+}
+
+div.Error, div.Success, div.Table, div.Field, div.PrimaryKey, div.Index,
+div.Download, div.Question {
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	padding-left: 30px !important;
+}
+
+div.Download32, div.Question32 {
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	padding-left: 45px !important;
+}
+
+div.Error { background-image: url(failed.png); }
+div.Success { background-image: url(success.png); }
+div.Table { background-image: url(table.png); }
+div.PrimaryKey { background-image: url(primarykey.png); }
+div.Index { background-image: url(index.png); }
+div.Field { background-image: url(field.png); }
+div.Download { background-image: url(down.png); }
+div.Question { background-image: url(help.png); }
+
+div.Question32 { background-image: url(help32.png); }
+div.Download32 { background-image: url(down32.png); }
+
+/* ====================================
+          config.php Styles 
+==================================== */
+
+table.VariableTable {
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+}
+td.VariableName {
+	background-color: #EEEEEE;
+}
+td.VariableName, td.VariableBody {
+	border-top: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+}
+td.DataField {
+	padding-top: 0;
+}
+td.Comment {
+	padding-top: 0;
+}
+#SaveFailed {
+	border: 1px solid #660000;
+	background-color: #FFEEEE;
+	padding: 8px;
+	font-weight: none;
+}
+#SaveFailed b.Title {
+	font-size: 18px;
+}
+#SaveFailed p {
+	padding-top: 0;
+	margin-top: 0;
+}
+
+
+
+/* ====================================
+         upgradedb.php Styles 
+==================================== */
+
+h3.Table {
+	background-image: url(table-big.png);
+	background-repeat: no-repeat;
+	height: 24px;
+	padding: 0;
+	padding-left: 38px;
+	padding-top: 8px;
+	margin: 0;
+}
+#UpgradeDB div.Error {
+	background-color: #FFDDDD;
+}
+div.Unused {
+	background-color: #EEEEEE;
+}
+div.Create {
+	background-color: #DDFFDD;
+}
+div.Alter {
+	background-color: #FFFF99;
+}

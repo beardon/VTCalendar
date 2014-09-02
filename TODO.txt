@@ -1,10 +1,37 @@
+NEW TODO:
+===========================
+
+X Add helpsignup.php link back to displaylogin() in functions.inc.php
+X Should probably remove checking for HTTPS and just use
+  SECUREBASEURL for the action of any forms that need to be
+  secured. Search scripts for: _SERVER['HTTPS']
+X Filters need to work on upcoming events view.
+X A message should output when a keyword is being used in day/week/month view. There is currently no way for a user to know its filtering.
+X $iday['css'] and $iday['color'] should be removed if not being used.
+- Check input validation constants in constants.inc.php to determine the correct values and merge the constants as necessary.
+X Check current database schema vs 2.2.2.
+X Determine what 'detailscaller' did and if they can be removed.
+X Why was the saveall button disabled? ((Logic was unstable. Was removed in 2.2.2))
+- Assign DB results by reference. Example: $var =& DBQuery(...) or $results =& $db->query(...)
+- Get row by reference. Example $row =& $results->fetchRow()
+- Free results by using $results->free()
+- Properly handle string returns from functions like DBQuery.
+- Change _data files to _preheader just to make it easier to understand
+X Add colors to vtcal_colors for new CSS
+- Expand AUTH_HTTP_CACHE to LDAP
+- Improve the way AUTH_HTTP checks if the authentication was successful or not successful by also checking the body text.
+
+
+OLD TODO:
+===========================
+
 FEATURES
 --------
-- don't allow calendar admins to lock themselves out from the calendar by restricting access
+X don't allow calendar admins to lock themselves out from the calendar by restricting access
 - search by sponsor
 - display email addresses as javascript to protect against spammers
 - harden against cross-site scripting attacks
-- make "manage users" available in default calendar for all newly created calendars
+X make "manage users" available in default calendar for all newly created calendars (from Andre: Not sure what this means, but main admins can always access calendars now)
   (important for setting passwords when LDAP is not used)
 - document export parameters timebegin=today and rangedays=30
 - document difference between a calendar and categories

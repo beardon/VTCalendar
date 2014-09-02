@@ -2,11 +2,15 @@
 $lang['encoding'] = 'ISO-8859-1';
 
 // ================================== public interface =====================================
+
+$lang['upcoming'] = 'Upcoming';
 $lang['day'] = 'Day';
 $lang['week'] = 'Week';
 $lang['month'] = 'Month';
 $lang['search'] = 'Search';
 $lang['update'] = 'Update';
+
+// Little Calendar
 $lang['lit_cal_sun'] = 'S';
 $lang['lit_cal_mon'] = 'M';
 $lang['lit_cal_tue'] = 'T';
@@ -14,14 +18,24 @@ $lang['lit_cal_wed'] = 'W';
 $lang['lit_cal_thu'] = 'T';
 $lang['lit_cal_fri'] = 'F';
 $lang['lit_cal_sat'] = 'S';
-$lang['lit_cal_week'] = 'W';
+$lang['lit_cal_week'] = 'Wk';
 
-$lang['jump_to'] = 'Jump to...';
+// Date Picker
+//$lang['jump_to'] = 'Jump to...';
 $lang['today_is'] = 'Today is: ';
-$lang['subscribe_download'] = 'Subscribe &amp; download';
-$lang['filter_events'] = 'Filter events';
+
+// Column Links
+$lang['subscribe_download'] = 'Subscribe &amp; Download';
+$lang['filter_events'] = 'Filter Events';
+
+// Filter
 $lang['showing_filtered_events'] = 'Showing only filtered events';
 
+
+$lang['AM'] = 'AM';
+$lang['am'] = 'am';
+$lang['PM'] = 'PM';
+$lang['pm'] = 'pm';
 
 $lang['monday'] = 'Monday';
 $lang['tuesday'] = 'Tuesday';
@@ -65,18 +79,20 @@ $lang['oct'] = 'Oct';
 $lang['nov'] = 'Nov';
 $lang['dec'] = 'Dec';
 
-//navprevious next in all views
-$lang['previous_day'] = 'previous day';
-$lang['next_day'] = 'next day';
-$lang['previous_week'] = 'previous week';
-$lang['next_week'] = 'next week';
-$lang['previous_month'] = 'previous month';
-$lang['next_month'] = 'next month';
+// Next/Previous Links in All Views
+$lang['previous_day'] = 'Previous Day';
+$lang['next_day'] = 'Next Day';
+$lang['previous_week'] = 'Previous Week';
+$lang['next_week'] = 'Next Week';
+$lang['previous_month'] = 'Previous Month';
+$lang['next_month'] = 'Next Month';
 
-//day view
-$lang['day_page_header'] = 'Day - Calendar';
-$lang['no_events'] = 'No events scheduled for this day.';
-$lang['all_day'] = 'All day';
+// Day View
+$lang['upcoming_page_header'] = 'Upcoming Events';
+$lang['day_page_header'] = 'Day';
+$lang['no_events'] = 'No events were found for this day.';
+$lang['no_upcoming_events'] = 'No upcoming events were found.';
+$lang['all_day'] = 'All Day';
 
 //week view
 $lang['week_page_header'] = 'Week';
@@ -121,8 +137,8 @@ $lang['user_id'] = 'User-ID';
 $lang['password']='Password:';
 $lang['new_user'] = 'Create New User';
 
-$lang['subscribe'] = 'subscribe';
-$lang['download'] = 'download';
+$lang['subscribe'] = 'Subscribe';
+$lang['download'] = 'Download';
 $lang['copy_event_to_pda'] = 'copy this event into your personal desktop calendar';
 $lang['subscribe_message'] = 'If you have a desktop calendar or PDA compatible with the iCalendar standard you
 can subscribe to a calendar or download events. Currently the iCalendar standard
@@ -137,6 +153,8 @@ $lang['whole_calendar'] = 'whole calendar';
 
 // ================================== Login-protected interface =====================================
 
+$lang['dberror_generic'] = 'A database error was encountered';
+$lang['dberror_nosponsor'] = 'Error: The calendar does not seem to have any sponsors.';
 
 // Update interface
 $lang['choose_template'] = 'Choose template';
@@ -168,7 +186,7 @@ $lang['email_admin_rejected_event'] = 'The calendar administrator rejected the e
 $lang['email_reason_for_rejection'] = 'Reason for the rejection:';
 $lang['email_login_edit_resubmit'] = 'Please login to the calendar, edit and re-submit your event.';
 $lang['approve_reject_event_updates'] = 'Approve/reject event updates';
-$lang['back_to_menu'] = '&laquo; Back to menu';
+$lang['back_to_menu'] = 'Back to Menu';
 $lang['refresh_display'] = 'Refresh display';
 $lang['approve_all_events'] = 'Approve ALL events';
 $lang['date'] = 'Date';
@@ -176,13 +194,14 @@ $lang['time'] = 'Time';
 $lang['category'] = 'Category';
 $lang['title'] = 'Title';
 $lang['description'] = 'Description';
-$lang['approve'] = 'approve';
-$lang['reject'] = 'reject';
-$lang['edit'] = 'edit';
+$lang['approve'] = 'Approve';
+$lang['reject'] = 'Reject';
+$lang['edit'] = 'Edit';
 $lang['user_ids_invalid'] = 'The following user-IDs are invalid:';
 $lang['user_id_invalid'] = 'The following user-ID is invalid:';
-$lang['change_header_footer_colors_auth'] = 'Change header, footer, colors, authorization';
-$lang['calendar_title'] = 'Calendar title';
+$lang['change_header_footer_auth'] = 'Change header, footer, authorization settings';
+$lang['change_colors'] = 'Change calendar colors';
+$lang['calendar_title'] = 'Calendar Title';
 $lang['empty_or_any_text'] = '(empty or any text)';
 $lang['empty_or_any_html'] = '(empty or any HTML)';
 $lang['header_html'] = 'Header HTML';
@@ -310,6 +329,7 @@ $lang['sponsor_already_exists'] = 'A sponsor with this name already exists. Plea
 $lang['sponsor_name_example'] = '(e.g. Mikado Club)';
 $lang['choose_email'] = 'Please choose an email address.';
 $lang['url_example'] = '(e.g. http://www.vtmc.vt.edu/)';
+$lang['sponsor_members'] = 'Sponsor members:';
 $lang['administrative_members'] = 'Administrative members:';
 $lang['administrative_members_example'] = '(separate user-id\'s with a comma)';
 
@@ -333,8 +353,9 @@ Use the &quot;<b>View Source</b>&quot; option of your browser to view the export
 $lang['choose_sponsor_role'] = 'Choose your sponsor role';
 $lang['error_not_authorized'] = 'Error! Not authorized.';
 $lang['error_not_authorized_message'] = 'You are currently not authorized to update the calendar because you have not been assigned to an event sponsor.';
+$lang['error_bad_sponsorid'] = 'You do not belong to the sponsor that you selected. Please select a sponsor from the list below.';
 $lang['help_signup_link'] = 'Sign up with the calendar';
-$lang['login_failed'] = 'Login failed.<br> Please check your user-ID and password and try again.';
+$lang['login_failed'] = 'Your login failed. Please try again.';
 $lang['help'] = 'Help';
 $lang['recurring'] = 'recurring';
 $lang['on_the'] = 'on the';
@@ -411,8 +432,8 @@ $lang['contact_email_example'] = '(e.g. icinfo@hotmail.com)';
 $lang['event_page_web_address'] = 'Event page<br> web address';
 $lang['event_page_url_example'] = '(e.g. http://www.ic.vt.edu/talks/future.html)';
 $lang['button_restore_all_sponsor_defaults'] = 'Restore all sponsor defaults';
-$lang['displayed_sponsor_name'] = 'Displayed<br> sponsor name';
-$lang['sponsor_page_web_address'] = 'Sponsor page<br> web address';
+$lang['displayed_sponsor_name'] = 'Displayed Name';
+$lang['sponsor_page_web_address'] = 'Sponsor\'s Website';
 $lang['button_restore_default'] = 'Restore default';
 $lang['also_display_on'] = 'Also display this event on the'; // ... Calendar ...
 $lang['assign_to_category'] = 'and assign it to this category';
@@ -423,23 +444,23 @@ $lang['template_name_example'] = '(e.g. Guest speaker)';
 
 $lang['manage_calendars'] = 'Manage calendars';
 $lang['or_modify_existing_calendar'] = 'or modify existing calendar:';
-$lang['delete'] = 'delete';
+$lang['delete'] = 'Delete';
 $lang['calendars'] = 'Calendars';
 
 $lang['manage_event_categories'] = 'Manage event categories';
 $lang['or_modify_existing_category'] = 'or modify existing category:';
-$lang['rename'] = 'rename';
+$lang['rename'] = 'Rename';
 
-$lang['manage_events'] = 'Manage events';
+$lang['manage_events'] = 'My submitted events';
 $lang['or_manage_existing_events'] = 'or manage existing events:';
 $lang['status'] = 'Status';
-$lang['submitted_for_approval'] = 'submitted for approval';
+$lang['submitted_for_approval'] = 'awaiting approval';
 $lang['approved'] = 'approved';
-$lang['copy'] = 'copy';
+$lang['copy'] = 'Copy';
 $lang['status_info_message'] = 'The status information has the following meaning:';
 $lang['rejected'] = 'rejected';
 $lang['rejected_explanation'] = '...event was not approved for publication';
-$lang['submitted_for_approval_explanation'] = '...update has yet to be reviewed and approved';
+$lang['submitted_for_approval_explanation'] = '...event has yet to be reviewed and approved';
 $lang['approved_explanation'] = '...event is displayed in the calendar';
 
 $lang['manage_featured_search_keywords'] = 'Manage featured search keywords';
@@ -514,13 +535,13 @@ make sure you have <strong>sufficient contrast</strong> between text/link color 
 $lang['help_addevent'] = 'Add event';
 $lang['help_addevent_contents'] = 'You have 4 options:
 <OL>
-  <LI>Create a <A href="helpaddeventnew.php">new event</A>
-  by clicking on the &quot;Add new event&quot; link in the update menu</LI>
-  <LI>Use the icon <IMG src="images/nuvola/16x16/actions/filenew.png" width="16" height="16" alt="new event" border="0">
-  in the day/week/month view to create a <A href="helpaddeventnew.php">new event</A></LI>
-  <LI><A href="helpupdatecopydelete.php">Copy from an existing event</A> by clicking on the link
-  &quot;Update/Copy/Delete event&quot; in the update menu</LI>
-  <LI>Define a <A href="helptemplate.php">template</A> and use it to create a <A href="helpaddeventnew.php">new event</A></LI>
+	<LI>Create a <A href="helpaddeventnew.php">new event</A>
+	by clicking on the &quot;Add new event&quot; link in the update menu</LI>
+	<LI>Use the icon <IMG src="images/new.gif" width="16" height="16" alt="new event" border="0">
+	in the day/week/month view to create a <A href="helpaddeventnew.php">new event</A></LI>
+	<LI><A href="helpupdatecopydelete.php">Copy from an existing event</A> by clicking on the link
+	&quot;Update/Copy/Delete event&quot; in the update menu</LI>
+	<LI>Define a <A href="helptemplate.php">template</A> and use it to create a <A href="helpaddeventnew.php">new event</A></LI>
 </OL>';
 
 $lang['help_addnewevent'] = 'Add new event';
@@ -568,145 +589,145 @@ The event will be immediately removed from the calendar.';
 $lang['help_export'] = 'Exporting Events';
 $lang['help_export_intro'] = 'You can export all or a subset of the data of the event calendar in two different ways:
 <ul>
-  <li>by choosing the link 
-  &quot;export events&quot; in the sponsor\'s options menu</li>
-  <li>or by directly accessing the export URL<br>e.g. ';
+	<li>by choosing the link 
+	&quot;export events&quot; in the sponsor\'s options menu</li>
+	<li>or by directly accessing the export URL<br>e.g. ';
 $lang['help_export_formats'] = '<p>Currently the calendar supports the following export formats:</p>
 <ul>
-    <li>XML (custom XML; for format see below) (type=xml) </li>
-    <li>iCalendar/vCalendar (type=ical)</li>
-    <li>RSS 0.91 (type=rss)</li>
-    <li>RSS 1.0 (type=rss1_0)</li>
-    <li>VoiceXML 2.0 (type=vxml)    
+		<li>XML (custom XML; for format see below) (type=xml) </li>
+		<li>iCalendar/vCalendar (type=ical)</li>
+		<li>RSS 0.91 (type=rss)</li>
+		<li>RSS 1.0 (type=rss1_0)</li>
+		<li>VoiceXML 2.0 (type=vxml)    
 </ul>';
 $lang['help_export_xmlformat_example'] = 'This is an example of the custom XML format:';
 $lang['help_export_data_format'] = '<strong>The following table describes the data format:</strong><br>
 <br>
 <table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>field name</th>
-    <th>usage</th>
-  </tr>
-  <tr>
-    <td>eventid</td>
-    <td>the index number of this event</td>
-  </tr>
-  <tr>
-    <td>sponsorid</td>
-    <td>the short identifier of the organization that inputed the event into the calendar</td>
-  </tr>
-  <tr>
-    <td>inputsponsor</td>
-    <td>the name of the organization that inputed the event into the calendar</td>
-  </tr>
-  <tr>
-    <td>displayedsponsor</td>
-    <td>the name of the sponsor that is displayed in the calendar\'s detailed view</td>
-  </tr>
-  <tr>
-    <td>displayedsponsorurl</td>
-    <td>the URL of the homepage of the sponsor that is displayed in the calendar\'s detailed view</td>
-  </tr>
-  <tr>
-    <td>date</td>
-    <td>the date the event takes place, written in the ISO-8601 format</td>
-  </tr>
-  <tr>
-    <td>timebegin</td>
-    <td>
-      <ul>
-        <li>the time the event begins, written in the ISO-8601 format (military/24 hour time)</li>
-        <li>if the value is &quot;00:00&quot; and timeend is &quot;23:59&quot; the event is considered to be an 
-            &quot;all day event&quot;</li>
-      </ul>  
-    </td>
-  </tr>
-  <tr>
-    <td>timeend</td>
-    <td>
-      <ul>
-        <li>the time the event ends, written in the ISO-8601 format (military/24 hour time)</li>
-        <li>if the value is completely ommitted the event is considered to not have a specified
-        ending time</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td>repeat_vcaldef</td>
-    <td>
-      <ul>
-        <li>if the event is a recurring event it contains the recurrence definition in 
-        <a href="http://www.imc.org/pdi/vcal-10.txt">vCalendar format</a></li>
-        <li>e.g. &quot;W1 MO WE FR 20000502T235900&quot; means that an event repeats every week<br>
-            Monday, Wednesday &amp; Friday until May 2, 2000</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td>repeat_startdate</td>
-    <td>
-      if the event is a recurring event it contains the date where the recurrence starts
-    </td>
-  </tr>
-  <tr>
-    <td>repeat_enddate</td>
-    <td>
-      if the event is a recurring event it contains the date where the recurrence ends
-    </td>
-  </tr>
-  <tr>
-    <td>categoryid</td>
-    <td>
-      an index number indicating the category of the event (see table below)
-    </td>
-  </tr>
-  <tr>
-    <td>category</td>
-    <td>
-      the name of the category associated with the event
-    </td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>the event title (displayed in weekly, monthly and detailed view)</td>
-  </tr>
-  <tr>
-    <td>description</td>
-    <td>a long text describing the specifics of an event<br>
-    the description is only displayed in the detailed view</td>
-  </tr>
-  <tr>
-    <td>location</td>
-    <td>the location where the event takes place (building, room etc.)</td>
-  </tr>
-  <tr>
-    <td>price</td>
-    <td>
-      the price of the event
-    </td>
-  </tr>
-  <tr>
-    <td>contact_name</td>
-    <td>the name of a person that can be contacted if further info is required</td>
-  </tr>
-  <tr>
-    <td>contact_phone</td>
-    <td>
-      contact phone number(s)
-    </td>
-  </tr>
-  <tr>
-    <td>contact_email</td>
-    <td>contact email address</td>
-  </tr>
-  <tr>
-    <td>url</td>
-    <td>URL of a web page specifically describing the event</td>
-  </tr>
-  <tr>
-    <td>recordchanged</td>
-    <td>a timestamp indicating when this event was changed the last time</td>
-  </tr>
+	<tr>
+		<th>field name</th>
+		<th>usage</th>
+	</tr>
+	<tr>
+		<td>eventid</td>
+		<td>the index number of this event</td>
+	</tr>
+	<tr>
+		<td>sponsorid</td>
+		<td>the short identifier of the organization that inputed the event into the calendar</td>
+	</tr>
+	<tr>
+		<td>inputsponsor</td>
+		<td>the name of the organization that inputed the event into the calendar</td>
+	</tr>
+	<tr>
+		<td>displayedsponsor</td>
+		<td>the name of the sponsor that is displayed in the calendar\'s detailed view</td>
+	</tr>
+	<tr>
+		<td>displayedsponsorurl</td>
+		<td>the URL of the homepage of the sponsor that is displayed in the calendar\'s detailed view</td>
+	</tr>
+	<tr>
+		<td>date</td>
+		<td>the date the event takes place, written in the ISO-8601 format</td>
+	</tr>
+	<tr>
+		<td>timebegin</td>
+		<td>
+			<ul>
+				<li>the time the event begins, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>if the value is &quot;00:00&quot; and timeend is &quot;23:59&quot; the event is considered to be an 
+						&quot;all day event&quot;</li>
+			</ul>  
+		</td>
+	</tr>
+	<tr>
+		<td>timeend</td>
+		<td>
+			<ul>
+				<li>the time the event ends, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>if the value is completely ommitted the event is considered to not have a specified
+				ending time</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_vcaldef</td>
+		<td>
+			<ul>
+				<li>if the event is a recurring event it contains the recurrence definition in 
+				<a href="http://www.imc.org/pdi/vcal-10.txt">vCalendar format</a></li>
+				<li>e.g. &quot;W1 MO WE FR 20000502T235900&quot; means that an event repeats every week<br>
+						Monday, Wednesday &amp; Friday until May 2, 2000</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_startdate</td>
+		<td>
+			if the event is a recurring event it contains the date where the recurrence starts
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_enddate</td>
+		<td>
+			if the event is a recurring event it contains the date where the recurrence ends
+		</td>
+	</tr>
+	<tr>
+		<td>categoryid</td>
+		<td>
+			an index number indicating the category of the event (see table below)
+		</td>
+	</tr>
+	<tr>
+		<td>category</td>
+		<td>
+			the name of the category associated with the event
+		</td>
+	</tr>
+	<tr>
+		<td>title</td>
+		<td>the event title (displayed in weekly, monthly and detailed view)</td>
+	</tr>
+	<tr>
+		<td>description</td>
+		<td>a long text describing the specifics of an event<br>
+		the description is only displayed in the detailed view</td>
+	</tr>
+	<tr>
+		<td>location</td>
+		<td>the location where the event takes place (building, room etc.)</td>
+	</tr>
+	<tr>
+		<td>price</td>
+		<td>
+			the price of the event
+		</td>
+	</tr>
+	<tr>
+		<td>contact_name</td>
+		<td>the name of a person that can be contacted if further info is required</td>
+	</tr>
+	<tr>
+		<td>contact_phone</td>
+		<td>
+			contact phone number(s)
+		</td>
+	</tr>
+	<tr>
+		<td>contact_email</td>
+		<td>contact email address</td>
+	</tr>
+	<tr>
+		<td>url</td>
+		<td>URL of a web page specifically describing the event</td>
+	</tr>
+	<tr>
+		<td>recordchanged</td>
+		<td>a timestamp indicating when this event was changed the last time</td>
+	</tr>
 </table>';
 $lang['help_export_categoryid_intro'] = 'The value for &quot;categoryid&quot; is one of the following index numbers:';
 
@@ -742,7 +763,7 @@ calendar web interface</b>.
 and place it in a directory of a web server
 <li>login to the VT calendar
 <li>choose the "import events from remote location" option, specify the 
-  URL of the file and press the button "Start Import"</li>              
+	URL of the file and press the button "Start Import"</li>              
 </ol>
 <P>
 The data, that is going to be added to the calendar, is contained in an XML file 
@@ -761,231 +782,231 @@ describe an event, their intended usage, the allowed field length, the syntax an
 can be empty or not (like <code>&lt;timeend&gt;&lt;/timeend&gt;</code>).
 <br>
 <table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>field name</th>
-    <th>usage</th>
-    <th>field length [character]</th>
-    <th>syntax</th>
-    <th>empty element allowed</th>
-  </tr>
-  <tr>
-    <td>displayedsponsor</td>
-    <td>the name of the sponsor that is displayed in the calendar\'s detailed view</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>displayedsponsorurl</td>
-    <td>the URL of the homepage of the sponsor that is displayed in the calendar\'s detailed view</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>date</td>
-    <td>the date the event takes place, written in the ISO-8601 format</td>
-    <td>exactly 10</td>
-    <td>YYYY-MM-DD</td>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td>timebegin</td>
-    <td>
-      <ul>
-        <li>the time the event begins, written in the ISO-8601 format (military/24 hour time)</li>
-        <li>e.g. for 9am use &quot;09:00&quot;, for 8pm use &quot;20:00&quot;</li>
-        <li>if the value is &quot;00:00&quot; and timeend is &quot;23:59&quot; the event is considered to be an 
-            &quot;all day event&quot;</li>
-        <li>the time is only displayed in the weekly and detailed view (not in the monthly view)</li>
-      </ul>  
-    </td>
-    <td>exactly 5</td>
-    <td>HH:MM</td>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td>timeend</td>
-    <td>
-      <ul>
-        <li>the time the event ends, written in the ISO-8601 format (military/24 hour time)</li>
-        <li>e.g. for 9am use &quot;09:00&quot;, for 8pm use &quot;20:00&quot;</li>
-        <li>if the value is completely ommitted the event is considered to not have a specified
-        ending time (no ending time is displayed in the calendar)</li>
-        <li>the time is only displayed in the detailed view (not in the weekly or monthly view)</li>
-      </ul>
-    </td>
-    <td>exactly 5</td>
-    <td>HH:MM</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>categoryid</td>
-    <td>
-      <ul>
-        <li>an index number indicating the category of the event (see table above)</li>
-        <li>the associated category is only displayed in the weekly and detailed view (not in the monthly view)</li>
-      </ul
-    ></td>
-    <td>number from table above</td>
-    <td>number</td>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>the event title (displayed in weekly, monthly and detailed view)</td>
-    <td>max. 40</td>
-    <td>free text</td>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td>description</td>
-    <td>a long text describing the specifics of an event<br>
-    the description is only displayed in the detailed view</td>
-    <td>max. 5000</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>location</td>
-    <td>the location where the event takes place</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>price</td>
-    <td>
-      <ul>
-        <li>the price of the event</li>
-        <li>use &quot;free&quot; if there is no charge</li>
-        <li>e.g. you could use something like &quot;$5 for VT students, $10 for general public&quot;</li>
-      </ul>
-    </td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>contact_name</td>
-    <td>the name of a person that can be contacted if further info is required</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>contact_phone</td>
-    <td>
-      <ul>
-        <li>contact phone number(s)</li>
-        <li>e.g. use &quot;231-2343 for general info, 231-5600 for tickets&quot;</li>
-      </ul>
-    </td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>contact_email</td>
-    <td>contact email address</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td>url</td>
-    <td>URL of a web page specifically describing the event</td>
-    <td>max. 100</td>
-    <td>free text</td>
-    <td>yes</td>
-  </tr>
+	<tr>
+		<th>field name</th>
+		<th>usage</th>
+		<th>field length [character]</th>
+		<th>syntax</th>
+		<th>empty element allowed</th>
+	</tr>
+	<tr>
+		<td>displayedsponsor</td>
+		<td>the name of the sponsor that is displayed in the calendar\'s detailed view</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>displayedsponsorurl</td>
+		<td>the URL of the homepage of the sponsor that is displayed in the calendar\'s detailed view</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>date</td>
+		<td>the date the event takes place, written in the ISO-8601 format</td>
+		<td>exactly 10</td>
+		<td>YYYY-MM-DD</td>
+		<td>no</td>
+	</tr>
+	<tr>
+		<td>timebegin</td>
+		<td>
+			<ul>
+				<li>the time the event begins, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>e.g. for 9am use &quot;09:00&quot;, for 8pm use &quot;20:00&quot;</li>
+				<li>if the value is &quot;00:00&quot; and timeend is &quot;23:59&quot; the event is considered to be an 
+						&quot;all day event&quot;</li>
+				<li>the time is only displayed in the weekly and detailed view (not in the monthly view)</li>
+			</ul>  
+		</td>
+		<td>exactly 5</td>
+		<td>HH:MM</td>
+		<td>no</td>
+	</tr>
+	<tr>
+		<td>timeend</td>
+		<td>
+			<ul>
+				<li>the time the event ends, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>e.g. for 9am use &quot;09:00&quot;, for 8pm use &quot;20:00&quot;</li>
+				<li>if the value is completely ommitted the event is considered to not have a specified
+				ending time (no ending time is displayed in the calendar)</li>
+				<li>the time is only displayed in the detailed view (not in the weekly or monthly view)</li>
+			</ul>
+		</td>
+		<td>exactly 5</td>
+		<td>HH:MM</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>categoryid</td>
+		<td>
+			<ul>
+				<li>an index number indicating the category of the event (see table above)</li>
+				<li>the associated category is only displayed in the weekly and detailed view (not in the monthly view)</li>
+			</ul
+		></td>
+		<td>number from table above</td>
+		<td>number</td>
+		<td>no</td>
+	</tr>
+	<tr>
+		<td>title</td>
+		<td>the event title (displayed in weekly, monthly and detailed view)</td>
+		<td>max. 40</td>
+		<td>free text</td>
+		<td>no</td>
+	</tr>
+	<tr>
+		<td>description</td>
+		<td>a long text describing the specifics of an event<br>
+		the description is only displayed in the detailed view</td>
+		<td>max. 5000</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>location</td>
+		<td>the location where the event takes place</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>price</td>
+		<td>
+			<ul>
+				<li>the price of the event</li>
+				<li>use &quot;free&quot; if there is no charge</li>
+				<li>e.g. you could use something like &quot;$5 for VT students, $10 for general public&quot;</li>
+			</ul>
+		</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>contact_name</td>
+		<td>the name of a person that can be contacted if further info is required</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>contact_phone</td>
+		<td>
+			<ul>
+				<li>contact phone number(s)</li>
+				<li>e.g. use &quot;231-2343 for general info, 231-5600 for tickets&quot;</li>
+			</ul>
+		</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>contact_email</td>
+		<td>contact email address</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
+	<tr>
+		<td>url</td>
+		<td>URL of a web page specifically describing the event</td>
+		<td>max. 100</td>
+		<td>free text</td>
+		<td>yes</td>
+	</tr>
 </table>';
 
 $lang['help_inputfields'] = 'Input fields';
 $lang['help_inputfields_contents'] = 'The following table shows the meaning of the input fields:<BR>
 <BR>
 <TABLE width="100%" border="1" cellspacing="1" cellpadding="3">
-  <TR align="left">
-    <TH class="helpbox">Field name</TH>
-    <TH class="helpbox">Meaning</TH>
-  </TR>
-    <TR>
-      <TD class="helpbox">Date</TD>
-      <TD class="helpbox">Choose between one of the radio buttons to determine whether your
-      event is a one-time or a recurring event. Then you will be given the opportunity to specify the
-      date of the one-time event or define the recurrence for a repeating event.<BR>
-      The validity of the date you picked is checked after pressing the &quot;Preview Event&quot; button.<BR>
-      </TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Time</TD>
-      <TD class="helpbox">Declare the event as being an
-      &quot;all day event&quot; (for example "Thanksgiving Day") or specify start and ending time for the event. Pick &quot;???&quot; for the hour of the
-      ending time if the event does not have a specified ending time.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Category</TD>
-      <TD class="helpbox">Classify your event into one of the given categories to facilitate searching.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Title</TD>
-      <TD class="helpbox">Give your event a descriptive title. When choosing one, remember that
-      the category is always displayed along with the title.<BR>
-      <BR>
-      Neither the weekly nor the monthly view shows your sponsor name. That\'s why you have to
-      make sure that the user will have a rough idea about the event just by reading the title.<BR>
-      <BR>
-      The input space for the title is limited to 40 characters to avoid cluttering the
-      screen with too long titles.
-      </TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Description</TD>
-      <TD class="helpbox">Give a detailed description of the event here. Remember that you can save people
-      a lot of hassle if you give all the information available to you, so that
-      they are not required to call you or send out an email.<BR>
-      <BR>
-      You are not limited in space.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Location</TD>
-      <TD class="helpbox">Describe the location of the event (building, room number etc.)</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Price</TD>
-      <TD class="helpbox">Specify, if there is a charge for taking part in the event. If it\'s free just
-      use the word &quot;free&quot;.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Contact name</TD>
-      <TD class="helpbox">Specify the name of a person that can be contacted by people interested to learn
-      more about the event.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Contact phone</TD>
-      <TD class="helpbox">Specify a phone number that everybody who needs further information can call.
-      If you have a fax machine you can also provide its number.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Contact email</TD>
-      <TD class="helpbox">Specify an email address that can be used to request further information.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Event page web address</TD>
-      <TD class="helpbox">If you have a specific web page that gives more information about that particular event
-      write down its address here. Do not use this field to publicize your homepage\'s address. For this purpose
-      you can use the field &quot;Sponsor page web address&quot; below.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Displayed sponsor name</TD>
-      <TD class="helpbox">By default this field will contain the name of your organisation agreed upon when
-      signing up with the event calendar. You are free to change it. You might have to use it if
-      you want to submit events on behalf of an organisation who did not sign up itself.</TD>
-    <TR>
-    <TR>
-      <TD class="helpbox">Sponsor page web address</TD>
-      <TD class="helpbox">Specify the address for the homepage of your organization here.</TD>
-    <TR>
+	<TR align="left">
+		<TH class="helpbox">Field name</TH>
+		<TH class="helpbox">Meaning</TH>
+	</TR>
+		<TR>
+			<TD class="helpbox">Date</TD>
+			<TD class="helpbox">Choose between one of the radio buttons to determine whether your
+			event is a one-time or a recurring event. Then you will be given the opportunity to specify the
+			date of the one-time event or define the recurrence for a repeating event.<BR>
+			The validity of the date you picked is checked after pressing the &quot;Preview Event&quot; button.<BR>
+			</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Time</TD>
+			<TD class="helpbox">Declare the event as being an
+			&quot;all day event&quot; (for example "Thanksgiving Day") or specify start and ending time for the event. Pick &quot;???&quot; for the hour of the
+			ending time if the event does not have a specified ending time.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Category</TD>
+			<TD class="helpbox">Classify your event into one of the given categories to facilitate searching.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Title</TD>
+			<TD class="helpbox">Give your event a descriptive title. When choosing one, remember that
+			the category is always displayed along with the title.<BR>
+			<BR>
+			Neither the weekly nor the monthly view shows your sponsor name. That\'s why you have to
+			make sure that the user will have a rough idea about the event just by reading the title.<BR>
+			<BR>
+			The input space for the title is limited to 40 characters to avoid cluttering the
+			screen with too long titles.
+			</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Description</TD>
+			<TD class="helpbox">Give a detailed description of the event here. Remember that you can save people
+			a lot of hassle if you give all the information available to you, so that
+			they are not required to call you or send out an email.<BR>
+			<BR>
+			You are not limited in space.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Location</TD>
+			<TD class="helpbox">Describe the location of the event (building, room number etc.)</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Price</TD>
+			<TD class="helpbox">Specify, if there is a charge for taking part in the event. If it\'s free just
+			use the word &quot;free&quot;.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Contact name</TD>
+			<TD class="helpbox">Specify the name of a person that can be contacted by people interested to learn
+			more about the event.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Contact phone</TD>
+			<TD class="helpbox">Specify a phone number that everybody who needs further information can call.
+			If you have a fax machine you can also provide its number.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Contact email</TD>
+			<TD class="helpbox">Specify an email address that can be used to request further information.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Event page web address</TD>
+			<TD class="helpbox">If you have a specific web page that gives more information about that particular event
+			write down its address here. Do not use this field to publicize your homepage\'s address. For this purpose
+			you can use the field &quot;Sponsor page web address&quot; below.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Displayed sponsor name</TD>
+			<TD class="helpbox">By default this field will contain the name of your organisation agreed upon when
+			signing up with the event calendar. You are free to change it. You might have to use it if
+			you want to submit events on behalf of an organisation who did not sign up itself.</TD>
+		<TR>
+		<TR>
+			<TD class="helpbox">Sponsor page web address</TD>
+			<TD class="helpbox">Specify the address for the homepage of your organization here.</TD>
+		<TR>
 </TABLE>';
 
 $lang['help_signup'] = 'How to post events';
@@ -1011,28 +1032,28 @@ to host guest speakers.<BR>
 <BR>
 Here is what you can do:
 <OL>
-  <LI>
-    <B>add a new template</B> with the name &quot;Guest speaker&quot;,
-    <B>set the fields which usually do not change </B>like category, location,
-    price and contact information
-  </LI>
-  <LI>
-    <B>add new event</B> and <B>choose the template</B> you have just
-    created from the list that will appear
-  </LI>
-  <LI>
-    <B>fill out the remaining fields</B> of the form like data, title,
-    description etc. and save the event.
-  </LI>
+	<LI>
+		<B>add a new template</B> with the name &quot;Guest speaker&quot;,
+		<B>set the fields which usually do not change </B>like category, location,
+		price and contact information
+	</LI>
+	<LI>
+		<B>add new event</B> and <B>choose the template</B> you have just
+		created from the list that will appear
+	</LI>
+	<LI>
+		<B>fill out the remaining fields</B> of the form like data, title,
+		description etc. and save the event.
+	</LI>
 </OL>';
 
 $lang['help_updatecopydelete'] = 'Update/Copy/Delete event';
 $lang['help_updatecopydelete_contents'] = 'You have 2 options:
 <OL>
-  <LI>Click on the &quot;Manage events&quot; link in the update menu</LI> or
-  <LI>In the weekly/monthly view use the icon <IMG src="images/nuvola/16x16/actions/color_line.png" width="16" height="16" alt="update event" border="0">
-   to <A href="helpupdateevent.php">update</A>, <IMG src="images/nuvola/16x16/actions/editcopy.png" width="16" height="16" alt="copy event" border="0"> to
-   <A href="helpcopyevent.php">copy</A> or <IMG src="images/nuvola/16x16/actions/button_cancel.png" width="16" height="16" alt="delete event" border="0"> to <A href="helpdeleteevent.php">delete</A> an event</LI>
+	<LI>Click on the &quot;' . $lang['manage_events'] . '&quot; link in the update menu</LI> or
+	<LI>In the weekly/monthly view use the icon <IMG src="images/edit.gif" width="16" height="16" alt="update event" border="0">
+	 to <A href="helpupdateevent.php">update</A>, <IMG src="images/copy.gif" width="16" height="16" alt="copy event" border="0"> to
+	 <A href="helpcopyevent.php">copy</A> or <IMG src="images/delete.gif" width="16" height="16" alt="delete event" border="0"> to <A href="helpdeleteevent.php">delete</A> an event</LI>
 </OL>';
 $lang['help_updateevent'] = 'Update event';
 $lang['help_updateevent_contents'] = 'When you choose to update an existing event you can make changes or
