@@ -27,13 +27,12 @@ function sendrejectionemail($eventid,$database) {
   $result = DBQuery($database, $query ); 
   $d = $result->fetchRow(DB_FETCHMODE_ASSOC);
   
-  $subject = "submitted event was rejected";
-  $body = "The calendar administrator rejected the event:\n";
+  $subject = lang('email_submitted_event_rejected');
+  $body = lang('email_admin_rejected_event')."\n";
   $body.= $d['event_title']."\n\n";
-  $body.= "Reason for the rejection:\n";
+  $body.= lang('email_reason_for_rejection')."\n";
   $body.= $d['event_rejectreason']."\n\n";
-	
-	$body.= "Please login to the calendar, edit and re-submit your event.";
+  $body.= lang('email_login_edit_resubmit');
 
 	/* taken out because it would need to be adapted to work for the calendar forwarding
 	   feature which it currently does not. also, rejection is extremely rarely used.
@@ -43,7 +42,7 @@ function sendrejectionemail($eventid,$database) {
 		$body.= "changeeinfo.php?calendarid=".$_SESSION["CALENDARID"];
 		$body.= "&authsponsorid=".$d['sponsorid'];
 		$body.= "&eventid=$eventid&httpreferer=update.php";
-  */
+	*/
 	
   sendemail2sponsor($d['sponsor_name'],$d['sponsor_email'],$subject,$body);
 } // end: function sendrejectionemail
@@ -101,11 +100,11 @@ function sendrejectionemail($eventid,$database) {
     } // end: if ($event["approved"]==0)
   } // end: if (isset($eventid))
 
-  pageheader("Approve/reject event updates, VT Event Calendar",
-             "Approve/reject event updates",
+  pageheader(lang('approve_reject_event_updates'),
+             lang('approve_reject_event_updates'),
 	           "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Approve/reject event updates");
+  box_begin("inputbox",lang('approve_reject_event_updates'));
 
   // print list with events
   $query = "SELECT e.id AS id,e.approved,e.timebegin,e.timeend,e.repeatid,e.sponsorid,e.displayedsponsor,e.displayedsponsorurl,e.title,e.wholedayevent,e.categoryid,e.description,e.location,e.price,e.contact_name,e.contact_phone,e.contact_email,e.url,c.id AS cid,c.name AS category_name,s.id AS sid,s.name AS sponsor_name,s.url AS sponsor_url,s.calendarid AS sponsor_calendarid FROM vtcal_event e, vtcal_category c, vtcal_sponsor s WHERE e.calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND c.calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND e.categoryid = c.id AND e.sponsorid = s.id AND e.approved = 0";
@@ -113,16 +112,16 @@ function sendrejectionemail($eventid,$database) {
   $result = DBQuery($database, $query ); 
 ?>
       <FORM method="post" action="update.php">
-        <INPUT type="submit" name="back" value="&laquo; Back to menu">
+        <INPUT type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
       </FORM>
 <br>
-<b><a href="<?php echo $_SERVER["PHP_SELF"]; ?>">Refresh Display</a></b><br>
+<b><a href="<?php echo $_SERVER["PHP_SELF"]; ?>"><?php echo lang('refresh_display'); ?></a></b><br>
 <?php
   if ($result->numRows() > 0 ) {
 ?>
 <br>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-<INPUT type="submit" name="approveallevents" value="Approve ALL Events">
+<INPUT type="submit" name="approveallevents" value="<?php echo lang('approve_all_events'); ?>">
 <input type="hidden" name="eventidlist" value="<?php
   // read first event if one exists
   $ievent = 0;
@@ -136,12 +135,12 @@ function sendrejectionemail($eventid,$database) {
 </form>
 <table border="0" cellspacing="0" cellpadding="4">
   <tr bgcolor="#CCCCCC">
-    <td bgcolor="#CCCCCC"><b>Date/Time</b></td>
-    <td bgcolor="#CCCCCC"><b>Category: Title/Description</b></td>
-    <td bgcolor="#CCCCCC"><b>Sponsor</b></td>
-    <td bgcolor="#CCCCCC"><b>Location</b></td>
-    <td bgcolor="#CCCCCC"><b>Price</b></td>
-    <td bgcolor="#CCCCCC"><b>Contact</b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('date'),"/",lang('time'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('category'),": ",lang('title'),"/",lang('description'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('sponsor'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('location'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('price'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('contact'); ?></b></td>
     <td bgcolor="#CCCCCC">&nbsp;</td>
   </tr>
 <?php
@@ -175,7 +174,7 @@ function sendrejectionemail($eventid,$database) {
 		}
   }
 	else {
-	  echo "All day";
+	  echo lang('all_day');
 	}
 
 	if (!empty($event['repeatid'])) {
@@ -214,7 +213,7 @@ function sendrejectionemail($eventid,$database) {
     <td bgcolor="<?php echo $color; ?>" valign="top" nowrap><?php 
  if (!empty($event['contact_name']) ) { echo $event['contact_name'],"<br>"; } 
  if (!empty($event['contact_email']) ) { 
-   echo '<img src="images/email.gif" width="20" height="20">';
+   echo '<img src="images/email.gif" width="20" height="20" alt="e-mail">';
    echo "<a href=\"mailto:",$event['contact_email'],"\">",$event['contact_email'],"</a><br>"; 
  } 
  if (!empty($event['contact_phone']) ) { 
@@ -230,7 +229,9 @@ function sendrejectionemail($eventid,$database) {
 	  echo "approvethis=1";
 	}
 		
-?>&eventid=<?php echo $event['id']; ?>">approve</a>&nbsp; <a href="approval.php?reject=1&eventid=<?php echo $event['id']; ?>">reject</a>&nbsp; <a href="changeeinfo.php?update=1&eventid=<?php echo $event['id']; ?>">edit</a></td>
+?>&eventid=<?php echo $event['id']; ?>"><?php echo lang('approve'); ?></a>&nbsp; 
+<a href="approval.php?reject=1&eventid=<?php echo $event['id']; ?>"><?php echo lang('reject'); ?></a>&nbsp; 
+<a href="changeeinfo.php?update=1&eventid=<?php echo $event['id']; ?>"><?php echo lang('edit'); ?></a></td>
   </tr>
 <?php
   } // end: for ($i=0; $i<$result->numRows(); $i++)
@@ -241,7 +242,7 @@ function sendrejectionemail($eventid,$database) {
 </table>
 <br>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 <?php
   } // end: if ($result->numRows() > 0 )

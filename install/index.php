@@ -1,17 +1,17 @@
 <html>
 <head>
-<title>VT Calendar Installation</title>
+<title>VTCalendar Installation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <style><!--
 body, td, p {
   font-family: Arial,Helvetica,Sans-Serif;
-	font-size: x-small;
+	font-size: 10pt;
 }
 //-->
 </style>
 </head>
 <body>
-<h1>VT Calendar Installation</h1>
+<h1>VTCalendar Installation</h1>
 <?php
 	if (!function_exists("file_get_contents")) {
 		function file_get_contents($filename, $use_include_path = 0) {
@@ -29,7 +29,12 @@ body, td, p {
 	if (isset($_POST['install'])) { // run install procedure
     // create config file config.inc.php from config.inc.php.template		
 		$config = file_get_contents ("config.inc.template.php");
-    if ($_POST['databasetype']=="mysql") { $databasetype = "mysql"; }
+
+	if (isset($_POST['language'])) { 
+  		$config = preg_replace('/define\("LANGUAGE","en"\);/','define("LANGUAGE","'.$_POST['language'].'");',$config);
+	}
+    
+	if ($_POST['databasetype']=="mysql") { $databasetype = "mysql"; }
 		elseif ($_POST['databasetype']=="postgres") { $databasetype = "pgsql"; }
 		else { $databasetype = "other-please-specify"; }
 		$connectionstring = $databasetype.'://'.$_POST['database_user'].':'.$_POST['database_password'].'@'.$_POST['database_host'].'/'.$_POST['database_name'];
@@ -116,6 +121,29 @@ body, td, p {
 be edited later by hand.<br>
 <br></td>
     </tr>
+  <tr bgcolor="#FFFFFF">
+    <td valign="baseline" nowrap><strong>Language:</strong></td>
+    <td valign="baseline"><select name="language"><?php
+$dir = "../languages/";
+if ($dh = opendir($dir)) {
+	while (($file = readdir($dh)) !== false) {
+		if (preg_match("|^(.*)\.inc\.php$|", $file, $matches)) {
+			$languages[] = $matches[1];
+		}
+	}
+	closedir($dh);
+}
+foreach ($languages as $language) {
+    echo '<option value="',$language,'"';
+	if ($language == "en") {
+		echo ' selected';
+	}
+	echo '>',$language,"</option>\n";
+}	
+	?> 
+	</select>
+      (e.g. en stands for English; these match the file names of the translations in the &quot;languages/&quot; folder)</td>
+  </tr>
   <tr bgcolor="#eeeeee">
     <td width="10%" valign="baseline" nowrap><strong>Database software:</strong></td>
     <td width="90%" valign="baseline">

@@ -1,99 +1,137 @@
 <?php
   session_start();
-	
+  header("Content-Type: text/css");	
   if (strpos(" ".$_SERVER["HTTP_USER_AGENT"],"MSIE") > 0) { $ie = 1; }
-  else { $ie = 0; }    
-?>body, td, p {
-  font-family: Arial,Helvetica,Sans-Serif;
-	font-size: <?php if ($ie) { echo "x-"; } ?>small;
-  margin : 0 0px 0px 0px;
+  else { $ie = 0; }  
+?>
+BODY, TD, P {
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small; 
+	FONT-FAMILY: Arial,Helvetica,Sans-Serif;
+	MARGIN: 0 0 0 0;
+}
+A {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>; 
+	TEXT-DECORATION: none;
+}
+A:visited {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>; 
+	TEXT-DECORATION: none;
+}
+A:hover {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>; 
+	TEXT-DECORATION: none;
 }
 .calendartitle {
-	font-size: 20px;
-	font-weight: bold;
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 20px;
 }
 .datetitle {
-	font-size: 20px;
+	FONT-SIZE: 20px; 
 }
 .eventtitlebig {
-  font-size: 24px;
-	font-weight: bold;
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 24px; 
 }
 .eventtimebig {
-  font-size: 18px;
+	FONT-SIZE: 18px; 
 }
 .littlecalendardatetitle {
-	font-size: <?php if ($ie) { echo "x-"; } ?>small;
-	font-weight: bold;
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small;
 }
 .littlecalendarheader {
-	font-size: <?php if ($ie) { echo "x"; } ?>x-small;
+	FONT-SIZE: <?php if ($ie) { echo "x"; } ?>x-small; 
+	BACKGROUND-COLOR: <?php echo $_SESSION["BGCOLOR"]; ?>;
 }
 .littlecalendarday {
-	font-size: <?php if ($ie) { echo "x"; } ?>x-small;
+	FONT-SIZE: <?php if ($ie) { echo "x"; } ?>x-small; 
+	BACKGROUND-COLOR: <?php echo $_SESSION["BGCOLOR"]; ?>;
 }
-.littlecalendarday a {
-	color: #0000ff;
+.littlecalendarweek {
+	FONT-SIZE: xx-small; 
+	BACKGROUND-COLOR: <?php echo $_SESSION["BGCOLOR"]; ?>;
 }
-
 .littlecalendarother {
-	font-size: <?php if ($ie) { echo "x"; } ?>x-small;
-	color : #cccccc;
+	FONT-SIZE: <?php if ($ie) { echo "x"; } ?>x-small; 
+	COLOR: #cccccc;
 }
 .todayis {
-	font-size: <?php if ($ie) { echo "x-"; } ?>small;
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small;  
 }
-.weekheaderpast,.weekheaderfuture {
-  background-color : #aaaaaa;
+.todayis A {
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small; 
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
 }
-.weekheadertoday {
-  background-color : #aaaaaa;
+.todayis A:visited {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
 }
-.monthheaderpast,.monthheaderfuture {
-  background-color : #aaaaaa;
+.todayis A:hover {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
 }
-.monthheadertoday {
-  background-color : <?php echo $_SESSION["TODAYCOLOR"]; ?>;
+.weekheader {
+	BACKGROUND-COLOR: <?php echo $_SESSION["GRIDCOLOR"]; ?>; 
+	COLOR: <?php echo $_SESSION["TEXTCOLOR"]; ?>;
+}
+.monthheader {
+	BACKGROUND-COLOR: #aaaaaa; 
+	COLOR: #000000;
 }
 .past {
-  background-color : #eeeeee;
-	color : #999999;
+	BACKGROUND-COLOR: <?php echo $_SESSION["PASTCOLOR"]; ?>;
 }
-.past a {
-	color : #999999;
+A.past {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
+}
+A.past:visited {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
+}
+A.past:hover {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
 }
 .today {
-  background-color : <?php echo $_SESSION["TODAYCOLOR"]; ?>;
+	BACKGROUND-COLOR: <?php echo $_SESSION["TODAYCOLOR"]; ?>;
 }
 .future {
-  background-color : #ffffff;
+	BACKGROUND-COLOR: <?php echo $_SESSION["FUTURECOLOR"]; ?>;
 }
 .eventtime {
-	font-size: <?php if ($ie) { echo "x"; } ?>x-small;
+	FONT-SIZE: <?php if ($ie) { echo "x"; } ?>x-small;
 }
 .eventcategory {
-	font-size: <?php if ($ie) { echo "x"; } ?>x-small;
+	FONT-SIZE: <?php if ($ie) { echo "x"; } ?>x-small;
 }
 .tabactive {
-  background-color: <?php echo $_SESSION["MAINCOLOR"]; ?>;
+	COLOR: <?php echo $_SESSION["TEXTCOLOR"]; ?>; 
+	BACKGROUND-COLOR: <?php echo $_SESSION["MAINCOLOR"]; ?>;
+}
+.tabinactive A {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
+}
+.tabinactive A:visited {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
+}
+.tabinactive A:hover {
+	COLOR: <?php echo $_SESSION["LINKCOLOR"]; ?>;
 }
 .tabinactive {
-  background-color: #cccccc;
+	BACKGROUND-COLOR: <?php echo $_SESSION["GRIDCOLOR"]; ?>;
 }
 .announcement {
-	font-size: medium;
+	FONT-SIZE: medium;
 }
 .feedbackpos {
-  COLOR: #00AA00;
-  FONT-WEIGHT: bold;
-  FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small;
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small; 
+	COLOR: #00CC14;
 }
 .feedbackneg {
-  COLOR: #FF0000;
-  FONT-WEIGHT: bold;
-  FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small;
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: <?php if ($ie) { echo "x-"; } ?>small; 
+	COLOR: #FF1A00;
 }
-h3.boxheader {
-  FONT-SIZE: medium;
+.example {
+  color: #999999;
 }
-
+code, pre {
+   font-size: 10pt;
+}

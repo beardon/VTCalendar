@@ -38,25 +38,16 @@
   }
 
 	function emailsponsoraccountchanged(&$sponsor) {
-		$subject = "calendar account information updated";
-		$body = "The calendar administrator updated the information for your account.\n\n";
-		$body.= "The current settings are:\n";
-		$body.= "   Name: ".stripslashes($sponsor['name'])."\n";
-		$body.= "   Email: ".stripslashes($sponsor['email'])."\n";
-		$body.= "   Homepage: ".stripslashes($sponsor['url'])."\n\n";
+		$subject = lang('email_account_updated_subject');
+		$body = lang('email_account_updated_body');
+		$body.= "   ".lang('sponsor_name')." ".stripslashes($sponsor['name'])."\n";
+		$body.= "   ".lang('email')." ".stripslashes($sponsor['email'])."\n";
+		$body.= "   ".lang('homepage')." ".stripslashes($sponsor['url'])."\n\n";
 
-		$body.= "Short instructions for adding an event:\n";
-		$body.= "- Go to ";
-	  if ( isset($_SERVER["HTTPS"]) ) { $body .= "https"; } else { $body .= "http"; } 
-    $body .= "://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'], "/"))."/update.php?calendarid=".$_SESSION["CALENDARID"]."\n";
-		$body.= "- Login using your personal user-ID and password\n";
-		$body.= "- Click on \"Add new event\"\n";
-		$body.= "- Fill in the fields\n";
-		$body.= "- Press the \"preview event\" button\n";
-		$body.= "- If the preview looks ok, press the \"Save changes\" button\n\n";
-		
-		$body.= "Your event is submitted to the calendar administrator \n";
-		$body.= "for review and will be publicized shortly.";
+    	if ( isset($_SERVER["HTTPS"]) ) { $body .= "https"; } else { $body .= "http"; } 
+        $body .= "://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'], "/"))."/update.php?calendarid=".$_SESSION["CALENDARID"]."\n\n";
+
+		$body.= lang('email_add_event_instructions');
 		sendemail2sponsor($sponsor['name'],$sponsor['email'],$subject,$body);
 	} // end: emailsponsoraccountchanged
 
@@ -108,10 +99,10 @@
 				// feedback message(s)
 				if ( !empty($pidsInvalid) ) {
 					if ( strpos($pidsInvalid, "," ) > 0 ) { // more than one user-ID
-						$addPIDError = "The user-IDs &quot;".$pidsInvalid."&quot; are invalid.";
+						$addPIDError = lang('user_ids_invalid')." &quot;".$pidsInvalid."&quot;";
 					}
 					else {
-						$addPIDError = "The user-ID &quot;".$pidsInvalid."&quot; is invalid.";
+						$addPIDError = lang('user_id_invalid')." &quot;".$pidsInvalid."&quot;";
 					}
 				}
 			} // end: else: if ( empty($sponsor[admins]) )
@@ -150,22 +141,22 @@
 	}
 
   if ( isset($id) ) {
-    pageheader("Edit Sponsor, Event Calendar",
-               "Edit Sponsor",
+    pageheader(lang('edit_sponsor'),
+               lang('edit_sponsor'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Edit Sponsor");
+    box_begin("inputbox",lang('edit_sponsor'));
 		if ( !isset($check) ) {
   		$result = DBQuery($database, "SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($id)."'" );
       $sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 		}
 	}
 	else {
-    pageheader("Add New Sponsor, Event Calendar",
-               "Add New Sponsor",
+    pageheader(lang('add_new_sponsor'),
+               lang('add_new_sponsor'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Add New Sponsor");
+    box_begin("inputbox",lang('add_new_sponsor'));
 	}
 ?>
 <br>
@@ -173,66 +164,64 @@
 <TABLE border="0" cellpadding="2" cellspacing="0">
   <TR>
     <TD class="bodytext" valign="top">
-      Name:
+      <strong><?php echo lang('sponsor_name'); ?></strong>
       <FONT color="#FF0000">*</FONT>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
 		if ( isset($check) ) {
 			if (empty($sponsor['name'])) {
-				feedback("Please choose a name.",1);
+				feedback(lang('choose_sponsor_name'),1);
 			}
 			elseif ($sponsorexists) {
-				feedback("A sponsor with this name already exists. Please choose a different one.",1);
+				feedback(lang('sponsor_already_exists'),1);
 			}
 		}
 ?>
       <INPUT type="text" size="50" name="sponsor[name]" maxlength=<?php echo constSponsor_nameMaxLength; ?>  value="<?php
     if ( isset($check) ) { $sponsor['name']=stripslashes($sponsor['name']); }
     if ( isset($sponsor['name']) ) { echo HTMLSpecialChars($sponsor['name']); }
-?>"> <I>(e.g. Mikado Club)</I><BR>
+?>"> <I><?php echo lang('sponsor_name_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      E-mail:
+      <strong><?php echo lang('email'); ?></strong>
       <FONT color="#FF0000">*</FONT>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
   if (isset($check) && (empty($sponsor['email']))) {
-    feedback("Please choose an email address.",1);
+    feedback(lang('choose_email'),1);
   }
 ?>
       <INPUT type="text" size="20" name="sponsor[email]" maxlength=<?php echo constEmailMaxLength; ?> value="<?php
   if ( isset($check) ) { $sponsor['email']=stripslashes($sponsor['email']); }
   if ( isset($sponsor['email'])) { echo HTMLSpecialChars($sponsor['email']); }
 ?>">
-      <I>(e.g. vtmc@vt.edu)</I><BR>
+      <I><?php echo lang('email_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      Home page<BR>
-      web address:
+      <strong><?php echo lang('homepage'); ?></strong>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
   if ( isset($check) && !checkURL($sponsor['url']) ) {
-    feedback("The URL is invalid. Please make sure that you enter: &quot;http://&quot; or &quot;https://&quot; in front.",1);
+    feedback(lang('url_invalid'),1);
   }
 ?>
       <INPUT type="text" size="50" name="sponsor[url]" maxlength=<?php echo constUrlMaxLength; ?> value="<?php
   if ( isset($check) ) { $sponsor['url']=stripslashes($sponsor['url']); }
   if ( isset($sponsor['url']) ) { echo HTMLSpecialChars($sponsor['url']); }
 ?>">
-      <I>(e.g. http://www.vtmc.vt.edu/)</I><BR>
+      <I><?php echo lang('url_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      Administrative<br>
-			Members:
+      <strong><?php echo lang('administrative_members'); ?></strong>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
@@ -256,7 +245,7 @@
 			}
 		}
 		?></textarea><br>
-		<i>(separate user-id's with a comma)</i>
+		<i><?php echo lang('administrative_members_example'); ?></i>
     </TD>
   </TR>
 </TABLE>
@@ -266,8 +255,8 @@
 ?>
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

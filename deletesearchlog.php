@@ -21,17 +21,17 @@
     exit;
   }
 
-  pageheader("Clear search log, Event Calendar",
-             "Clear search log",
+  pageheader(lang('clear_search_log'),
+             lang('clear_search_log'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Clear search log");
+  box_begin("inputbox",lang('clear_search_log'));
 ?>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  Do you want to delete the entire search log?
+  <?php echo lang('clear_search_log_confirm'); ?><br>
 	<BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

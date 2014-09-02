@@ -50,17 +50,17 @@
     exit;
   }
 
-  pageheader("Delete Sponsor, Event Calendar",
-             "Delete Sponsor",
+  pageheader(lang('delete_sponsor'),
+             lang('delete_sponsor'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete Sponsor");
+  box_begin("inputbox",lang('delete_sponsor'));
 ?>
-<font color="#ff0000"><b>Warning!</b></font> The sponsor &quot;<b><?php echo $sponsor['name']; ?></b>&quot; will be deleted.
+<font color="#ff0000"><b><?php echo lang('delete_sponsor_confirm'); ?> &quot;<b><?php echo $sponsor['name']; ?></b>&quot;</b></font>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-	<input type="radio" name="deleteevents" value="1"> delete all events belonging to this sponsor<br>
+	<input type="radio" name="deleteevents" value="1"> <?php echo lang('delete_all_events_of_sponsor'); ?><br>
   <input type="radio" name="deleteevents" value="0" checked> 
-	re-assign all events belonging to this sponsor to:
+	<?php echo lang('reassign_all_events_to_sponsor'); ?>
   <select name="newsponsorid" size="1">
 <?php
   $result = DBQuery($database, "SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id!='".sqlescape($id)."' ORDER BY name" ); 
@@ -78,8 +78,8 @@
 ?>	
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

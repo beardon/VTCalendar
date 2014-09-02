@@ -7,22 +7,22 @@
   if (!authorized($database)) { exit; }
   if (!$_SESSION["AUTH_MAINADMIN"]) { exit; } // additional security
 
-	pageheader("Manage Main Admins, Event Calendar",
-					 "Manage Main Admins",
+	pageheader(lang('manage_main_admins'),
+					 lang('manage_main_admins'),
 					 "Update","",$database);
 	echo "<BR>\n";
-	box_begin("inputbox","Manage Main Admins");
+	box_begin("inputbox",lang('manage_main_admins'));
 ?>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 <form method="post" name="mainform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-<a href="addmainadmin.php">Add new main admin</a>
-or delete existing:<br>
+<a href="addmainadmin.php"><?php echo lang('add_new_main_admin'); ?></a>
+<?php echo lang('or_delete_existing'); ?><br>
 <br>
 <table border="0" cellspacing="0" cellpadding="4">
   <tr bgcolor="#CCCCCC">
-    <td bgcolor="#CCCCCC"><b>Main admin user-ID</b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('user_id'); ?></b></td>
     <td bgcolor="#CCCCCC">&nbsp;</td>
   </tr>
 <?php
@@ -35,17 +35,17 @@ or delete existing:<br>
 ?>	
   <tr bgcolor="<?php echo $color; ?>">
     <td bgcolor="<?php echo $color; ?>"><?php echo $user['id']; ?></td>
-    <td bgcolor="<?php echo $color; ?>"><a href="deletemainadmin.php?userid=<?php echo $user['id']; ?>">delete</a></td>
+    <td bgcolor="<?php echo $color; ?>"><a href="deletemainadmin.php?userid=<?php echo $user['id']; ?>"><?php echo lang('delete'); ?></a></td>
   </tr>
 <?php
   } // end: for ($i=0; $i<$result->numRows(); $i++)
 ?>	
 </table>
 <br>
-<b><?php echo $result->numRows(); ?> Main admins total</b>
+<b><?php echo $result->numRows(); ?> <?php echo lang('main_admins_total'); ?></b>
 </form>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 <?php
   box_end();

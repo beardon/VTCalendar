@@ -5,19 +5,10 @@
 
   helpbox_begin();
 ?>
-<H3><IMG src="images/help.gif" width="16" height="16" alt="" border="0">
-Copy event
+<H3><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0">
+<?php echo lang('help_copyevent'); ?>
 </H3>
-
-When you choose to copy an existing event all the input fields for the new
-event you are creating will be copied from the one you have chosen.<BR>
-If you chose a recurring event the recurrence information will also be
-copied.<BR>
-<BR>
-You can make changes or <A href="helpfillinevent.php">fill in</A> additional information.<BR>
-<BR>
-Please keep in mind that the event you create will have to be <A href="helpapproval.php">approved</A>.<BR>
-Therefore, it will <B>not be immediately visible</B> in the calendar.<BR>
+<?php echo lang('help_copyevent_contents'); ?>
 <?php
   helpbox_end();
 ?>

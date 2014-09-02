@@ -41,16 +41,19 @@
 			}
 			else {
 				// create new calendar
-			  $query = "INSERT INTO vtcal_calendar (id,name,title,bgcolor,maincolor,todaycolor,viewauthrequired,forwardeventdefault) VALUES ('".sqlescape($cal['id'])."','".sqlescape($cal['name'])."','Calendar','#ffffff','#ff9900','#ffcc66','0','".sqlescape($cal['forwardeventdefault'])."')";
+			  			  $query = "INSERT INTO vtcal_calendar (id, name,                       title,             header, footer, bgcolor, maincolor,  todaycolor, pastcolor, futurecolor, textcolor, linkcolor, gridcolor, viewauthrequired, forwardeventdefault) VALUES 
+                                    ('".sqlescape($cal['id'])."','".sqlescape($cal['name'])."', '".lang('calendar')."', '',    '', '#ffffff','#ff9900', '#ffcc66', '#eeeeee',  '#ffffff',   '#000000', '#3333cc', '#cccccc', 0, '".sqlescape($cal['forwardeventdefault'])."')";
+
+
         $result = DBQuery($database, $query );
 
-				$query = "INSERT INTO vtcal_sponsor (calendarid,name,email,url,admin) VALUES ('".sqlescape($cal['id'])."','Administration','','".sqlescape(BASEURL.$cal['id'])."/"."','1')";
+				$query = "INSERT INTO vtcal_sponsor (calendarid,name,email,url,admin) VALUES ('".sqlescape($cal['id'])."','".lang('administration')."','','".sqlescape(BASEURL.$cal['id'])."/"."','1')";
 				$result = DBQuery($database, $query ); 
 				
 				// create three categories to have a starting point
-        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','Category 1')" );
-        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','Category 2')" );
-        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','Category 3')" );
+        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','".lang('category1')."')" );
+        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','".lang('category2')."')" );
+        $result = DBQuery($database, "INSERT INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($cal['id'])."','".lang('category3')."')" );
 			}
 		} // end: if ( isset($new) )
 		else { 
@@ -84,10 +87,10 @@
 				// feedback message(s)
 				if ( !empty($pidsInvalid) ) {
 					if ( strpos($pidsInvalid, "," ) > 0 ) { // more than one user-ID
-						$addPIDError = "The user-IDs &quot;".$pidsInvalid."&quot; are invalid.";
+						$addPIDError = lang('user_ids_invalid')." &quot;".$pidsInvalid."&quot;";
 					}
 					else {
-						$addPIDError = "The user-ID &quot;".$pidsInvalid."&quot; is invalid.";
+						$addPIDError = lang('user_id_invalid')." &quot;".$pidsInvalid."&quot;";
 					}
 				}
 			} // end: else: if ( empty($cal[admins]) )
@@ -111,22 +114,22 @@
 	} // end: if (isset($save) && checkcalendar($cal) )
 
   if ( isset($cal['id']) ) {
-    pageheader("Edit Calendar, Event Calendar",
-               "Edit Calendar",
+    pageheader(lang('edit_calendar'),
+               lang('edit_calendar'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Edit Calendar");
+    box_begin("inputbox",lang('edit_calendar'));
 		if ( !isset($check) ) {
   		$result = DBQuery($database, "SELECT * FROM vtcal_calendar WHERE id='".sqlescape($cal['id'])."'" );
       $cal = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 		}
 	}
 	else {
-    pageheader("Add New Calendar, Event Calendar",
-               "Add New Calendar",
+    pageheader(lang('add_new_calendar'),
+               lang('add_new_calendar'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Add New Calendar");
+    box_begin("inputbox",lang('add_new_calendar'));
 	}
 ?>
 <br>
@@ -134,17 +137,17 @@
 <TABLE border="0" cellpadding="2" cellspacing="0">
   <TR>
     <TD class="bodytext" valign="top">
-      Calendar-ID:
+      <?php echo lang('calendar_id'); ?>:
       <FONT color="#FF0000">*</FONT>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
 	if ( isset($check) ) {
 		if (empty($cal['id']) || !isValidInput($cal['id'],'calendarid')) {
-			feedback("Please choose a valid calendar-ID: ".constCalendaridVALIDMESSAGE,1);
+			feedback(lang('choose_valid_calendar_id')." ".constCalendaridVALIDMESSAGE,1);
 		}
 		elseif ($calendarexists) {
-			feedback("A calendar with this ID already exists. Please choose a different one.",1);
+			feedback(lang('calendar_already_exists'),1);
 		}
 	}
 ?>
@@ -154,7 +157,7 @@
   <INPUT type="text" size="20" name="cal[id]" maxlength=<?php echo constCalendaridMAXLENGTH; ?> value="<?php
   if ( isset($check) ) { $cal['id']=stripslashes($cal['id']); }
   if ( isset($cal['id']) ) { echo HTMLSpecialChars($cal['id']); }
-?>"> <I>(e.g. mikadoclub)</I>
+?>"> <I><?php echo lang('calendar_id_example'); ?></I>
 <?php
   } // end: else: if ( isset ($cal['id']) )
 	else {
@@ -167,26 +170,26 @@
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      Name:
+      <?php echo lang('calendar_name'); ?>:
       <FONT color="#FF0000">*</FONT>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
 	if ( isset($check) ) {
 		if (empty($cal['name']) || !isValidInput($cal['name'],'calendarname')) {
-			feedback("Please choose a valid name: ".constCalendarnameVALIDMESSAGE,1);
+			feedback(lang('choose_valid_calendar_name')." ".constCalendarnameVALIDMESSAGE,1);
 		}
 	}
 ?>
       <INPUT type="text" size="50" name="cal[name]" maxlength=<?php echo constCalendarnameMAXLENGTH; ?>  value="<?php
   if ( isset($check) ) { $cal['name']=stripslashes($cal['name']); }
   if ( isset($cal['name']) ) { echo HTMLSpecialChars($cal['name']); }
-?>"> <I>(e.g. Mikado Club)</I><BR>
+?>"> <I><?php echo lang('calendar_name_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      Administrators:<br>
+      <?php echo lang('administrators'); ?><br>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
@@ -216,7 +219,7 @@
 			}
 		}
 		?></textarea><br>
-		<i>(separate user-id's with a comma)</i>
+		<i><?php echo lang('administrators_example'); ?></i>
     </TD>
   </TR>
 <?php
@@ -237,9 +240,8 @@
 					if (isset($cal['forwardeventdefault']) && $cal['forwardeventdefault']=="1") { echo " checked"; } 
 					?>></td>
           <td>
-             <label for="forwardeventdefault">By default also display events on
-            the <?php echo $defaultcalendarname ?></label><br>
-      (Sponsors can still disable this on a per-event basis)</td>
+             <label for="forwardeventdefault"><?php echo lang('also_display_on_calendar_message'); ?> <?php echo $defaultcalendarname ?></label><br>
+      <?php echo lang('also_display_on_calendar_notice'); ?></td>
         </tr>
       </table>
     </TD>
@@ -257,8 +259,8 @@
   }
 ?>		
     <BR>
-    <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-    <INPUT type="submit" name="cancel" value="Cancel">
+    <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+    <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
   	</td>
 	</tr>
 </TABLE>

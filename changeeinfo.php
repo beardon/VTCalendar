@@ -124,7 +124,7 @@ function passeventvalues(&$event,$sponsorid,&$repeat) {
 } // end: function passeventvalues
 
 // test if the recurrence info was changed, return true if it was
-// not used because changing only one instance of a recurring event was too error-prone and buggy
+// not used because changing only one instance of a recurring event was too error-prone
 /*
 function recurrenceschanged($repeatid,&$repeat,&$event,$database) {
   $repeat['startdate'] = datetime2timestamp($event['timebegin_year'],$event['timebegin_month'],$event['timebegin_day'],0,0,"am");
@@ -171,7 +171,7 @@ function insertrecurrences($repeatid,&$event,&$repeatlist,$database) {
 } // end: function insertrecurrences
 
 function savechangesbuttons(&$event,&$repeat,$database) {
-  echo '<INPUT type="submit" name="savethis" value="Save changes"> ';
+  echo '<INPUT type="submit" name="savethis" value="',lang('save_changes'),'"> ';
 /*
   if ($repeat['mode'] > 0 && !empty($event['repeatid'])) {
     if (!recurrenceschanged($event['repeatid'],$repeat,$event,$database)) {
@@ -183,8 +183,8 @@ function savechangesbuttons(&$event,&$repeat,$database) {
 
 function inputeventbuttons(&$event,&$repeat,$database) {
 //  savechangesbuttons($event,$repeat,$database);
-  echo '<INPUT type="submit" name="preview" value="Preview Event"> ';
-  echo '<INPUT type="submit" name="cancel" value="Cancel">';
+  echo '<INPUT type="submit" name="preview" value="',lang('preview_event'),'"> ';
+  echo '<INPUT type="submit" name="cancel" value="',lang('cancel_button_text'),'">';
 } // end: inputeventbuttons
 
 
@@ -363,9 +363,9 @@ function inputeventbuttons(&$event,&$repeat,$database) {
   $sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
   if (isset($check) && $eventvalid && isset($preview)) { // display preview
-		pageheader("VT Event Calendar, Preview Event",
-							 "Preview Event",
-							 "","",$database);
+		pageheader(lang('preview_event'),
+							 lang('preview_event'),
+							 "Update","",$database);
 	
 		// determine the text representation in the form "MM/DD/YYYY" and the day of the week
 		$day['text'] = Encode_Date_US($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year']);
@@ -387,9 +387,9 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 		}
 	
 		echo "<BR>";
-		box_begin("inputbox","Preview event");
+		box_begin("inputbox",lang('preview_event'));
 		echo '<form method="post" action="changeeinfo.php">',"\n";
-    echo '<input type="submit" name="savethis" value="Save changes">',"\n";
+    echo '<input type="submit" name="savethis" value="',lang('save_changes'),'">',"\n";
 
 /*
 		if ($repeat['mode'] > 0 && !empty($event['repeatid'])) {
@@ -399,8 +399,8 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 		}
 */
 ?>
-<input type="submit" name="edit" value="Go back to make changes"> &nbsp;&nbsp;&nbsp;
-<input type="submit" name="cancel" value="Cancel"><BR>
+<input type="submit" name="edit" value="<?php echo lang('go_back_to_make_changes'); ?>"> &nbsp;&nbsp;&nbsp;
+<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>"><BR>
 <br>
 <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="<?php echo "#cccccc"; ?>">
   <tr>
@@ -422,16 +422,16 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 <?php
 		if (!checkeventtime($event)) {
 			echo "<BR>";
-			feedback("Warning! Ending time is not greater than starting time.",1);
+			feedback(lang('warning_ending_time_before_starting_time'),1);
 		}
 		if ($event['timeend_hour']==0) {
 			echo "<BR>";
-			feedback("Warning! The ending time is not specified.",1);
+			feedback(lang('warning_no_ending_time'),1);
 		}
 	
 		echo '<span class="bodytext">';
 		if ($repeat['mode'] > 0) {
-			echo "recurring event: ";
+			echo lang('recurring_event'),": ";
 			$repeatdef = repeatinput2repeatdef($event,$repeat);
 			printrecurrence($event['timebegin_year'],
 											$event['timebegin_month'],
@@ -442,7 +442,7 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 			printrecurrencedetails($repeatlist);
 		}
 		else {
-			echo "no recurrences defined.";
+			echo lang('no_recurrences_defined');
 		}
 		echo "<BR><BR>\n";
 	
@@ -456,8 +456,8 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 		if (isset($copy)) { echo "<INPUT type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n"; }
 		savechangesbuttons($event,$repeat,$database);
 ?>
-<input type="submit" name="edit" value="Go back to make changes"> &nbsp;&nbsp;&nbsp;
-<input type="submit" name="cancel" value="Cancel">
+<input type="submit" name="edit" value="<?php echo lang('go_back_to_make_changes'); ?>"> &nbsp;&nbsp;&nbsp;
+<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 <br>
 </span>
 </form>
@@ -467,20 +467,20 @@ function inputeventbuttons(&$event,&$repeat,$database) {
   else { // display input form
 		if (isset($eventid)) {
 			if (isset($copy)) {
-				pageheader("VT Event Calendar, Copy Event",
-									 "Copy Event",
-									 "","",$database);
+				pageheader(lang('copy_event'),
+									 lang('copy_event'),
+									 "Update","",$database);
 				echo "<INPUT type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n";
 			} else {
-				pageheader("VT Event Calendar, Update Event",
-									 "Update Event",
-									 "","",$database);
+				pageheader(lang('update_event'),
+									 lang('update_event'),
+									 "Update","",$database);
 			}
 		}
 		else {
-			pageheader("VT Event Calendar, Add new Event",
-								 "Add new Event",
-								 "","",$database);
+			pageheader(lang('add_new_event'),
+								 lang('add_new_event'),
+								 "Update","",$database);
 		}
 		
 		if (!isset($check)) { // end: ) && !isset($repeatsave)
@@ -525,7 +525,7 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 		//  $sponsorid = $event[sponsorid];
 		} // end if: "if (isset($eventid))"
     echo "<br>\n";
-		box_begin("inputbox","Input event information");
+		box_begin("inputbox",lang('input_event_information'));
 		echo "<form name=\"inputevent\" method=\"post\" action=\"changeeinfo.php\">\n";
 		inputeventbuttons($event,$repeat,$database);
 		echo "<br>\n<br>\n";

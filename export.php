@@ -1,10 +1,10 @@
 <?php
   session_start ();
-	header("Cache-control: private");
+  header("Cache-control: private");
 
   require_once('globalsettings.inc.php');
   require_once('functions.inc.php');
-	require_once("icalendar.inc.php");
+  require_once("icalendar.inc.php");
 
   if (isset($_GET['cancel'])) { setVar($cancel,$_GET['cancel'],'cancel'); } else { unset($cancel); }
   if (isset($_GET['type'])) { setVar($type,$_GET['type'],'type'); } else { unset($type); }
@@ -20,6 +20,10 @@
   if (isset($_GET['timeend_day'])) { setVar($timeend_day,$_GET['timeend_day'],'timeend_day'); } else { unset($timeend_day); }
   if (isset($_GET['rangedays'])) { setVar($rangedays,$_GET['rangedays'],'rangedays'); } else { unset($rangedays); }
   if (isset($_GET['categoryid'])) { setVar($categoryid,$_GET['categoryid'],'categoryid'); } else { unset($categoryid); }
+
+// TODO: input validation for "categoryidlist" parameter of the format e.g. "3,34,17"
+$categoryidlist = $_GET['categoryidlist'];
+
   if (isset($_GET['keyword'])) { setVar($keyword,$_GET['keyword'],'keyword'); } else { unset($keyword); }
   if (isset($_GET['specificsponsor'])) { setVar($specificsponsor,$_GET['specificsponsor'],'specificsponsor'); } else { unset($specificsponsor); }
 			
@@ -41,7 +45,7 @@
     return $text;
   } // end: function txt2xmltxt
 
-	if (isset($type) && ($type == "xml" || $type == "rss" || $type == "ical" || $type == "rss1_0") ) { // outputs everything depending in the params in XML format
+	if (isset($type) && ($type == "xml" || $type == "rss" || $type == "ical" || $type == "rss1_0" || $type == "vxml") ) { // outputs everything depending in the params in XML format
     // determine which sponsors to show
     if ($sponsortype=="self" && !empty($_SESSION["AUTH_SPONSORID"])) { 
       // read sponsor name from DB
@@ -62,10 +66,12 @@
       $timeend = "";
     }
     else {
-      if (!isset($timebegin) || $timebegin=="today") {
-        // determine today's date
-        $today = Decode_Date_US(date("m/d/Y"));
-  
+      // determine today's date
+	  $today = Decode_Date_US(date("m/d/Y"));
+      if ($timebegin == "now") {
+	  	$timebegin = date("Y-m-d H:i:s");
+	  }
+	  elseif (!isset($timebegin) || $timebegin=="today") {
         if (isset($timebegin_year)) { // details was called from the searchform
           $timebegin = datetime2timestamp($timebegin_year,$timebegin_month,$timebegin_day,12,0,"am");
         }
@@ -73,6 +79,7 @@
           $timebegin = datetime2timestamp($today['year'],$today['month'],$today['day'],12,0,"am");
         }
       }
+	  
       if (!isset($timeend) || $timeend=="today") {
         if (isset($timeend_year)) {
           $timeend = datetime2timestamp($timeend_year,$timeend_month,$timeend_day,11,59,"pm");
@@ -92,11 +99,38 @@
     if (!isset($keyword)) { $keyword=""; }
 
     $query = "SELECT e.recordchangedtime,e.recordchangeduser,e.repeatid,e.id AS id,e.timebegin,e.timeend,e.sponsorid,e.displayedsponsor,e.displayedsponsorurl,e.title,e.wholedayevent,e.categoryid,e.description,e.location,e.price,e.contact_name,e.contact_phone,e.contact_email,e.url,c.id AS cid,c.name AS category_name,s.id AS sid,s.name AS sponsor_name,s.url AS sponsor_url FROM vtcal_event_public e, vtcal_category c, vtcal_sponsor s WHERE e.calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND c.calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND e.categoryid = c.id AND e.sponsorid = s.id";
+
     if (!empty($eventid))  { $query.= " AND e.id='".sqlescape($eventid)."'"; }
-    if (!empty($timebegin)) { $query.= " AND e.timebegin >= '".sqlescape($timebegin)."'"; }
+    if (!empty($timebegin)) { 
+        $date = substr($timebegin,0,10);
+	    $query.= " AND (";
+		// also get "all day" events
+//		$query.= "(e.timebegin = '".sqlescape($date)." 00:00:00' AND e.timeend = '".sqlescape($date)." 23:59:00')"; 
+		$query.= "(e.timebegin = '".sqlescape($date)." 00:00:00' AND e.wholedayevent = '1')"; 
+		$query.= " OR e.timebegin >= '".sqlescape($timebegin)."')"; 
+	}
     if (!empty($timeend)) { $query.= " AND e.timeend <= '".sqlescape($timeend)."'"; }
-    if (!empty($displayedsponsor))  { $query.= " and e.displayedsponsor LIKE '%".sqlescape($displayedsponsor)."%'"; }
-    if (isset($categoryid) && $categoryid!=0) { $query.= " AND e.categoryid='".sqlescape($categoryid)."'"; }
+    if (!empty($displayedsponsor))  { $query.= " AND e.displayedsponsor LIKE '%".sqlescape($displayedsponsor)."%'"; }
+
+	if (!empty($categoryidlist)) {
+		  $query.= " AND (";
+		  $aCategoryIdList = explode(",",$categoryidlist);
+		  $i=0;
+		  foreach($aCategoryIdList as $sCategoryId) {
+		  	  $i++;
+			  if ($i > 1) {
+				  $query.= " OR "; 
+			  }
+			  $query.= "e.categoryid='".sqlescape($sCategoryId)."'"; 
+		  }
+		  $query.= ")";
+	}
+	else {
+    	if (isset($categoryid) && $categoryid!=0) { 
+		  $query.= " AND e.categoryid='".sqlescape($categoryid)."'"; 
+		}
+	}
+
     if (!empty($keyword)) { $query.= " AND ((e.title LIKE '%".sqlescape($keyword)."%') or (e.description LIKE '%".sqlescape($keyword)."%'))"; }
     $query.= " ORDER BY e.timebegin ASC, e.wholedayevent DESC";
     
@@ -112,7 +146,7 @@
       if (substr($timebegin,5,1) == "0") { $month = substr($timebegin,6,1); } 
       else { $month = substr($timebegin,5,2); }
       $date = $month."/".$day."/".substr($timebegin,0,4);
-      echo "    <description>Events for ".$date."</description>\n";
+      echo "    <description>".$date."</description>\n";
 
       echo "    <link>".$calendarurl."?calendarid=".$_SESSION["CALENDARID"]."</link>\n\n";
       for ($i=0; $i < $result->numRows(); $i++) {
@@ -153,7 +187,7 @@
   else { $month = substr($timebegin,5,2); }
   $date = $month."/".$day."/".substr($timebegin,0,4);
 ?>
-  <description>Events for <?php echo $date; ?></description>
+  <description><?php echo $date; ?></description>
   <title><?php echo $_SESSION["TITLE"]; ?></title>
   <items>
     <rdf:Seq>
@@ -268,9 +302,66 @@
 				echo getICalFormat($event);
 			} // end: for ($i=0; $i < $result->numRows(); $i++) {
 			echo getICalFooter();	
-		} // end: elseif ($type == "ical")
+	} // end: elseif ($type == "ical")
+    elseif ($type == "vxml") {
+      echo '<?xml version="1.0"?>',"\n";
+      echo '<vxml version="2.0">
+  <form>
+    <block>
+      <prompt>
+        ';
+	  echo lang('vxml_welcome')." ";
+	  echo '<break size="medium"/>',"\n";
+	  $iNumEvents = $result->numRows();
+	  if ($iNumEvents > 0) {
+		  echo lang('vxml_there_are'),' ',$iNumEvents,' ',lang('vxml_events_for_today'),' ',date("F j");
+	  }
+	  else {
+	  	  echo lang('vxml_no_more_events'),' ',date("F j");
+	  }
+	  
+	  if (date("j") == "1") { echo "st"; }
+	  elseif (date("j") == "2") { echo "nd"; }
+	  elseif (date("j") == "3") { echo "rd"; }
+	  else { echo "th"; }
+	  echo ".\n";
+	  
+	  echo '<break size="medium"/>',"\n";
+
+      for ($i=0; $i < $iNumEvents; $i++) {
+        $event = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
+		
+		if ($event['wholedayevent'] == '1') {
+			echo lang('all_day');
+		}
+		else {
+			$aTimeBegin = timestamp2datetime($event['timebegin']);
+			echo $aTimeBegin['hour'];
+			if ($aTimeBegin['min'] != "00") {
+				echo " ",$aTimeBegin['min'];
+			}
+			echo strtoupper($aTimeBegin['ampm']),"\n";
+        }
+		echo '<break size="small"/>',"\n";
+        
+        echo $event['title'],"\n";
+        
+        echo '<break size="large"/>',"\n";
+      } // end: for ($i=0; $i < $result->numRows(); $i++) {
+
+      echo '<break size="large"/>',"\n";
+	  echo lang('vxml_goodbye'),"\n";
+
+	  echo '
+      </prompt>
+	</block>
+  </form>
+</vxml>
+';
+    } // end: elseif ($type == "vxml")
+  
   } // end: elseif ($type == "xml" || $type == "rss")
-	else { // display form
+  else { // display form
     // determine today's date
     $today = Decode_Date_US(date("m/d/Y"));
   
@@ -292,18 +383,22 @@
       while (!checkdate($timeend_month,$timeend_day,$timeend_year)) { $timeend_day--; };
     }
 
-    pageheader("VT Event Calendar, Export Events",
-               "Export Events",
+    pageheader(lang('export_events'),
+               lang('export_events'),
                "","",$database);
     echo "<BR>";
-    box_begin("inputbox","Export events");
+    box_begin("inputbox",lang('export_events'));
 ?>
-<a target="newWindow"	onclick="new_window(this.href); return false" href="helpexport.php"><img src="images/help.gif" width="16" height="16" alt="" border="0"> How do I export events?</a>
+<a target="newWindow" onclick="new_window(this.href); return false" 
+   href="helpexport.php"><img src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"> 
+   <?php echo lang('how_to_export_events'); ?></a>
+<br>
+<br>
 <form method="get" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td class="bodytext" valign="top">
-      <strong>Output format:&nbsp;&nbsp;</strong>
+      <strong><?php echo lang('output_format'); ?></strong>&nbsp;
     </td>
     <td>
       <select name="type">
@@ -311,13 +406,14 @@
         <option value="ical">iCalendar</option>
         <option value="rss">XML/RSS 0.91</option>
         <option value="rss1_0">XML/RSS 1.0</option>
+        <option value="vxml">VoiceXML 2.0</option>
       </select> <br>
       <br>
     </td>
   </tr>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Category:</strong>
+      <strong><?php echo lang('category'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <SELECT name="categoryid" size="1">
@@ -344,10 +440,10 @@ for ($i=0; $i<$result->numRows(); $i++) {
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Event sponsor:&nbsp;&nbsp;</strong>
+      <strong><?php echo lang('sponsor'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
-      <input type="radio" name="sponsortype" value="all" checked> all<br>
+      <input type="radio" name="sponsortype" value="all" checked> <?php echo lang('all'); ?><br>
 <?php
   if (!empty($_SESSION["AUTH_SPONSORID"])) {
     // read sponsor name from DB
@@ -356,20 +452,21 @@ for ($i=0; $i<$result->numRows(); $i++) {
     echo '<input type="radio" name="sponsortype" value="self"> ',$s['name'],"<br>\n";
   }
 ?>
-        <input type="radio" name="sponsortype" value="specific"> specific:
+        <input type="radio" name="sponsortype" value="specific"> <?php echo lang('specific_sponsor'); ?>
         <INPUT type="text" size="28" maxlength="<?php echo constSpecificsponsorMaxLength; ?>" name="specificsponsor" value="">
-      <i>(case-insensitive substring search, e.g. school of the arts)</i><BR>
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	  <i><?php echo lang('specific_sponsor_example'); ?></i><BR>
       <br>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Date:</strong>
+      <strong><?php echo lang('date'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <TABLE border="0">
         <TR>
-          <TD class="bodytext" valign="top">from</TD>
+          <TD class="bodytext" valign="top"><?php echo lang('from'); ?>:</TD>
           <TD class="bodytext" valign="top">
             <SELECT name="timebegin_month" size="1">
 <?php
@@ -408,7 +505,7 @@ for ($i=date("Y")-1; $i<=date("Y")+3; $i++) {
       </TD>
     </TR>
     <TR>
-      <TD class="bodytext" valign="top">to</TD>
+      <TD class="bodytext" valign="top"><?php echo lang('to'); ?>:</TD>
       <TD class="bodytext" valign="top">
         <SELECT name="timeend_month" size="1">
 <?php
@@ -450,11 +547,10 @@ for ($i=date("Y")-1; $i<=date("Y")+3; $i++) {
 </table>
 <br>
 
-Depending on your browser you might see an <b>empty screen</b> after pressing &quot;Start Export&quot;.<br> 
-Use the &quot;<b>View Source</b>&quot; option of your browser to view the exported data.<br>
+<?php echo lang('export_message'); ?><br>
 <br>
-<input type="submit" name="startexport" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-<input type="submit" name="cancel" value="Cancel">
+<input type="submit" name="startexport" value="<?php echo lang('ok_button_text'); ?>">
+<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php    
     box_end();

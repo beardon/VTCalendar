@@ -1,1 +1,1 @@
-Search
+<?php echo lang('search'); ?>

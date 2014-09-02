@@ -4,15 +4,8 @@
 <tr valign="top">
 	<td>
 	  <br>
-If you have a desktop calendar or PDA compatible with the iCalendar standard you
-can subscribe to a calendar or download events. Currently the iCalendar standard
-is fully supported by <a href="http://www.apple.com/ical/">Apple's iCal</a>, and the 
-<a href="http://www.mozilla.org/projects/calendar/">Mozilla Calendar</a>.<br>
+<?php echo lang('subscribe_message'); ?>
 <br>
-If your calendar software cannot subscribe to a whole category of events, you should
-still be able to download individual events by clicking on the link 
-&quot;copy this event into your personal desktop calendar or PDA&quot; which you will find
-on each page that lists event details.<br>
 <br>
 <table border="0" cellspacing="0" cellpadding="4">
 <?php
@@ -26,7 +19,8 @@ on each page that lists event details.<br>
 ?>	
   <tr bgcolor="<?php echo $color; ?>">
     <td bgcolor="<?php echo $color; ?>"><?php echo substr($file,0,strlen($file)-4); ?></td>
-    <td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7).$iCalDirName.$file; ?>">subscribe</a> &nbsp; <a href="<?php echo BASEURL.$iCalDirName.$file; ?>">download</a></td>
+    <td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7).$iCalDirName.$file; ?>"><?php echo lang('subscribe'); ?></a> &nbsp; 
+	<a href="<?php echo BASEURL.$iCalDirName.$file; ?>"><?php echo lang('download'); ?></a></td>
   </tr>
 <?php
       } // end: if (strlen($file)>4 && substr($file,strlen($file)-4,4)==".ics")
@@ -45,7 +39,8 @@ on each page that lists event details.<br>
 ?>	
   <tr bgcolor="<?php echo $color; ?>">
     <td bgcolor="<?php echo $color; ?>"><?php echo $category['name']; ?></td>
-    <td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION["CALENDARID"]; ?>&type=ical&sponsortype=all&timebegin=today&categoryid=<?php echo $category['id']; ?>">subscribe</a> &nbsp; <a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today&categoryid=<?php echo $category['id']; ?>">download</a></td>
+    <td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION["CALENDARID"]; ?>&type=ical&sponsortype=all&timebegin=today&categoryid=<?php echo $category['id']; ?>"><?php echo lang('subscribe'); ?></a> &nbsp; 
+	<a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today&categoryid=<?php echo $category['id']; ?>"><?php echo lang('download'); ?></a></td>
   </tr>
 <?php
     } // end: for ($i=0; $i<$result->numRows(); $i++)
@@ -55,7 +50,9 @@ on each page that lists event details.<br>
 ?>
 </table>
 <br>
-&nbsp;<?php echo $_SESSION["NAME"]; ?> (whole calendar)&nbsp; <a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION["CALENDARID"]; ?>&type=ical&sponsortype=all&timebegin=today">subscribe</a> &nbsp; <a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today">download</a>
+&nbsp;<?php echo $_SESSION["NAME"]; ?> (<?php echo lang('whole_calendar'); ?>)&nbsp; 
+<a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION["CALENDARID"]; ?>&type=ical&sponsortype=all&timebegin=today"><?php echo lang('subscribe'); ?></a> &nbsp; 
+<a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today"><?php echo lang('download'); ?></a>
 	<br>
 	<br>
 	</td>

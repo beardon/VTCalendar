@@ -12,7 +12,7 @@
   define("constSpecificsponsorMaxLength",100);
   define("constPasswordMaxLength",20);
   define("constPasswordRegEx", '/^['.constValidTextCharWithoutSpacesRegEx.']{1,'.constPasswordMaxLength.'}$/');
-  define("constTitleMaxLength",50);
+  define("constTitleMaxLength",1024);
 	define("constImporturlMaxLength",100);
 	define("constUrlMaxLength",100);
 	define("constLocationMaxLength",100);
@@ -29,6 +29,7 @@
 	
   // checks the input against regular expressions
 	function isValidInput($value, $type) {
+        global $use_ampm;
 	  if (!isset($value)) { 
 			return FALSE; 
 		}
@@ -197,7 +198,7 @@
 		  if (preg_match(constPasswordRegEx,$value)) { return TRUE; }
 		}
 		elseif ($type=='preview') {
-		  if ($value=='Preview Event') { return TRUE; }
+		  if (!empty($value)) { return TRUE; }
 		}
 		elseif ($type=='price') {
 		  if (preg_match('/^['.constValidTextCharWithSpacesRegEx.']{1,'.constPriceMaxLength.'}$/',$value)) { return TRUE; }
@@ -282,7 +283,7 @@
 		  if (is_numeric($value) && $value>=1 && $value<=31) { return TRUE; }
 		}
 		elseif ($type=='timebegin_hour' || $type=='timeend_hour') {
-		  if (is_numeric($value) && $value>=1 && $value<=12) { return TRUE; }
+		  if (is_numeric($value) && ( ($value>=1 && $value<=12 && $use_ampm) || ($value>=0 && $value<=23 && !$use_ampm) )) { return TRUE; }
 		}
 		elseif ($type=='timebegin_min' || $type=='timeend_min') {
 		  if (is_numeric($value) && $value>=0 && $value<=59) { return TRUE; }
@@ -294,7 +295,7 @@
 		  if (preg_match('/^['.constValidTextCharWithSpacesRegEx.']{1,'.constTitleMaxLength.'}$/',$value)) { return TRUE; }
 		}
 		elseif ($type=='type') {
-		  if ($value=="xml" || $value=="rss" || $value=="ical" || $value=="rss1_0") { return TRUE; }
+		  if ($value=="xml" || $value=="rss" || $value=="ical" || $value=="rss1_0" || $value=="vxml") { return TRUE; }
 		}
 		elseif ($type=='viewauthrequired') {
 		  if ($value=='0' || $value=='1') { return TRUE; }
@@ -306,7 +307,7 @@
 		  if (preg_match(REGEXVALIDUSERID,$value)) { return TRUE; }
 		}
 		elseif ($type=='users') { // needs refinement, allow newlines
-		  if (preg_match('/^['.constValidTextCharWithSpacesRegEx.']{1,500}$/',$value)) { return TRUE; }
+		  if (preg_match('/^['.constValidTextCharWithSpacesRegEx.']{1,2000}$/',$value)) { return TRUE; }
 		}
 		elseif ($type=='view') {
 		  if ($value=='day' || $value=='week' || $value=='month' || $value=='search' || $value=='searchresults' || $value=='event' || $value=='subscribe' || $value=='filter') { return TRUE; }

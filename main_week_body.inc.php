@@ -1,6 +1,6 @@
 <?php
   if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
-?><table cellspacing="1" cellpadding="7" width="100%" bgcolor="#aaaaaa" border="0">
+?><table cellspacing="1" cellpadding="7" width="100%" class="weekheader" border="0">
         <tr>
 <?php
   // print the days of the week in the header of the table
@@ -9,19 +9,15 @@
 		$iday = Add_Delta_Days($weekfrom['month'],$weekfrom['day'],$weekfrom['year'],$weekday);
     $datediff = Delta_Days($iday['month'],$iday['day'],$iday['year'],date("m"),date("d"),date("Y"));
 
-		echo '<td ';
-    if ($datediff > 0) { echo 'class="weekheaderpast" bgcolor="',$colorpast,'"'; }
-    elseif ($datediff < 0) { echo 'class="weekheaderfuture" bgcolor="',$colorfuture,'"'; }
-    else { echo 'class="weekheadertoday" bgcolor="',$colortoday,'"'; }
-    echo ' valign="top" width="14%" align="center">';
+	echo '<td valign="top" width="14%" align="center">';
     echo "<b>\n";
-    echo Day_of_Week_to_Text($weekday);
+    echo Day_of_Week_to_Text(($weekday+$week_start)%7); // use modulus 7 as week can begin with Sunday or Monday
     echo "<br>\n";
-    echo "<a href=\"main.php?view=day&timebegin=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],12,0,"am")),"&timeend=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],11,59,"pm")),"\">".substr(Month_to_Text($iday['month']),0,3)." ".$iday['day']."</a>\n";
+    echo "<a href=\"main.php?view=day&timebegin=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],12,0,"am")),"&timeend=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],11,59,"pm")),"\">".week_header_date_format($iday['day'],Month_to_Text($iday['month']),0,3)."</a>\n";
 
     if (!empty($_SESSION["AUTH_SPONSORID"])) { // display "add event" icon
-			echo " <a href=\"addevent.php?timebegin_year=".$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\">";
-      echo '<img src="images/addnewevent.gif" height="16" width="16" alt="add new event" border="0"></a>';
+			echo "<br><a href=\"addevent.php?timebegin_year=".$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\" title=\"",lang('add_new_event'),"\">";
+      echo '<img src="images/nuvola/16x16/actions/filenew.png" height="16" width="16" alt="',lang('add_new_event'),'" border="0"></a>';
     }
 
     echo "</b>\n</td>\n";

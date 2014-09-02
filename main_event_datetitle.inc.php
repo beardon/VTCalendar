@@ -9,7 +9,8 @@
  	  disassemble_eventtime($event);	
     $event_timebegin  = timestamp2datetime($event['timebegin']);
     $event_timeend    = timestamp2datetime($event['timeend']);
-    echo Day_of_Week_to_Text(Day_of_Week($event_timebegin['month'],$event_timebegin['day'],$event_timebegin['year'])),", ";
-  }
-  echo Month_to_Text($event_timebegin['month'])," ",$event_timebegin['day'],", ",$event_timebegin['year'];
+
+
+echo day_view_date_format($event_timebegin['day'], Day_of_Week_to_Text(Day_of_Week($event_timebegin['month'],$event_timebegin['day'],$event_timebegin['year'])),Month_to_Text($event_timebegin['month']),$event_timebegin['year']);
+}
 ?>

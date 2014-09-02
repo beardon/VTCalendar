@@ -23,61 +23,49 @@
 	$result = DBQuery($database, "SELECT name FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 	$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
-	pageheader("VT Event Calendar, Update Calendar",
-						 "Update Calendar",
+	pageheader(lang('update_calendar'),
+						 lang('update_calendar'),
 						 "Update","",$database);
 
 	echo "<BR>";
-  echo '<table cellspacing="0" cellpadding="0" border="0"><tr><td valign="top">'."\n";
-	box_begin("inputbox","Sponsor's options");
+  echo '<table cellspacing="5" cellpadding="0" border="0"><tr><td valign="top">'."\n";
+  echo "<fieldset>\n";
+  echo "<legend><b>",lang('sponsors_options'),"&nbsp;</b></legend><br>\n";
 
   if ( isset($fbid) ) {
 		if ($fbid=="eaddsuccess" && !$_SESSION["AUTH_ADMIN"]) {
-			feedback(stripslashes(urldecode("The new event \"$fbparam\" has been submitted for approval.")),0);
+			feedback(lang('new_event_submitted_notice')." ".stripslashes(urldecode("\"$fbparam\"")),0);
 			echo "<BR>";
 		}
 		elseif ($fbid=="eupdatesuccess" && !$_SESSION["AUTH_ADMIN"] ) {
-			feedback(stripslashes(urldecode("The update for the event \"$fbparam\" has been submitted for approval.")),0);
+			feedback(lang('updated_event_submitted_notice')." ".stripslashes(urldecode("\"$fbparam\"")),0);
 			echo "<BR>";
 		}
 		elseif ($fbid=="urlchangesuccess") {
-			feedback(stripslashes(urldecode("The address of your homepage was successfully changed to \"$fbparam\".")),0);
+			feedback(lang('hompage_changed_notice')." ".stripslashes(urldecode("\"$fbparam\"")),0);
 			echo "<BR>";
 		}
 		elseif ($fbid=="emailchangesuccess") {
-			feedback(stripslashes(urldecode("Your email address was successfully changed to \"$fbparam\".")),0);
+			feedback(lang('email_changed_notice')." ".stripslashes(urldecode("\"$fbparam\"")),0);
 			echo "<BR>";
 		}
   } // end: if ( isset($fbid) )
-	  
-  echo '<TABLE width="100%" border="0" cellspacing="1" cellpadding="3">';
 ?>
+<TABLE width="100%" border="0" cellspacing="1" cellpadding="2">
 <TR>
   <TD class="inputbox">
-    <A href="addevent.php">Add new event</A>
+    <A href="addevent.php"><?php echo lang('add_new_event'); ?></A>
   </TD class="inputbox">
   <TD class="inputbox">
-    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpaddevent.php"><IMG src="images/help.gif" width="16" height="16" alt="" border="0"></A>
+    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpaddevent.php"><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"></A>
   </TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="manageevents.php">Manage events</A>
+    <A href="manageevents.php"><?php echo lang('manage_events'); ?></A>
   </TD>
   <TD class="inputbox">
-    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpupdatecopydelete.php"><IMG src="images/help.gif" width="16" height="16" alt="" border="0"></A>
-  </TD>
-</TR>
-<TR>
-  <TD><br></TD>
-  <TD><br></TD>
-</TR>
-<TR>
-  <TD class="inputbox">
-    <A href="managetemplates.php">Manage templates</A>
-  </TD>
-  <TD class="inputbox">
-    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helptemplate.php"><IMG src="images/help.gif" width="16" height="16" alt="" border="0"></A>
+    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpupdatecopydelete.php"><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"></A>
   </TD>
 </TR>
 <TR>
@@ -86,18 +74,10 @@
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="export.php">Export events</A>
+    <A href="managetemplates.php"><?php echo lang('manage_templates'); ?></A>
   </TD>
   <TD class="inputbox">
-    &nbsp;&nbsp;&nbsp;<a target="newWindow" onclick="new_window(this.href); return false" href="helpexport.php"><img src="images/help.gif" width="16" height="16" alt="" border="0"></A>
-  </TD>
-</TR>
-<TR>
-  <TD class="inputbox">
-    <A href="import.php">Import events</A>
-  </TD>
-  <TD class="inputbox">
-    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpimport.php"><IMG src="images/help.gif" width="16" height="16" alt="" border="0"></A>
+    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helptemplate.php"><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"></A>
   </TD>
 </TR>
 <TR>
@@ -106,12 +86,32 @@
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="changehomepage.php">Change homepage address</A>
+    <A href="export.php"><?php echo lang('export_events'); ?></A>
+  </TD>
+  <TD class="inputbox">
+    &nbsp;&nbsp;&nbsp;<a target="newWindow" onclick="new_window(this.href); return false" href="helpexport.php"><img src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"></A>
   </TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="changeemail.php">Change email address</A>
+    <A href="import.php"><?php echo lang('import_events'); ?></A>
+  </TD>
+  <TD class="inputbox">
+    &nbsp;&nbsp;&nbsp;<A target="newWindow" onclick="new_window(this.href); return false" href="helpimport.php"><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"></A>
+  </TD>
+</TR>
+<TR>
+  <TD><br></TD>
+  <TD><br></TD>
+</TR>
+<TR>
+  <TD class="inputbox">
+    <A href="changehomepage.php"><?php echo lang('change_homepage'); ?></A>
+  </TD>
+</TR>
+<TR>
+  <TD class="inputbox">
+    <A href="changeemail.php"><?php echo lang('change_email'); ?></A>
   </TD>
 </TR>
 <TR>
@@ -119,7 +119,7 @@
 <?php
 	if ( AUTH_DB && strlen($_SESSION["AUTH_USERID"]) > strlen(AUTH_DB_USER_PREFIX) && substr($_SESSION["AUTH_USERID"],0,strlen(AUTH_DB_USER_PREFIX)) == AUTH_DB_USER_PREFIX ) {
 ?>
-    <A href="changeuserpassword.php">Change password of user &quot;<?php echo $_SESSION["AUTH_USERID"]; ?>&quot;</A>
+    <A href="changeuserpassword.php"><?php echo lang('change_password_of_user'); ?> &quot;<?php echo $_SESSION["AUTH_USERID"]; ?>&quot;</A>
 <?php
   } // end: if ( AUTH_DB ... )
 ?>&nbsp;
@@ -128,18 +128,19 @@
 </TR>
 </TABLE>
 <?php
- box_end();
+  echo "</fieldset>\n";
 ?>
 </td>
 <?php
   if ($_SESSION["AUTH_ADMIN"]) {
 		echo "<td valign=\"top\">\n";
-		box_begin("inputbox","Administrator's options");
+	  echo "<fieldset>\n";
+	  echo "<legend><b>",lang('administrators_options'),"&nbsp;</b></legend><br>\n";
 ?>
-<TABLE width="100%" border="0" cellspacing="1" cellpadding="3">
+<TABLE width="100%" border="0" cellspacing="1" cellpadding="2">
 <TR>
   <TD class="inputbox">
-    <A href="approval.php">Approve/reject event updates</A>
+    <A href="approval.php"><?php echo lang('approve_reject_event_updates'); ?></A>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
@@ -149,13 +150,13 @@
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="managesponsors.php">Manage sponsors</A>
+    <A href="managesponsors.php"><?php echo lang('manage_sponsors'); ?></A>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <A href="deleteinactivesponsors.php">Delete inactive sponsors</A>
+    <A href="deleteinactivesponsors.php"><?php echo lang('delete_inactive_sponsors'); ?></A>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
@@ -164,44 +165,45 @@
 </TR>
 <TR>
   <TD class="inputbox">
-    <a href="changecalendarsettings.php">Change header, footer, colors, authorization</a>
+    <a href="changecalendarsettings.php"><?php echo lang('change_header_footer_colors_auth'); ?></a>
   </TD>
   <TD></TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <a href="manageeventcategories.php">Manage event categories</a>
+    <a href="manageeventcategories.php"><?php echo lang('manage_event_categories'); ?></a>
   </TD>
   <TD></TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <a href="managesearchkeywords.php">Manage search keywords</a>
+    <a href="managesearchkeywords.php"><?php echo lang('manage_search_keywords'); ?></a>
   </TD>
   <TD></TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <a href="managefeaturedsearchkeywords.php">Manage featured search keywords</a>
+    <a href="managefeaturedsearchkeywords.php"><?php echo lang('manage_featured_search_keywords'); ?></a>
   </TD>
   <TD></TD>
 </TR>
 <TR>
   <TD class="inputbox">
-    <a href="viewsearchlog.php">View search log</a><br><br><br>
+    <a href="viewsearchlog.php"><?php echo lang('view_search_log'); ?></a><br><br><br>
   </TD>
   <TD></TD>
 </TR>
 </table>
 <?php
-    box_end();
+    	  echo "</fieldset>\n";
 		echo "</td>\n";
   } // end: if ($_SESSION["AUTH_ADMIN"])
 ?>
 <?php
   if ( $_SESSION["AUTH_MAINADMIN"] ) {
 		echo "<td valign=\"top\">\n";
-		box_begin("inputbox","Main Administrator's options");
+		  echo "<fieldset>\n";
+		  echo "<legend><b>",lang('main_administrators_options'),"&nbsp;</b></legend><br>\n";
 ?>
 <TABLE width="100%" border="0" cellspacing="1" cellpadding="3">
 <?php
@@ -209,7 +211,7 @@
 ?>
 <TR>
   <TD class="inputbox">
-    <A href="manageusers.php">Manage users</A> <?php echo AUTH_DB_NOTICE; ?>
+    <A href="manageusers.php"><?php echo lang('manage_users'); ?></A> <?php echo AUTH_DB_NOTICE; ?>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
@@ -218,21 +220,21 @@
 ?>
 <TR valign="top">
   <TD class="inputbox">
-    <a href="managecalendars.php">Manage calendars</a>
+    <a href="managecalendars.php"><?php echo lang('manage_calendars'); ?></a>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
 <TR valign="top">
   <TD class="inputbox">
-    <a href="managemainadmins.php">Manage main admins</a>
+    <a href="managemainadmins.php"><?php echo lang('manage_main_admins'); ?></a>
   </TD>
   <TD>
-	  &nbsp;<br><br><br><br><br><br><br><br><br><br><br><br><br>
+	  &nbsp;<br><br><br><br><br><br><br><br><br><br><br><br>
 	</TD>
 </TR>
 </table>
 <?php
-    box_end();
+ 	 echo "</fieldset>\n";
 		echo "</td>\n";
   } // end: if ( $_SESSION["AUTH_MAINADMIN"] )
 ?>

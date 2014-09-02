@@ -36,17 +36,17 @@
     $sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
   } // end else: if (isset($save))
 
-  pageheader("VT Event Calendar, Change Email Address",
-             "Change Email Address",
-             "","",$database);
+  pageheader(lang('change_email'),
+             lang('change_email'),
+             "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Change email address");
+  box_begin("inputbox",lang('change_email'));
 ?>
-<B>The email address you enter below will be used by the calendar administrator to send messages to you:</B><BR>
+<B><?php echo lang('change_email_label'); ?></B><BR>
 <FORM method="post" action="changeemail.php">
 <?php
   if (!checkemail($sponsor["email"])) {
-    feedback("The email address is invalid.",1);
+    feedback(lang('email_invalid'),1);
 ?>
   <BR>
 <?php
@@ -55,8 +55,8 @@
   <INPUT type="text" name="sponsor_email" maxlength="100" size="60" value="<?php echo HTMLSpecialChars($sponsor["email"]); ?>">
   <BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

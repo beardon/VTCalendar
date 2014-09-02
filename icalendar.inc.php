@@ -7,7 +7,7 @@
 		$ical = "BEGIN:VCALENDAR".CRLF;
 		$ical .= "VERSION:2.0".CRLF;
 		$ical .= "METHOD:PUBLISH".CRLF;
-		$ical .= "PRODID:-//Virginia Tech//VT Calendar//EN".CRLF;
+		$ical .= "PRODID:-//Virginia Tech//VTCalendar//EN".CRLF;
 		return $ical;
 	}
 	
@@ -62,37 +62,37 @@
 			$ical.= "\\n\\n".CRLF;
 		}
 		if (!empty($event['price'])) {
-			$ical.= " Price: ";
+			$ical.= " ".lang('price').": ";
 			$ical.= iCalPrintMultipleLines($event['price']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!empty($event['sponsor_name'])) {
-			$ical.= " Sponsor: ";
+			$ical.= " ".lang('sponsor').": ";
 			$ical.= iCalPrintMultipleLines($event['sponsor_name']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!(empty($event['sponsor_url']) || $event['sponsor_url']=="http://")) {
-			$ical.= " Sponsor's Homepage: ";
+			$ical.= " ".lang('homepage')." ";
 			$ical.= iCalPrintMultipleLines($event['sponsor_url']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!empty($event['contact_name'])) {
-			$ical.= " Contact name: ";
+			$ical.= " ".lang('contact').": ";
 			$ical.= iCalPrintMultipleLines($event['contact_name']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!empty($event['contact_phone'])) {
-			$ical.= " Contact phone: ";
+			$ical.= " ".lang('phone').": ";
 			$ical.= iCalPrintMultipleLines($event['contact_phone']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!empty($event['contact_email'])) {
-			$ical.= " Contact email: ";
+			$ical.= " ".lang('email').": ";
 			$ical.= iCalPrintMultipleLines($event['contact_email']);
 			$ical.= "\\n".CRLF;
 		}
 		if (!(empty($event['url']) || $event['url']=="http://")) {
-			$ical.= " for more info visit the web at:\\n ".CRLF." ";
+			$ical.= " ".lang('for_more_info_visit').":\\n ".CRLF." ";
 			$ical.= iCalPrintMultipleLines($event['url']);
 			$ical.= "\\n".CRLF;
 		}

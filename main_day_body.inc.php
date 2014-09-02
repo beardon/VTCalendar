@@ -33,7 +33,7 @@
 	else {
 ?>
         <tr valign="top">
-          <td colspan="3"><br><span class="announcement">&nbsp;&nbsp;No events scheduled for this day.</span></td>
+          <td colspan="3"><br><span class="announcement">&nbsp;&nbsp;<?php echo lang('no_events');?> </span></td>
         </tr>
 <?php	
 	} // end: else: if ($ievent < $result->numRows())
@@ -43,7 +43,7 @@
 	while ($ievent < $result->numRows()) {
 		if ( $previousWholeDay && $event['wholedayevent']==0 ) {  
 			echo '        <tr valign="top" bgcolor="#999999">',"\n";
-	  	echo '          <td colspan="3"><img src="spacer.gif" alt="" width="1" height="1"></td>',"\n";
+	  	echo '          <td colspan="3"><img src="images/spacer.gif" alt="" width="1" height="1"></td>',"\n";
 
   		echo '        </tr>',"\n";
 		}
@@ -62,29 +62,33 @@
 			echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
     }
 		else {
-		  if (!$previousWholeDay ) { echo 'All day'; }
+		  if (!$previousWholeDay ) { echo lang('all_day'); }
       $previousWholeDay = true;
 		}
 		echo '</td>',"\n";
-		echo '          <td width="1%" bgcolor="#FF9900"><img src="images/spacer.gif" width="5" height=1" alt=""></td>',"\n";
+		echo '          <td width="1%" bgcolor="',$_SESSION['MAINCOLOR'],'"><img src="images/spacer.gif" width="5" height=1" alt=""></td>',"\n";
 		echo "          <td width=\"98%\"";
     if ( $datediff > 0 ) {
 		  echo " class=\"past\" style=\"background-color : #ffffff\"";
 		}
 		echo ">";
-		echo "<a href=\"main.php?view=event&eventid=",$event['eventid'],"\"><b>",$event['title'],"</b></a> -\n";
+		echo "<a "; 
+                if ( $datediff > 0 ) {
+		  echo " class=\"past\" style=\"background-color : #ffffff\"";
+		}
+                echo "href=\"main.php?view=event&eventid=",$event['eventid'],"\"><b>",$event['title'],"</b></a> -\n";
 		echo "            ",$event['category_name']," ";
 		if ( !empty($event['location']) ) { echo "(".$event['location'].")"; }
 
     if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"]==$event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
-      echo " &nbsp;&nbsp;<a href=\"changeeinfo.php?eventid=",$event['eventid'],"\">";
-      echo "<img src=\"images/edit.gif\" height=\"16\" width=\"16\" alt=\"update event\" border=\"0\"></a>";
+      echo " &nbsp;&nbsp;<a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 
-      echo "<a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\">";
-      echo "<img src=\"images/copy.gif\" height=\"16\" width=\"17\" alt=\"copy event\" border=\"0\"></a>";
+      echo " <a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\" title=\"",lang('copy_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/editcopy.png\" height=\"16\" width=\"16\" alt=\"",lang('copy_event'),"\" border=\"0\"></a>";
 
-      echo "<a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\">";
-      echo "<img src=\"images/trashcan.gif\" height=\"16\" width=\"13\" alt=\"delete event\" border=\"0\"></a>";
+      echo " <a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\" title=\"",lang('delete_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/button_cancel.png\" height=\"16\" width=\"16\" alt=\"",lang('delete_event'),"\" border=\"0\"></a>";
     }
 
 		echo "<br>\n";

@@ -36,62 +36,61 @@
     }
   }
 
-  pageheader("VT Event Calendar, Change Password",
-             "Change Password",
-	           "","",$database);
+  pageheader(lang('change_password'),
+             lang('change_password'),
+	           "Update","",$database);
 
   echo "<BR>";
-  box_begin("inputbox","Change password");
+  box_begin("inputbox",lang('change_password'));
 ?>
-<B>Please enter the following information:</B><BR>
 <FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   <TABLE border="0" cellpadding="2" cellspacing="0">
     <TR>
       <TD class="bodytext" valign="top">
-        Old Password
+        <b><?php echo lang('old_password'); ?></b>
       </TD>
       <TD class="bodytext" valign="top">
 <?php
     if (isset($save) && $oldpw_error) {
-      feedback("The password you entered as the old one is wrong. Please try again.",1);
+      feedback(lang('old_password_wrong'),1);
     }
 ?>
         <INPUT type="password" name="user_oldpassword" maxlength="20" size="20" value="">
-        <I>&nbsp;(case sensitive)</I>
+        <I>&nbsp;<?php echo lang('case_sensitive'); ?></I>
       </TD>
     </TR>
     <TR>
       <TD class="bodytext" valign="top">
-        New Password
+        <b><?php echo lang('new_password'); ?></b>
       </TD>
       <TD class="bodytext" valign="top">
 <?php
   if (isset($save)) {
     if ($newpw_error == 1) {
-      feedback("The two values you entered for the new password do not agree. Please try again.",1);
+      feedback(lang('two_passwords_dont_match'),1);
     }
     elseif ($newpw_error == 2) {
-      feedback("The new password is invalid. It must have a length of at least 5 characters.",1);
+      feedback(lang('new_password_invalid'),1);
     } // end: if ($newpw_error == 2)
   } // end: if (isset($save))
 ?>
         <INPUT type="password" name="user_newpassword1" maxlength="20" size="20" value="">
-        <I>&nbsp;(case sensitive)</I>
+        <I>&nbsp;<?php echo lang('case_sensitive'); ?></I>
       </TD>
     </TR>
     <TR>
       <TD class="bodytext" valign="top">
-        New Password<BR>(repeated)
+        <b><?php echo lang('new_password'); ?></b><BR><?php echo lang('password_repeated'); ?>
       </TD>
       <TD class="bodytext" valign="top">
         <INPUT type="password" name="user_newpassword2" maxlength="20" size="20" value="">
-        <I>&nbsp;(case sensitive)</I>
+        <I>&nbsp;<?php echo lang('case_sensitive'); ?></I>
       </TD>
     </TR>
   </TABLE>
   <BR>
-  <INPUT type="submit" name="save" value="Save">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

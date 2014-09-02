@@ -1,7 +1,7 @@
 <?php
-  $colorpast = "#eeeeee";
+  $colorpast = $_SESSION["PASTCOLOR"];
   $colortoday  = $_SESSION["TODAYCOLOR"];
-  $colorfuture = "#FFFFFF";
+  $colorfuture = $_SESSION["FUTURECOLOR"];
   $colorhelpbox = "#FFFFCC";
   $colorinputbox = "#FFFFFF";
 
@@ -56,13 +56,14 @@ function redirect2URL($url) {
 
 // display login screen and errormsg (if exists)
 function displaylogin($errormsg,$database) {
-  global $colorinputbox;
+ 
+  global $colorinputbox, $lang;
 
-  pageheader("VT Event Calendar, Login",
+  pageheader(lang('update_page_header'),
              "Login",
             "Update","",$database);
   echo "<BR>\n";
-  box_begin("inputbox","Login");
+  box_begin("inputbox",lang('login'));
 
   if (!empty($errormsg)) {
     echo "<BR>\n";
@@ -79,19 +80,19 @@ function displaylogin($errormsg,$database) {
 ?>
       <TABLE width="50%" border="0" cellspacing="1" cellpadding="3" align="center">
         <TR>
-          <TD class="inputbox" align="right" nowrap><b>User-ID:</b></TD>
+          <TD class="inputbox" align="right" nowrap><b><?php echo lang('user_id'); ?>:</b></TD>
           <TD align="left"><INPUT type="text" name="userid" value=""></TD>
         </TR>
         <TR>
-          <TD class="inputbox" align="right"><b>Password:</b></TD>
+          <TD class="inputbox" align="right"><b><?php echo lang('password'); ?></b></TD>
           <TD align="left"><INPUT type="password" name="password" value="" maxlength="<?php echo constPasswordMaxLength; ?>"></TD>
         </TR>
         <TR>
           <TD class="inputbox">&nbsp;</TD>
-          <TD align="left"><INPUT type="submit" name="login" value="&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;"><br>
+          <TD align="left"><INPUT type="submit" name="login" value="&nbsp;&nbsp;&nbsp;<?php echo lang('login'); ?>&nbsp;&nbsp;&nbsp;"><br>
     <br>
 		<a href="helpsignup.php" target="newWindow"
-		onclick="new_window(this.href); return false"><b>Create New Account</b></a>
+		onclick="new_window(this.href); return false"><b><?php echo lang('new_user'); ?></b></a>
     <BR>
 					
 					</TD>
@@ -117,11 +118,11 @@ function displaylogin($errormsg,$database) {
 function displaymultiplelogin($database) {
   global $colorinputbox;
 
-  pageheader("VT Event Calendar, Login",
-             "Login",
+  pageheader(lang('login'),
+             lang('login'),
             "Update","",$database);
   echo "<BR>\n";
-  box_begin("inputbox","Choose your sponsor role");
+  box_begin("inputbox",lang('choose_sponsor_role'));
 ?>
 <table cellpadding="2" cellspacing="2" border="0">
 <?php
@@ -162,17 +163,15 @@ function displaymultiplelogin($database) {
 function displaynotauthorized($database) {
   global $colorinputbox;
 
-  pageheader("VT Event Calendar, Login",
-             "Login",
+  pageheader(lang('login'),
+             lang('login'),
             "Update","",$database);
   echo "<BR>\n";
-  box_begin("inputbox","Error! Not authorized.");
+  box_begin("inputbox",lang('error_not_authorized'));
 ?>
-You are currently not authorized to update the calendar.<br>
+<?php echo lang('error_not_authorized_message'); ?><br>
 <br>
-    If you want to <B>add event information</B>,<BR>
-    here is how you can <a href="helpsignup.php" target="newWindow"
-		onclick="new_window(this.href); return false">sign up with the calendar</a>.<br>
+    <a href="helpsignup.php" target="newWindow"	onclick="new_window(this.href); return false"><?php echo lang('help_signup_link'); ?></a><br>
 <BR>
 <?php
     box_end();
@@ -250,7 +249,7 @@ function userauthenticated($database,$userid,$password) {
 function authorized($database) {
   global $userid,$password,$authsponsorid;
   $userid=strtolower($userid);
-	$message_loginerror = "Login failed.<br> Please check your user-ID and password and try again."; 
+	$message_loginerror = lang('login_failed'); 
 
 	if ( isset($userid) && preg_match(REGEXVALIDUSERID, $userid) && isset($password) ) {
     // checking authentication of PID/password
@@ -291,11 +290,11 @@ function authorized($database) {
 	      }			
 			}
 
-			return true;
+			return TRUE;
 	  }
 		else {
 			displaymultiplelogin($database);
-			return false;
+			return FALSE;
 		}
 	} // end: if ( isset($_SESSION["AUTH_USERID"]) && isset($authsponsorid) )
 
@@ -537,11 +536,14 @@ function yearmonthday2timestamp($year,$month,$day) {
 
 /* converts a date/time to a timestamp in the format "1999-09-16 18:57:00" */
 function datetime2timestamp($year,$month,$day,$hour,$min,$ampm) {
+  global $use_ampm;
   $timestamp="$year-";
   if (strlen($month)==1) { $timestamp.="0$month-"; } else { $timestamp.="$month-"; }
   if (strlen($day)==1) { $timestamp.="0$day "; } else { $timestamp.="$day "; }
-  if (($ampm=="pm") && ($hour!=12)) { $hour+=12; }; /* 12pm is noon */
-  if (($ampm=="am") && ($hour==12)) { $hour=0; }; /* 12am is midnight */
+  if($use_ampm){  // if am, pm format is used
+	 if (($ampm=="pm") && ($hour!=12)) { $hour+=12; }; /* 12pm is noon */
+     if (($ampm=="am") && ($hour==12)) { $hour=0; }; /* 12am is midnight */
+  }
   if (strlen($hour)==1) { $timestamp.="0$hour:"; } else { $timestamp.="$hour:"; }
   if (strlen($min)==1) { $timestamp.="0$min:00"; } else { $timestamp.="$min:00"; }
 
@@ -550,6 +552,7 @@ function datetime2timestamp($year,$month,$day,$hour,$min,$ampm) {
 
 /* converts a timestamp "1999-09-16 18:57:00" to a date/time format */
 function timestamp2datetime($timestamp) {
+   global $use_ampm;
   /* split the date/time field-info into its parts */
   /* format returned by postgres is "1999-09-10 07:30:00" */
   $datetime['year']  = substr($timestamp,0,4);
@@ -564,14 +567,17 @@ function timestamp2datetime($timestamp) {
 
   $datetime['hour']  = substr($timestamp,11,2);
 
-  /* convert 24 hour into 1-12am/pm */
-  $datetime['ampm'] = "pm";
-  if ($datetime['hour'] < 12) {
-    if ($datetime['hour'] == 0) { $datetime['hour'] = 12; }
-    $datetime['ampm'] = "am";
-  } else {
-    if ($datetime['hour'] > 12) { $datetime['hour'] -= 12; }
+  /* convert 24 hour into 1-12am/pm  if am, pm in data format is used*/
+  if($use_ampm){  
+     $datetime['ampm'] = "pm";
+     if ($datetime['hour'] < 12) {
+       if ($datetime['hour'] == 0) { $datetime['hour'] = 12; }
+       $datetime['ampm'] = "am";
+     } else {
+       if ($datetime['hour'] > 12) { $datetime['hour'] -= 12; }
+     }
   }
+  
   if (substr($datetime['hour'],0,1)=="0") { /* remove leading "0" */
     $datetime['hour'] = substr($datetime['hour'],1,1);
   }
@@ -579,7 +585,6 @@ function timestamp2datetime($timestamp) {
 
   return $datetime;
 }
-
 // returns the date&time in the ISO8601format: 20000211T235900 (used by vCalendar)
 function datetime2ISO8601datetime($year,$month,$day,$hour,$min,$ampm) {
   $datetime = strtr(datetime2timestamp($year,$month,$day,$hour,$min,$ampm)," ","T");
@@ -649,6 +654,7 @@ function settimeenddate2timebegindate(&$event) {
 
 // construct event timestamps "timebegin&timeend" from month/day/year/hour/min/ampm
 function assemble_eventtime(&$event) {
+  global $day_beg_h, $day_end_h, $use_ampm;
   $event['timebegin'] = datetime2timestamp(
                         $event['timebegin_year'],
                         $event['timebegin_month'],
@@ -659,9 +665,10 @@ function assemble_eventtime(&$event) {
 
   // if event doesn't have an ending time, set it to the end of the day
   if ($event['timeend_hour']==0) {
-    $event['timeend_hour']=11;
+    $event['timeend_hour']=$day_end_h;
     $event['timeend_min']=59;
-    $event['timeend_ampm']="pm";
+    if($use_ampm)
+       $event['timeend_ampm']="pm";
   }
 
   $event['timeend'] =   datetime2timestamp(
@@ -684,7 +691,7 @@ function box_begin($class, $headertext) {
 <?php
 
   if (!empty($headertext)) {
-    echo "<h3 class=\"boxheader\">".$headertext."</h3>";
+    echo "<h3>".$headertext."</h3>";
 	}
 	
 } // end: function box_begin()
@@ -703,11 +710,9 @@ function helpbox_begin() {
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>Help</title>
+    <title><?php echo lang('help'); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta content="en-us" http-equiv=language>
-    <meta content="Jochen Rode" http-equiv=author>
-    <meta content="Web Hosting Group, Virginia Tech" http-equiv=publisher>
     <link href="stylesheet.php" rel="stylesheet" type="text/css">
   </head>
   <body bgcolor="<?php echo $_SESSION["BGCOLOR"]; ?>" leftMargin="0" topMargin="0" marginheight="0" marginwidth="0" onLoad="this.window.focus()">
@@ -766,138 +771,18 @@ function print_week_event(&$event,$preview) {
 
     // add little update, delete icons
     if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
-      echo "<br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\">";
-      echo "<img src=\"images/edit.gif\" height=\"16\" width=\"16\" alt=\"update event\" border=\"0\"></a>";
+      echo "<br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 
-      echo "<a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\">";
-      echo "<img src=\"images/copy.gif\" height=\"16\" width=\"17\" alt=\"copy event\" border=\"0\"></a>";
+      echo " <a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\" title=\"",lang('copy_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/editcopy.png\" height=\"16\" width=\"16\" alt=\"",lang('copy_event'),"\" border=\"0\"></a>";
 
-      echo "<a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\">";
-      echo "<img src=\"images/trashcan.gif\" height=\"16\" width=\"13\" alt=\"delete event\" border=\"0\"></a>";
+      echo " <a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\" title=\"",lang('delete_event'),"\">";
+      echo "<img src=\"images/nuvola/16x16/actions/button_cancel.png\" height=\"16\" width=\"16\" alt=\"",lang('delete_event'),"\" border=\"0\"></a>";
     }
   };
   echo "<BR><BR>\n";
 } // end: function print_week_event(&$event)
-
-function print_detail_event(&$event,$preview) {
-  global $detailscaller;
-?>
-  <TR>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="11%">
-      <B><?php echo Day_of_Week_Abbreviation(Day_of_Week($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year'])); ?>,<BR>
-      <?php echo Encode_Date_US($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year']); ?></B><BR>
-      <BR>
-<?php
-  if ($event['wholedayevent']==0) {
-      echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']),"-";
-      echo '<BR>';
-      if (endingtime_specified($event)) { // event has an explicit ending time
-        echo timestring($event['timeend_hour'],$event['timeend_min'],$event['timeend_ampm']);
-      }
-  }
-  if (!$preview==1) {
-    echo "<BR><BR>\n";
-    // add little update, delete icons
-    if ($_SESSION["AUTH_SPONSORID"] == $event['sponsorid'] || $_SESSION["AUTH_ADMIN"]) {
-      echo " <A href=\"changeeinfo.php?eventid=",$event['id'],"&detailscaller=",$detailscaller,"\">";
-      echo "<IMG src=\"images/edit.gif\" height=\"16\" width=\"16\" alt=\"update event\" border=\"0\"></A>";
-      echo "&nbsp;";
-      echo "<A href=\"changeeinfo.php?copy=1&eventid=",$event['id'],"&detailscaller=",$detailscaller,"\">";
-      echo "<IMG src=\"images/copy.gif\" height=\"16\" width=\"17\" alt=\"copy event\" border=\"0\"></A>";
-      echo "&nbsp;";
-      echo "<A href=\"deleteevent.php?eventid=",$event['id'],"&check=1&detailscaller=",$detailscaller,"\">";
-      echo "<IMG src=\"images/trashcan.gif\" height=\"16\" width=\"13\" alt=\"delete event\" border=\"0\"></A>";
-    }
-  } // end: if ($!preview==1)
-
-?>
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="24%">
-      <B><?php echo $event['category_name']; ?>: </B>
-<?php if (!empty($event['url']) && $event['url']!="http://") { echo "<A href=\"",HTMLSpecialChars($event['url']),"\">"; } ?>
-      <B><?php echo HTMLSpecialChars($event['title']); ?></B><?php
-  if (!empty($event['url']) && $event['url']!="http://") { echo "</A>"; } ?>
-      <BR>
-      <?php echo nl2br(HTMLSpecialChars($event['description'])); ?> 
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="10%">
-      <?php echo HTMLSpecialChars($event['location']); ?> 
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="13%">
-<?php if (!empty($event['displayedsponsorurl'])) { echo "<A href=\"",HTMLSpecialChars($event['displayedsponsorurl']),"\">"; } ?>
-      <?php echo HTMLSpecialChars($event['displayedsponsor']); ?>
-<?php if (!empty($event['displayedsponsorurl'])) { echo "</A>"; } ?>
-       
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="14%">
-      <?php echo HTMLSpecialChars($event['contact_name']); ?>
-<?php
-  if (!empty($event['contact_email'])) {
-      echo '<BR>';
-      echo '<IMG src="images/email.gif">';
-      if ($preview!=1) { echo "<A href=\"mailto:",HTMLSpecialChars($event['contact_email']),"\">"; }
-      echo HTMLSpecialChars($event['contact_email']);
-      if ($preview!=1) { echo "</A>"; }
-  } // end: if (!empty($event[contact_email]))
-
-  if (!empty($event['contact_phone'])) {
-      echo '<BR>';
-      echo '<IMG src="images/phone.gif">';
-      echo HTMLSpecialChars($event['contact_phone']);
-  } // end: if (!empty($event[contact_phone]))
-?>
-       
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="11%" >
-      <?php echo HTMLSpecialChars($event['price']); ?> 
-    </TD>
-    <TD class="<?php echo $event['css']; ?>" bgcolor="<?php echo $event['color']; ?>" align="top" valign="top" width="17%" >
-<?php
-  if ($preview!=1) { echo '<A href="icalendar.php?eventid=',$event['id'],'">'; }
-  echo "<IMG src=\"images/vcalendar.gif\" border=\"0\">";
-  if ($preview!=1) { echo '</A>'; }
-?>
-    </TD>
-  </TR>
-<?php
-} // end: function print_detail_event(&$event)
-
-function print_detailview_tableheader() {
-  print_detailview_tableheader_blank();
-?>
-<TR>
-  <TD class="tablehead" align="left" bgColor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "11%"><B>Date/time</B></TD>
-  <TD class="tablehead" align="left" bgColor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "24%"><B>Event description</B></TD>
-  <TD class="tablehead" align="left" bgcolor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "10%"><B>Location</B></TD>
-  <TD class="tablehead" align="left" bgcolor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "13%"><B>Event sponsor</B></TD>
-  <TD class="tablehead" align="left" bgcolor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "14%"><B>Contact</B></TD>
-  <TD class="tablehead" align="left" bgcolor="<?php echo BGCOLORDETAILSHEADER; ?>" width = "11%"><B>Price</B></TD>
-  <TD class="tablehead" align="left" bgcolor="<?php echo BGCOLORDETAILSHEADER; ?>">
-    <B>iCalendar</B><BR>
-    <A class="tableheadhelp" target="newWindow" onclick="new_window(this.href); return false" href="helpicalendar.php">What's that?</A>
-  </TD>
-</TR>
-<?php
-} // end: function print_detailview_tableheader()
-
-function print_detailview_tableheader_blank() {
-?>
-      <TABLE width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
-        <TR>
-          <TD bgcolor="#000000">
-            <TABLE width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
-<?php
-} // end: function print_detailview_tableheader_blank()
-
-
-function print_detailview_tablefooter() {
-?>
-      </TABLE>
-    </TD>
-  </TR>
-</TABLE>
-<?php
-} // end: function print_detailview_tablefooter()
 
 // remove slashes from event fields
 function removeslashes(&$event) {
@@ -916,33 +801,34 @@ function removeslashes(&$event) {
 // display input fields for a date (month, day, year)
 function inputdate($month,$monthvar,$day,$dayvar,$year,$yearvar) {
   $unknownvalue = "???"; // this is printed when the value of input field is unspecified
+  echo "<SELECT name=\"",$monthvar,"\" id=\"",$monthvar,"\">\n";
 
-  echo "<SELECT name=\"",$monthvar,"\">\n";
-
-  if ($month==0) {
-    echo "<OPTION selected value=\"0\">",$unknownvalue,"</OPTION>\n";
-  }
+  //if ($month==0) {
+  //  echo "<OPTION selected value=\"0\">",$unknownvalue,"</OPTION>\n";
+  //}
   /* print list with months and select the one read from the DB */
   for ($i=1; $i<=12; $i++) {
     print '<OPTION ';
     if ($month==$i) { echo "selected "; }
+    if (date("n")==$i && $month==0) { echo "selected "; }
     echo "value=\"$i\">",Month_to_Text($i),"</OPTION>\n";
   }
   echo "</SELECT>\n";
-  echo "<SELECT name=\"",$dayvar,"\">\n";
+  echo "<SELECT name=\"",$dayvar,"\" id=\"",$dayvar,"\">\n";
 
-  if ($day==0) {
-    echo "<OPTION selected value=\"0\">",$unknownvalue,"</OPTION>\n";
-  }
+  // if ($day==0) {
+  // echo "<OPTION selected value=\"0\">",$unknownvalue,"</OPTION>\n";
+  //}
 
   // print list with days and select the one read from the DB
   for ($i=1;$i<=31;$i++) {
     echo "<OPTION ";
     if ($day==$i) { echo "selected "; }
+    if (date("j")==$i && $day==0) { echo "selected "; }
     echo "value=\"",$i,"\">",$i,"</OPTION>\n";
   }
   echo "</SELECT>\n";
-  echo "<SELECT name=\"",$yearvar,"\">\n";
+  echo "<SELECT name=\"",$yearvar,"\" id=\"",$yearvar,"\">\n";
 
   // print list with years and select the one read from the DB
   if (!empty($year) && $year < date("Y")) { echo "<OPTION selected value=\"",$year,"\">",$year,"</OPTION>\n"; }
@@ -952,6 +838,62 @@ function inputdate($month,$monthvar,$day,$dayvar,$year,$yearvar) {
     echo "value=\"",$i,"\">",$i,"</OPTION>\n";
   }
   echo "</SELECT>\n";
+  
+  if (!isset($GLOBALS['popupCalendarJavascriptIsLoaded'])) {
+     $calendarLanguageFile = 'scripts/jscalendar/lang/calendar-'.LANGUAGE.'.js';
+	 if (!file_exists($calendarLanguageFile)) {
+	     $calendarLanguageFile = 'scripts/jscalendar/lang/calendar-en.js';
+	 }
+	 echo '
+  <link rel="stylesheet" type="text/css" media="all" href="scripts/jscalendar/calendar-win2k-cold-1.css" title="win2k-cold-1" />
+  <script type="text/javascript" src="scripts/jscalendar/calendar.js"></script>
+  <script type="text/javascript" src="',$calendarLanguageFile,'"></script>
+  <script type="text/javascript" src="scripts/jscalendar/calendar-setup.js"></script>
+';
+	  $GLOBALS['popupCalendarJavascriptIsLoaded'] = TRUE;
+  }
+  
+  $uniqueid = strtr($monthvar, '[]','__');
+  
+  $firstDay = WEEK_STARTING_DAY;
+  echo <<<END
+<input type="hidden" name="popupCalendarDate" id="popupCalendarDate_$uniqueid" value="$month/$day/$year">
+<img src="images/nuvola/16x16/apps/date.png" width="16" height="16" id="showPopupCalendarImage_$uniqueid" 
+title="Date selector" border="0" align="baseline" style="cursor: pointer;" hspace="3">
+<script type="text/javascript"><!--
+function onSelectDate(cal) {
+  var p = cal.params;
+  if (cal.dateClicked) {
+	  cal.callCloseHandler();
+	  var month = document.getElementById("$monthvar");
+	  monthPerhapsWithLeadingZero = cal.date.print("%m");
+	  if (monthPerhapsWithLeadingZero.charAt(0) == "0") {
+	  	month.value = monthPerhapsWithLeadingZero.substr(1);
+	  }
+	  else {
+	    month.value = monthPerhapsWithLeadingZero;
+	  }
+	  var date = document.getElementById("$dayvar");
+	  date.value = cal.date.print("%e");
+	  var year = document.getElementById("$yearvar");
+	  year.value = cal.date.print("%Y");
+	  
+	  document.getElementById("popupCalendarDate_$uniqueid").value = cal.date.print("%m/%e/%Y");
+  }
+};
+
+Calendar.setup({
+	inputField     :    "popupCalendarDate_$uniqueid",     // id of the input field
+	ifFormat       :    "%m/%e/%Y",      // format of the input field
+	button         :    "showPopupCalendarImage_$uniqueid",  // trigger for the calendar (button ID)
+	align          :    "br",           // alignment (defaults to "Bl")
+	weekNumbers    :    false,
+	firstDay       :    $firstDay,
+	onSelect       :    onSelectDate
+});
+//--></script>
+
+END;
 } // end: function inputdate
 
 function readinrepeat($repeatid,&$event,&$repeat,$database) {
@@ -1096,97 +1038,97 @@ function printrecurrence($startyear,$startmonth,$startday,
     repeatdefdisassemble($repeatdef,
                          $frequency,$interval,$frequencymodifier,
                          $endyear,$endmonth,$endday);
-    echo "recurring ";
+    echo lang('recurring')," ";
     if ($frequency=="MP") {
       list($frequencymodifiernumber,$frequencymodifierday) = getfirstslice($frequencymodifier);
-      echo 'on the ';
+      echo lang('on_the'),' ';
 
-      if ($frequencymodifiernumber[1]=="-") { echo "last"; }
+      if ($frequencymodifiernumber[1]=="-") { echo lang('last'); }
       else {
-	if ($frequencymodifiernumber=="1+") { echo "first"; }
-        elseif ($frequencymodifiernumber=="2+") { echo "second"; }
-        elseif ($frequencymodifiernumber=="3+") { echo "third"; }
-        elseif ($frequencymodifiernumber=="4+") { echo "fourth"; }
+	if ($frequencymodifiernumber=="1+") { echo lang('first'); }
+        elseif ($frequencymodifiernumber=="2+") { lang('second'); }
+        elseif ($frequencymodifiernumber=="3+") { lang('third'); }
+        elseif ($frequencymodifiernumber=="4+") { lang('fourth'); }
       }
       echo " ";
-      if ($frequencymodifierday=="SU") { echo "Sunday"; }
-      elseif ($frequencymodifierday=="MO") { echo "Monday"; }
-      elseif ($frequencymodifierday=="TU") { echo "Tuesday"; }
-      elseif ($frequencymodifierday=="WE") { echo "Wednesday"; }
-      elseif ($frequencymodifierday=="TH") { echo "Thursday"; }
-      elseif ($frequencymodifierday=="FR") { echo "Friday"; }
-      elseif ($frequencymodifierday=="SA") { echo "Saturday"; }
+      if ($frequencymodifierday=="SU") { echo lang('sunday'); }
+      elseif ($frequencymodifierday=="MO") { echo lang('monday'); }
+      elseif ($frequencymodifierday=="TU") { echo lang('tuesday'); }
+      elseif ($frequencymodifierday=="WE") { echo lang('wednesday'); }
+      elseif ($frequencymodifierday=="TH") { echo lang('thursday'); }
+      elseif ($frequencymodifierday=="FR") { echo lang('friday'); }
+      elseif ($frequencymodifierday=="SA") { echo lang('saturday'); }
 
-      echo ' of the month every ';
+      echo ' ',lang('of_the_month_every'),' ';
 
-      if ($interval==1) { echo "month"; }
-      elseif ($interval==2) { echo "other month"; }
-      elseif ($interval>=3 && $interval<=6) { echo "$interval months"; }
-      elseif ($interval==12) { echo "year"; }
+      if ($interval==1) { echo lang("month"); }
+      elseif ($interval==2) { echo lang("other_month"); }
+      elseif ($interval>=3 && $interval<=6) { echo $interval,' ',lang('months'); }
+      elseif ($interval==12) { echo lang("year"); }
 
     } // end: if ($frequency=="MP")
     else {
-      if ($interval==1) { echo "every"; }
-      elseif ($interval==2) { echo "every other"; }
-      elseif ($interval==3) { echo "every third"; }
-      elseif ($interval==4) { echo "every fourth"; }
+      if ($interval==1) { echo lang("every"); }
+      elseif ($interval==2) { echo lang("every_other"); }
+      elseif ($interval==3) { echo lang("every_third"); }
+      elseif ($interval==4) { echo lang("every_fourth"); }
       echo ' ';
 
-      if ($frequency=="D") { echo "day"; }
-      elseif ($frequency=="M") { echo "month"; }
-      elseif ($frequency=="Y") { echo "year"; }
+      if ($frequency=="D") { echo lang("day"); }
+      elseif ($frequency=="M") { echo lang("month"); }
+      elseif ($frequency=="Y") { echo lang("year"); }
       elseif ($frequency=="W") {
         echo " ";
-        if (empty($frequencymodifier)) { echo "week"; }
+        if (empty($frequencymodifier)) { echo lang("week"); }
         else {
           $frequencymodifier = " ".$frequencymodifier;
 
 	  $comma = 0;
 	  if (strpos($frequencymodifier,"SU")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Sunday";
+	    echo lang("sunday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"MO")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Monday";
+	    echo lang("monday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"TU")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Tuesday";
+	    echo lang("tuesday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"WE")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Wednesday";
+	    echo lang("wednesday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"TH")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Thursday";
+	    echo lang("thursday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"FR")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Friday";
+	    echo lang("friday");
             $comma=1;
 	  }
 	  if (strpos($frequencymodifier,"SA")!=0) {
 	    if ($comma) { echo ", "; }
-	    echo "Saturday";
+	    echo lang("saturday");
             $comma=1;
 	  }
 	} // end: else: if (empty($frequencymodifier))
       } // end: elseif ($frequency=="W")
     } // end: else: if ($frequency=="MP")
 
-    echo '; starting: ',Encode_Date_US($startmonth,$startday,$startyear);
-    echo '; ending: ',Encode_Date_US($endmonth,$endday,$endyear);
+    echo '; ',lang('starting'),' ',Encode_Date_US($startmonth,$startday,$startyear);
+    echo '; ',lang('ending'),' ',Encode_Date_US($endmonth,$endday,$endyear);
 
   } // end: if (!empty($repeatdef))
   else {
-    echo "no recurrences defined.";
+    echo lang('no_recurrences_defined');
   }
 } // end: function printrecurrence
 
@@ -1373,10 +1315,10 @@ function producerepeatlist(&$event,&$repeat) {
 // prints out all the days contained in a recurrencelist (array)
 function printrecurrencedetails(&$repeatlist) {
   if (sizeof($repeatlist)==0) {
-    echo "(The recurrence you have defined produces no dates!)";
+    echo lang('recurrence_produces_no_dates');
   }
   else {
-    echo "(The resulting dates are:";
+    echo "(",lang('resulting_dates_are');
 
     $comma = 0;
     while ($dateJD = each($repeatlist)) {
@@ -1505,7 +1447,7 @@ function insertintoevent($eventid,&$event,$database) {
 function insertintoeventsql($calendarid,$eventid,&$event,$database) {
   $changed = date ("Y-m-d H:i:s");
   $query = "INSERT INTO vtcal_event (calendarid,id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,url,recordchangedtime,recordchangeduser,showondefaultcal,showincategory) ";
-	$query.= "VALUES ('".sqlescape($calendarid)."','".sqlescape($eventid)."',0,'";
+  $query.= "VALUES ('".sqlescape($calendarid)."','".sqlescape($eventid)."',0,'";
   if (!empty($event['rejectreason'])) {
 		$query.= sqlescape($event['rejectreason']);
 	}
@@ -1635,22 +1577,6 @@ function updaterepeat($repeatid,&$event,&$repeat,$database) {
   return $repeatid;
 } // end: function updaterepeat
 
-/*
-function eventaddslashes(&$event) {
-  // take care of special chars like " 's"
-  $event['title']=addslashes($event['title']);
-  $event['description']=addslashes($event['description']);
-  $event['location']=addslashes($event['location']);
-  $event['price']=addslashes($event['price']);
-  $event['contact_name']=addslashes($event['contact_name']);
-  $event['contact_phone']=addslashes($event['contact_phone']);
-  $event['contact_email']=addslashes($event['contact_email']);
-  $event['url']=addslashes($event['url']);
-  $event['displayedsponsor']=addslashes($event['displayedsponsor']);
-  $event['displayedsponsorurl']=addslashes($event['displayedsponsorurl']);
-} // end: function eventaddslashes
-*/
-
 function num_unapprovedevents($repeatid,$database) {
   $result = DBQuery($database, "SELECT id FROM vtcal_event WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND repeatid='".sqlescape($repeatid)."' AND approved=0"); 
   return $result->numRows();
@@ -1765,7 +1691,7 @@ function sendemail2sponsor($sponsorname,$sponsoremail,$subject,$body) {
   $body.= getFullCalendarURL()."\n";
   $body.= $_SESSION["ADMINEMAIL"]."\n";
   
-  sendemail($sponsorname,$sponsoremail,"Calendar Administration",$_SESSION["ADMINEMAIL"],$subject,$body);
+  sendemail($sponsorname,$sponsoremail,lang('calendar_administration'),$_SESSION["ADMINEMAIL"],$subject,$body);
 } // end: Function sendemail2sponsor
 // sends an email to a sponsor
 
@@ -1776,7 +1702,7 @@ function sendemail2user($useremail,$subject,$body) {
   $body.= getFullCalendarURL()."\n";
   $body.= $_SESSION["ADMINEMAIL"]."\n";
   
-  sendemail($useremail,$useremail,"Event Calendar Administration",$_SESSION["ADMINEMAIL"],$subject,$body);
+  sendemail($useremail,$useremail,lang('calendar_administration'),$_SESSION["ADMINEMAIL"],$subject,$body);
 } // end: Function sendemail2user
 
 // opens a DB connection to postgres
@@ -1797,6 +1723,7 @@ function getNumCategories($database) {
 }
 
 function print_event(&$event) {
+global $lang, $day_end_h;
 ?>
 		  <table width="100%" border="0" cellpadding="0" cellspacing="5" bgcolor="#FFFFFF">
 				<tr valign="top">
@@ -1805,29 +1732,30 @@ function print_event(&$event) {
 <?php 
 		if ($event['wholedayevent']==0) {
 			echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
-			if ( ! ($event['timeend_hour']==11 && $event['timeend_min']==59) ) {
-			  echo "<br>to<br>";
+			if ( ! ($event['timeend_hour']==$day_end_h && $event['timeend_min']==59) ) {
+			  echo "<br>",lang('to'),"<br>";
 			  echo timestring($event['timeend_hour'],$event['timeend_min'],$event['timeend_ampm']);
 			}
     }
 		else {
-		  echo "All day\n";
+		  echo lang('all_day'),"\n";
 		}
 ?>          </td>
           <td bgcolor="<?php echo $_SESSION["MAINCOLOR"]; ?>">&nbsp;</td>
           <td>
 <span class="eventtitlebig"><?php echo $event['title']; ?></span>
-&nbsp;(<?php echo $event['category_name']; ?>)<br>
+&nbsp;<br>(<?php echo $event['category_name']; ?>)<br>
 <br>
 <?php 
   if (!empty($event['description'])) {
-		echo "<p>",$event['description']; 
+		echo "<p>",str_replace("\r", "<br>", $event['description']);
+
   }
 ?>
 <?php 
   if (!empty($event['url']) && $event['url'] != "http://") {
 ?>
-     <br><a href="<?php echo $event['url']; ?>">more information...</a>
+     <br><a href="<?php echo $event['url'],"\">",lang('more_information');?></a>
 <?php
   } // end: if (!empty($event['url'])) {
 	
@@ -1841,7 +1769,7 @@ function print_event(&$event) {
   if (!empty($event['location'])) {
 ?>
         <tr> 
-          <td align="left" valign="top" nowrap width="5%"><strong>Location:</strong></td>
+          <td align="left" valign="top" nowrap width="5%"><strong><?php echo lang('location'); ?>:</strong></td>
           <td width="95%"><?php echo $event['location']; ?></td>
         </tr>
 <?php
@@ -1851,7 +1779,7 @@ function print_event(&$event) {
   if (!empty($event['price'])) {
 ?>
         <tr> 
-          <td align="left" valign="top" nowrap width="5%"><strong>Price:</strong></td>
+          <td align="left" valign="top" nowrap width="5%"><strong><?php echo lang('price'); ?>:</strong></td>
           <td width="95%"><?php echo $event['price']; ?></td>
         </tr>
 <?php
@@ -1861,7 +1789,7 @@ function print_event(&$event) {
   if (!empty($event['displayedsponsor'])) {
 ?>
         <tr> 
-          <td align="left" valign="top" nowrap width="5%"><strong>Sponsor:</strong></td>
+          <td align="left" valign="top" nowrap width="5%"><strong><?php echo lang('sponsor'); ?>:</strong></td>
           <td width="95%"><?php 
     if (!empty($event['displayedsponsorurl'])) {
 		  echo "<a href=\"",$event['displayedsponsorurl'],"\">";
@@ -1883,11 +1811,11 @@ function print_event(&$event) {
 	) {
 ?>
         <tr> 
-          <td align="left" valign="top" nowrap width="5%"><strong>Contact:</strong></td>
+          <td align="left" valign="top" nowrap width="5%"><strong><?php echo lang('contact'); ?>:</strong></td>
           <td width="95%">
 <?php if (!empty($event['contact_name']) ) { echo $event['contact_name'],"<br>"; } ?>
 <?php if (!empty($event['contact_email']) ) { 
-  echo '<img src="images/email.gif" width="20" height="20" align="absmiddle">';
+  echo '<img src="images/email.gif" width="20" height="20" alt="',lang('email'),'" align="absmiddle">';
   echo " <a href=\"mailto:",$event['contact_email'],"\">",$event['contact_email'],"</a><br>"; } 
 ?>
 <?php if (!empty($event['contact_phone']) ) { 
@@ -1911,8 +1839,7 @@ function print_event(&$event) {
 					<a 
             href="icalendar.php?eventid=<?php echo $event['id']; ?>"><img 
             src="images/vcalendar.gif" width="20" height="20" border="0" align="absmiddle"></a>
-          <a href="icalendar.php?eventid=<?php echo $event['id']; ?>">copy 
-            this event into your personal desktop calendar or PDA</a>
+          <a href="icalendar.php?eventid=<?php echo $event['id']; ?>"><?php echo lang('copy_event_to_pda'); ?></a>
 <?php
   } // end: if (!empty($event['id']))
 ?>					
@@ -1924,4 +1851,12 @@ function print_event(&$event) {
     </table>
 <?php		
 } // end: Function print_event
+
+// highlights all occurrences of the keyword in the text
+// case-insensitive
+function highlight_keyword($keyword, $text) {
+	$keyword = preg_quote($keyword);
+	$newtext = preg_replace('/'.$keyword.'/Usi','<span style="background-color:#ffff99">\\0</span>',$text);
+	return $newtext;
+}
 ?>

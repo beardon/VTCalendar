@@ -46,17 +46,17 @@
     exit;
   }
 
-  pageheader("Delete Event Category, Event Calendar",
-             "Delete Event Category",
+  pageheader(lang('delete_event_category'),
+             lang('delete_event_category'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete Event Category");
+  box_begin("inputbox",lang('delete_event_category'));
 ?>
-<font color="#ff0000"><b>Warning!</b></font> The category &quot;<b><?php echo $category['name']; ?></b>&quot; will be deleted.
+<font color="#ff0000"><b><?php echo lang('warning_event_category_delete'); ?> &quot;<b><?php echo $category['name']; ?></b>&quot;</b></font>
 <form method="post" action="deletecategory.php">
-	<input type="radio" name="deleteevents" value="1"> delete all events in this category<br>
+	<input type="radio" name="deleteevents" value="1"> <?php echo lang('delete_all_events_in_category'); ?><br>
   <input type="radio" name="deleteevents" value="0" checked> 
-	re-assign all events in this category to:
+	<?php echo lang('reassign_all_events_to_category'); ?>
   <select name="newcategoryid" size="1">
 <?php
   $result = DBQuery($database, "SELECT * FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id!='".sqlescape($categoryid)."' ORDER BY name" ); 
@@ -72,8 +72,8 @@
 	<input type="hidden" name="categoryid" value="<?php echo $categoryid; ?>">
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

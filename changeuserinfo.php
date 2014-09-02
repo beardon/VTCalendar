@@ -40,14 +40,13 @@
   }
 
 	function emailuseraccountchanged(&$user) {
-		$subject = "account information updated";
-		$body = "The calendar administrator updated the information for your user account.\n\n";
-		$body.= "The current settings are:\n";
-		$body.= "   User-id: ".stripslashes($user['id'])."\n";
+		$subject = lang('email_account_updated_subject');
+		$body = lang('email_account_updated_body');
+		$body.= "   ".lang('user_id').": ".stripslashes($user['id'])."\n";
 		if ( $user['password'] != "#nochange$" ) {
-		  $body.= "   Password: ".stripslashes($user['password'])."\n";
+		  $body.= "   ".lang('password')." ".stripslashes($user['password'])."\n";
 		}
-		$body.= "   Email: ".stripslashes($user['email'])."\n";
+		$body.= "   ".lang('email')." ".stripslashes($user['email'])."\n";
 		
 		sendemail2user($user['email'],$subject,$body);
 	} // end: emailuseraccountchanged
@@ -94,19 +93,19 @@
       exit;
     }
     else {
-      pageheader("VT Event Calendar, Edit User",
-               "Edit User",
-	             "","",$database);
+      pageheader(lang('edit_user'),
+               lang('edit_user'),
+	             "Update","",$database);
       echo "<BR>\n";
-      box_begin("inputbox","Edit User");
+      box_begin("inputbox",lang('edit_user'));
 		}
   }
   else {
-    pageheader("VT Event Calendar, Add New User",
-               "Add New User",
-               "","",$database);
+    pageheader(lang('add_new_user'),
+               lang('add_new_user'),
+               "Update","",$database);
     echo "<BR>\n";
-    box_begin("inputbox","Add new user");
+    box_begin("inputbox",lang('add_new_user'));
   }
 
   if (isset($user['id']) && (!isset($check) || $check != 1)) { // load user to update information if it's the first time the form is viewed
@@ -122,7 +121,7 @@
 <TABLE border="0" cellpadding="2" cellspacing="0">
   <TR>
     <TD class="bodytext" valign="baseline">
-      <b>User-ID<FONT color="#FF0000">*</FONT>:</b>
+      <b><?php echo lang('user_id'); ?>:<FONT color="#FF0000">*</FONT></b>
     </TD>
     <TD class="bodytext" valign="baseline">
 <?php
@@ -131,10 +130,10 @@
 	}
 	else {
   	if (isset($check) && $check && (empty($userid))) {
-      feedback("Please choose a user-id.",1);
+      feedback(lang('choose_user_id'),1);
     }
     if (isset($check) && $check && userExistsInDB($database,$userid)) {
-      feedback("A user with this Login ID already exists. Please choose a different one.",1);
+      feedback(lang('user_id_already_exists'),1);
     }
 		
 	  echo AUTH_DB_USER_PREFIX;	
@@ -150,12 +149,12 @@
   </TR>
   <TR>
     <TD class="bodytext" valign="baseline">
-      <b>Password<FONT color="#FF0000">*</FONT>:</b>
+      <b><?php echo lang('password'); ?><FONT color="#FF0000">*</FONT></b>
     </TD>
     <TD class="bodytext" valign="baseline">
 <?php
   if (isset($check) && $check && (empty($user['password']))) {
-    feedback("Please choose a password.",1);
+    feedback(lang('choose_password'),1);
   }
 ?>
       <INPUT type="password" size="14" name="user[password]" maxlength=<?php echo constPasswordMaxLength; ?>  value="<?php if (!empty($chooseuser)) { echo "#nochange$"; } ?>"> <BR>
@@ -163,7 +162,7 @@
   </TR>
   <TR>
     <TD class="bodytext" valign="baseline">
-      <b>E-mail:</b>
+      <b><?php echo lang('email'); ?></b>
     </TD>
     <TD class="bodytext" valign="baseline">
       <INPUT type="text" size="20" name="user[email]" maxlength=<?php echo constEmailMaxLength; ?> value="<?php
@@ -174,7 +173,7 @@
   	echo HTMLSpecialChars($user['email']);
 	}
 ?>">
-      <I>(e.g. jsmith@hotmail.com)</I><BR>
+      <I><?php echo lang('email_example'); ?></I><BR>
     </TD>
   </TR>
 </TABLE>
@@ -186,8 +185,8 @@
    if (!empty($userid)) { echo "<INPUT type=\"hidden\" name=\"userid\" value=\"$userid\">\n"; }
  }
 ?>
-<INPUT type="submit" name="save" value="Save">
-<INPUT type="submit" name="cancel" value="Cancel">
+<INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

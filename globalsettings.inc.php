@@ -1,9 +1,8 @@
 <?php
-	define("ALLOWINCLUDES", TRUE); // in effect, any file that includes "globalsettings.inc.php" is also authorized to call other include files
+  define("ALLOWINCLUDES", TRUE); // in effect, any file that includes "globalsettings.inc.php" is also authorized to call other include files
   require_once('config.inc.php');
   require_once('DB.php');
-	require_once('inputvalidation.inc.php');
-
+  require_once('inputvalidation.inc.php');
 	
 	// set the correct calendarid
   if ( isset($_GET['calendarid']) && isValidInput($_GET['calendarid'],'calendarid') ) {	$calendarid = $_GET['calendarid']; }
@@ -30,6 +29,23 @@
 	else { 
 	  $enableViewMonth = true; 
 	}
+  //sets variable to according to week starting day specified in "config.inc.php". Sunday is default week starting day if WEEK_STARTING_DAY isn't defined in "config.inc.php'
+   
+  if(WEEK_STARTING_DAY == 0 || WEEK_STARTING_DAY == 1 ) {
+      $week_start = WEEK_STARTING_DAY;
+   }else{
+      $week_start = 0;  
+   }
+   if(USE_AMPM == false){
+      $use_ampm=false;
+      $day_beg_h=0;    // if 0:00 - 23:00 time format is used,appropriate day start, end hours will be passed to datetime2timestamp funtions where calculating day edges
+      $day_end_h=23;
+   }else{
+      $use_ampm=true;
+      $day_beg_h=0;
+      $day_end_h=11;
+   }
+
 
   function calendar_exists ( $calendarid ) {
     $database = DB::connect( DATABASE );
@@ -43,21 +59,25 @@
     $database = DB::connect( DATABASE );
     $result = DBQuery($database, "SELECT * FROM vtcal_calendar WHERE id='".sqlescape($_SESSION["CALENDARID"])."'" ); 
     $calendar = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
-		$_SESSION["TITLE"] = $calendar['title'];
-		$_SESSION["NAME"] = $calendar['name'];
-		$_SESSION["HEADER"] = $calendar['header'];
-		$_SESSION["FOOTER"] = $calendar['footer'];
-		$_SESSION["BGCOLOR"] = $calendar['bgcolor'];
-		$_SESSION["MAINCOLOR"] = $calendar['maincolor'];
-		$_SESSION["TODAYCOLOR"] = $calendar['todaycolor'];
-		$_SESSION["VIEWAUTHREQUIRED"] = $calendar['viewauthrequired'];
-		$_SESSION["FORWARDEVENTDEFAULT"] = $calendar['forwardeventdefault'];
+	$_SESSION["TITLE"] = $calendar['title'];
+	$_SESSION["NAME"] = $calendar['name'];
+	$_SESSION["HEADER"] = $calendar['header'];
+	$_SESSION["FOOTER"] = $calendar['footer'];
+	$_SESSION["VIEWAUTHREQUIRED"] = $calendar['viewauthrequired'];
+	$_SESSION["FORWARDEVENTDEFAULT"] = $calendar['forwardeventdefault'];
+	
+	$_SESSION["BGCOLOR"] = $calendar['bgcolor'];
+	$_SESSION["MAINCOLOR"] = $calendar['maincolor'];
+	$_SESSION["TODAYCOLOR"] = $calendar['todaycolor'];
+	$_SESSION["PASTCOLOR"] = $calendar['pastcolor'];		
+	$_SESSION["FUTURECOLOR"] = $calendar['futurecolor'];		
+	$_SESSION["TEXTCOLOR"] = $calendar['textcolor'];		
+	$_SESSION["LINKCOLOR"] = $calendar['linkcolor'];		
+	$_SESSION["GRIDCOLOR"] = $calendar['gridcolor'];
   
     $result = DBQuery($database, "SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND admin='1'" ); 
     $sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
-	  $_SESSION["ADMINEMAIL"] = $sponsor['email'];
-	
-//	  $database->disconnect();
+	$_SESSION["ADMINEMAIL"] = $sponsor['email'];
   }
 
 	function logout() {
@@ -112,5 +132,17 @@
 		else {
 			return mysql_escape_string($value);
 		}
+	}
+	
+    require_once('languages/'.LANGUAGE.'.inc.php');
+	// returns a string in a particular language
+	function lang($sTextKey) {
+	  if (isset($GLOBALS['lang'][$sTextKey])) {
+		return $GLOBALS['lang'][$sTextKey];
+	  }
+	  else {
+	    require('languages/en.inc.php');
+	  	return $lang[$sTextKey];
+	  }
 	}
 ?>

@@ -29,22 +29,30 @@ function defaultevent(&$event,$sponsorid,$database) {
   $event['categoryid']=0;
   $event['description']="";
   $event['location']="";
-  $event['price']="free";
+  $event['price']="";
   $event['contact_name']="";
   $event['contact_phone']="";
   $event['contact_email']="";
   $event['url']="http://";
-  $event['displayedsponsor'] = $sponsor['name'];
-  $event['displayedsponsorurl'] = $sponsor['url'];
+  $event['displayedsponsor'] = "";
+  $event['displayedsponsorurl'] = ""; //$sponsor['url'];
 
   return 1;
 } /* function defaultevent */
 
-/* checks the validity of the time 1am-12pm */
+/* checks the validity of the time 1am-12pm or 0:00-23:00 */
 function checktime($hour,$min) {
-  return
-    (($hour>0) && ($hour<=12)) &&
-    (($min>=0) && ($min<=59));
+   global $use_ampm;
+   if ($use_ampm){
+      return
+         (($hour>0) && ($hour<=12)) &&
+         (($min>=0) && ($min<=59));
+   }else{
+	   return
+         (($hour>=0) && ($hour<23)) &&
+         (($min>=0) && ($min<=59));
+   }
+
 }
 
 function checkeventdate(&$event,&$repeat) {
@@ -127,49 +135,50 @@ function checkevent(&$event,&$repeat) {
 // shows the inputfields for the recurrence information
 function inputrecurrences(&$event,&$repeat,$check) {
 ?>
-        <INPUT type="radio" name="repeat[mode]" id="repeatmode1" value="1"<?php if ($repeat['mode']==1) { echo " checked"; } ?>><label for="repeatmode1"> repeat</label>
+        <INPUT type="radio" name="repeat[mode]" id="repeatmode1" value="1"<?php if ($repeat['mode']==1) { echo " checked"; } ?>><label for="repeatmode1"> 
+		<?php echo lang('repeat'); ?></label>
         <SELECT name="repeat[interval1]" size="1">
-          <OPTION value="every"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="every") { echo " selected"; } ?>>Every</OPTION>
-          <OPTION value="everyother"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everyother") { echo " selected"; } ?>>Every other</OPTION>
-          <OPTION value="everythird"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everythird") { echo " selected"; } ?>>Every third</OPTION>
-          <OPTION value="everyfourth"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everyfourth") { echo " selected"; } ?>>Every fourth</OPTION>
+          <OPTION value="every"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="every") { echo " selected"; } ?>><?php echo lang('every'); ?></OPTION>
+          <OPTION value="everyother"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everyother") { echo " selected"; } ?>><?php echo lang('every_other'); ?></OPTION>
+          <OPTION value="everythird"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everythird") { echo " selected"; } ?>><?php echo lang('every_third'); ?></OPTION>
+          <OPTION value="everyfourth"<?php if (isset($repeat['interval1']) && $repeat['interval1']=="everyfourth") { echo " selected"; } ?>><?php echo lang('every_fourth'); ?></OPTION>
         </SELECT>
         <SELECT name="repeat[frequency1]" size="1">
-          <OPTION value="day"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="day") { echo " selected"; } ?>>Day</OPTION>
-          <OPTION value="week"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="week") { echo " selected"; } ?>>Week</OPTION>
+          <OPTION value="day"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="day") { echo " selected"; } ?>><?php echo lang('day'); ?></OPTION>
+          <OPTION value="week"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="week") { echo " selected"; } ?>><?php echo lang('week'); ?></OPTION>
           <OPTION value="month">Month<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="month") { echo " selected"; } ?></OPTION>
-          <OPTION value="year"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="year") { echo " selected"; } ?>>Year</OPTION>
-          <OPTION value="monwedfri"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="monwedfri") { echo " selected"; } ?>>Mon, Wed, Fri</OPTION>
-          <OPTION value="tuethu"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="tuethu") { echo " selected"; } ?>>Tue & Thu</OPTION>
-          <OPTION value="montuewedthufri"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="montuewedthufri") { echo " selected"; } ?>>Mon thru Fri</OPTION>
-          <OPTION value="satsun"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="satsun") { echo " selected"; } ?>>Sat & Sun</OPTION>
+          <OPTION value="year"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="year") { echo " selected"; } ?>><?php echo lang('year'); ?></OPTION>
+          <OPTION value="monwedfri"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="monwedfri") { echo " selected"; } ?>><?php echo lang('mon'); ?>, <?php echo lang('wed'); ?>, <?php echo lang('fri'); ?></OPTION>
+          <OPTION value="tuethu"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="tuethu") { echo " selected"; } ?>><?php echo lang('tue'); ?> &amp; <?php echo lang('thu'); ?></OPTION>
+          <OPTION value="montuewedthufri"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="montuewedthufri") { echo " selected"; } ?>><?php echo lang('mon'); ?> - <?php echo lang('fri'); ?></OPTION>
+          <OPTION value="satsun"<?php if (isset($repeat['frequency1']) && $repeat['frequency1']=="satsun") { echo " selected"; } ?>><?php echo lang('sat'); ?> &amp; <?php echo lang('sun'); ?></OPTION>
         </SELECT>
         <BR>
-        <INPUT type="radio" name="repeat[mode]" id="repeatmode2" value="2"<?php if ($repeat['mode']==2) { echo " checked"; } ?>> <label for="repeatmode2">repeat on the</label>
+        <INPUT type="radio" name="repeat[mode]" id="repeatmode2" value="2"<?php if ($repeat['mode']==2) { echo " checked"; } ?>> <label for="repeatmode2"><?php echo lang('repeat_on_the'); ?></label>
         <SELECT name="repeat[frequency2modifier1]" size="1">
-          <OPTION value="first"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="first") { echo " selected"; } ?>>First</OPTION>
-          <OPTION value="second"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="second") { echo " selected"; } ?>>Second</OPTION>
-          <OPTION value="third"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="third") { echo " selected"; } ?>>Third</OPTION>
-          <OPTION value="fourth"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="fourth") { echo " selected"; } ?>>Fourth</OPTION>
-          <OPTION value="last"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="last") { echo " selected"; } ?>>Last</OPTION>
+          <OPTION value="first"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="first") { echo " selected"; } ?>><?php echo lang('first'); ?></OPTION>
+          <OPTION value="second"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="second") { echo " selected"; } ?>><?php echo lang('second'); ?></OPTION>
+          <OPTION value="third"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="third") { echo " selected"; } ?>><?php echo lang('third'); ?></OPTION>
+          <OPTION value="fourth"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="fourth") { echo " selected"; } ?>><?php echo lang('fourth'); ?></OPTION>
+          <OPTION value="last"<?php if (isset($repeat['frequency2modifier1']) && $repeat['frequency2modifier1']=="last") { echo " selected"; } ?>><?php echo lang('last'); ?></OPTION>
         </SELECT>
         <SELECT name="repeat[frequency2modifier2]" size="1">
-          <OPTION value="sun"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="sun") { echo " selected"; } ?>>Sun</OPTION>
-          <OPTION value="mon"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="mon") { echo " selected"; } ?>>Mon</OPTION>
-          <OPTION value="tue"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="tue") { echo " selected"; } ?>>Tue</OPTION>
-          <OPTION value="wed"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="wed") { echo " selected"; } ?>>Wed</OPTION>
-          <OPTION value="thu"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="thu") { echo " selected"; } ?>>Thu</OPTION>
-          <OPTION value="fri"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="fri") { echo " selected"; } ?>>Fri</OPTION>
-          <OPTION value="sat"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="sat") { echo " selected"; } ?>>Sat</OPTION>
+          <OPTION value="sun"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="sun") { echo " selected"; } ?>><?php echo lang('sun'); ?></OPTION>
+          <OPTION value="mon"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="mon") { echo " selected"; } ?>><?php echo lang('mon'); ?></OPTION>
+          <OPTION value="tue"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="tue") { echo " selected"; } ?>><?php echo lang('tue'); ?></OPTION>
+          <OPTION value="wed"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="wed") { echo " selected"; } ?>><?php echo lang('wed'); ?></OPTION>
+          <OPTION value="thu"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="thu") { echo " selected"; } ?>><?php echo lang('thu'); ?></OPTION>
+          <OPTION value="fri"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="fri") { echo " selected"; } ?>><?php echo lang('fri'); ?></OPTION>
+          <OPTION value="sat"<?php if (isset($repeat['frequency2modifier2']) && $repeat['frequency2modifier2']=="sat") { echo " selected"; } ?>><?php echo lang('sat'); ?></OPTION>
         </SELECT>
         of the month every
         <SELECT name="repeat[interval2]" size="1">
-          <OPTION value="month"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="month") { echo " selected"; } ?>>Month</OPTION>
-          <OPTION value="2months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="2months") { echo " selected"; } ?>>other month</OPTION>
-          <OPTION value="3months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="3months") { echo " selected"; } ?>>3 months</OPTION>
-          <OPTION value="4months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="4months") { echo " selected"; } ?>>4 months</OPTION>
-          <OPTION value="6months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="6months") { echo " selected"; } ?>>6 months</OPTION>
-          <OPTION value="year"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="year") { echo " selected"; } ?>>year</OPTION>
+          <OPTION value="month"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="month") { echo " selected"; } ?>><?php echo lang('month'); ?></OPTION>
+          <OPTION value="2months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="2months") { echo " selected"; } ?>><?php echo lang('other_month'); ?></OPTION>
+          <OPTION value="3months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="3months") { echo " selected"; } ?>>3 <?php echo lang('months'); ?></OPTION>
+          <OPTION value="4months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="4months") { echo " selected"; } ?>>4 <?php echo lang('months'); ?></OPTION>
+          <OPTION value="6months"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="6months") { echo " selected"; } ?>>6 <?php echo lang('months'); ?></OPTION>
+          <OPTION value="year"<?php if (isset($repeat['interval2']) && $repeat['interval2']=="year") { echo " selected"; } ?>><?php echo lang('year'); ?></OPTION>
         </SELECT>
 	<BR>
         <BR>
@@ -177,19 +186,19 @@ function inputrecurrences(&$event,&$repeat,$check) {
   if (isset($check) && $repeat['mode'] > 0) {
 
     if (!isset($event['timeend_month']) || !isset($event['timeend_day']) || !isset($event['timeend_year'])) {
-      feedback("Please specify a valid ending date.",1);
+      feedback(lang('specify_valid_ending_date'),1);
 		}
     elseif (
 		    !checkdate($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year']) &&
         !checkdate($event['timeend_month'],$event['timeend_day'],$event['timeend_year'])
 				) {
-      feedback("Please specify valid dates.",1);
+      feedback(lang('specify_valid_dates'),1);
     }
     elseif (!checkdate($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year'])) {
-      feedback("Please specify a valid starting date.",1);
+      feedback(lang('specify_valid_starting_date'),1);
     }
     elseif (!checkdate($event['timeend_month'],$event['timeend_day'],$event['timeend_year'])) {
-      feedback("Please specify a valid ending date.",1);
+      feedback(lang('specify_valid_ending_date'),1);
     }
     elseif (!checkstartenddate($event['timebegin_month'],
                                $event['timebegin_day'],
@@ -197,7 +206,7 @@ function inputrecurrences(&$event,&$repeat,$check) {
                                $event['timeend_month'],
 			                         $event['timeend_day'],
 			                         $event['timeend_year'])) {
-      feedback("The ending date must be equal or greater than the starting date.",1);
+      feedback(lang('ending_date_after_starting_date'),1);
     }
   } // end: if (isset($check) && repeat[mode] > 0)
 ?>
@@ -206,7 +215,7 @@ function inputrecurrences(&$event,&$repeat,$check) {
     inputdate($event['timebegin_month'],"event[timebegin_month]",
             $event['timebegin_day'],"event[timebegin_day]",
             $event['timebegin_year'],"event[timebegin_year]");
-    echo " to ";
+    echo " ",lang('to')," ";
 		if (!isset($event['timeend_month']) || !isset($event['timeend_day']) || !isset($event['timeend_year'])) {
 			inputdate(0,"event[timeend_month]",
 							0,"event[timeend_day]",
@@ -225,6 +234,7 @@ function inputrecurrences(&$event,&$repeat,$check) {
 /* print out the event input form and use the provided parameter as preset */
 function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetime,&$repeat,$database) {
   /* now printing the HTML code for the input form */
+  global $use_ampm;
   $unknownvalue = "???"; /* this is printed when the value of input field is unspecified */
 
   // the value of the radio box when user chooses recurring event
@@ -241,7 +251,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   if ($displaydatetime) {
 ?>
   <TR>
-    <TD class="bodytext" valign="top"><strong>Date:</strong>
+    <TD class="bodytext" valign="top"><strong><?php echo lang('date'); ?>:</strong>
 <?php
   if ($inputrequired) {
 ?>
@@ -253,13 +263,13 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     <TD class="bodytext" valign="top">
 <?php
   if ($inputrequired && $check && $repeat['mode'] == 0 && !checkeventdate($event,$repeat)) {
-    feedback("Date is invalid. Please change.",1);
+    feedback(lang('date_invalid'),1);
   }
 
   echo '<INPUT type="radio" name="repeat[mode]" value="0" id="onetime"';
   if (!isset($repeat['mode']) || $repeat['mode']==0) { echo " checked"; }
   echo ' onClick="this.form.submit()">';
-  echo "\n<label for=\"onetime\">one-time event</label> ";
+  echo "\n<label for=\"onetime\">",lang('one_time_event'),"</label> ";
 
   if ($repeat['mode']==0) {
 		if (!isset($event['timebegin_month'])) { $event['timebegin_month'] = 0; }
@@ -275,7 +285,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     echo "<BR>\n";
     echo "<INPUT type=\"radio\" name=\"repeat[mode]\" id=\"recurringevent\" value=\"$recurring\"";
     if ($repeat['mode']>=1) { echo " checked"; }
-    echo ' onClick="this.form.submit()"><label for="recurringevent"> recurring event</label>';
+    echo ' onClick="this.form.submit()"><label for="recurringevent"> ',lang('recurring_event'),'</label>';
     echo "<BR>\n";
   }
   elseif ($repeat['mode']>=1 && $repeat['mode']<=2) {
@@ -288,7 +298,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-    <strong>Time:</strong>
+    <strong><?php echo lang('time'); ?>:</strong>
 <?php
   if ($inputrequired) {
 ?>
@@ -300,22 +310,29 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     <TD class="bodytext" valign="top">
 <?php
   if ($inputrequired && $check && $event['wholedayevent']==0 && $event['timebegin_hour']==0) {
-    feedback("Please specify \"All day event\" or a starting time.",1);
+    feedback(lang('specify_all_day_or_starting_time'),1);
   }
 ?>
       <INPUT type="radio" name="event[wholedayevent]" id="alldayevent" value="1"<?php if ($event['wholedayevent']==1) { echo " checked "; } ?>>
-      <label for="alldayevent">All day event</label>
+      <label for="alldayevent"><?php echo lang('all_day_event'); ?></label>
       <BR>
    <INPUT type="radio" name="event[wholedayevent]" id="timedevent" value="0"<?php if ($event['wholedayevent']==0) { echo " checked "; } ?>>
-   <label for="timedevent">Timed event:
-    from
+   <label for="timedevent"><?php echo lang('timed_event'); ?>:
+    <?php echo lang('from'); ?>
     <SELECT name="event[timebegin_hour]" size="1">
 <?php
   if ($event['timebegin_hour']==0) {
     echo "<OPTION selected value=\"0\">",$unknownvalue,"</OPTION>\n";
   }
   // print list with hours and select the one read from the DB
-  for ($i=1; $i<=12; $i++) {
+   if($use_ampm){
+      $start_hour=1;
+      $end_hour=12;
+   }else{
+      $start_hour=0;
+      $end_hour=23;
+   }
+  for ($i=$start_hour; $i<=$end_hour; $i++) {
     echo "<OPTION ";
     if (isset($event['timebegin_hour']) && $event['timebegin_hour']==$i) { echo "selected "; }
     echo "value=\"$i\">$i</OPTION>\n";
@@ -334,19 +351,24 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   }
 ?>
       </SELECT>
-      <SELECT name="event[timebegin_ampm]" size="1">
-        <OPTION value="am"
-<?php
+<?php 
+
+  if($use_ampm){
+ echo '
+<SELECT name="event[timebegin_ampm]" size="1">
+        <OPTION value="am"';
+
   if (isset($event['timebegin_ampm']) && $event['timebegin_ampm']=="am") {echo "selected"; }
-?>
-        >am</OPTION>
-        <OPTION value="pm"
-<?php
+
+  echo '    >am</OPTION>
+        <OPTION value="pm"';
   if (isset($event['timebegin_ampm']) && $event['timebegin_ampm']=="pm") {echo "selected "; }
+
+      echo ' >pm</OPTION>
+      </SELECT>';
+}
 ?>
-        >pm</OPTION>
-      </SELECT>
-      to
+      <?php echo lang('to'); ?>
       <SELECT name="event[timeend_hour]" size="1">
 <?php
   if (!endingtime_specified($event)) {
@@ -357,7 +379,14 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   if (isset($event['timeend_hour']) && $event['timeend_hour']==0) { echo "selected "; }
   echo "value=\"0\">$unknownvalue</OPTION>\n";
   // print list with hours and select the one read from the DB
-  for ($i=1; $i<=12; $i++) {
+   if($use_ampm){
+      $start_hour=1;
+      $end_hour=12;
+   }else{
+      $start_hour=0;
+      $end_hour=23;
+   }
+  for ($i=$start_hour; $i<=$end_hour; $i++) {
     echo "<OPTION ";
     if (isset($event['timeend_hour']) && $event['timeend_hour']==$i) { echo "selected "; }
     echo "value=\"$i\">$i</OPTION>\n";
@@ -376,20 +405,24 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   }
 ?>
       </SELECT>
+<?php 
+if($use_ampm){
+   echo'
       <SELECT name="event[timeend_ampm]" size="1">
-        <OPTION value="am"
-<?php
+        <OPTION value="am"';
+
   if (isset ($event['timeend_ampm']) && $event['timeend_ampm']=="am") {echo "selected "; }
-?>
-        >am</OPTION>
-        <OPTION value="pm"
-<?php
+
+     echo'   >am</OPTION>
+        <OPTION value="pm"';
   if (isset($event['timeend_ampm']) && $event['timeend_ampm']=="pm") {echo "selected "; }
+
+echo'  >pm</OPTION>
+      </SELECT>';
+}
 ?>
-        >pm</OPTION>
-      </SELECT>
 			</label>
-      &nbsp;<I>(ending time is NOT required)</I>
+      &nbsp;<I><?php echo lang('ending_time_not_required'); ?></I>
       <BR>
     </TD>
   </TR>
@@ -398,7 +431,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 ?>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Category:</strong>
+      <strong><?php echo lang('category'); ?>:</strong>
 <?php
   if ($inputrequired) {
 ?>
@@ -410,7 +443,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     <TD class="bodytext" valign="top">
 <?php
   if ($inputrequired && $check && ($event['categoryid']==0)) {
-    feedback("Please choose a category.",1);
+    feedback(lang('choose_category'),1);
   }
 ?>
       <SELECT name="event[categoryid]" size="1">
@@ -432,12 +465,11 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   }
 ?>
       </SELECT>
-      <I>(e.g. Seminar/Conference)</I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Title:</strong>
+      <strong><?php echo lang('title'); ?>:</strong>
 <?php
   if ($inputrequired) {
 ?>
@@ -449,7 +481,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     <TD class="bodytext" valign="top">
 <?php
   if ($inputrequired && $check && (empty($event['title']))) {
-    feedback("Please choose a title.",1);
+    feedback(lang('choose_title'),1);
   }
 ?>
       <INPUT type="text" size="24" name="event[title]" maxlength=<?php echo constTitleMaxLength; ?> value="<?php
@@ -458,28 +490,28 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     echo HTMLSpecialChars($event['title']);
 	}
 ?>">
-      <I>(Please do not abbreviate organization names. For example, <br>&quot;VTSFFC meeting&quot; may be entered as &quot;Science Fiction &amp; Fantasy Club meeting&quot;)</I><BR>
+      <I><?php echo lang('title_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Description:</strong>
+      <strong><?php echo lang('description'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
-      <TEXTAREA name="event[description]" rows="3" cols="50" wrap=virtual><?php
+      <TEXTAREA name="event[description]" rows="10" cols="60" wrap=virtual><?php
   if (isset($event['description'])) {
 	  if ($check) { $event['description']=stripslashes($event['description']); }
     echo HTMLSpecialChars($event['description']);
 	}
 ?></TEXTAREA>
       <BR>
-      <I>(e.g. Prof. XXX from YYY gives a presentation about ZZZ...)</I><BR>
+      <I><?php echo lang('description_example'); ?></I><BR>
       <BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Location:</strong>
+      <strong><?php echo lang('location'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="24" name="event[location]" maxlength=<?php echo constLocationMaxLength; ?> value="<?php
@@ -487,12 +519,12 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     if ($check) { $event['location']=stripslashes($event['location']); }
     echo HTMLSpecialChars($event['location']);
 	}
-?>"> <I>(e.g. Squires Colonial Hall)</I><BR>
+?>"> <I><?php echo lang('location_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Price:</strong>
+      <strong><?php echo lang('price'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="24" name="event[price]" maxlength=<?php echo constPriceMaxLength; ?>  value="<?php
@@ -500,12 +532,12 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     if ($check) { $event['price']=stripslashes($event['price']); }
     echo HTMLSpecialChars($event['price']);
 	}
-?>"> <I>(e.g. students: free, public: $5)</I><BR>
+?>"> <I><?php echo lang('price_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Contact name:</strong>
+      <strong><?php echo lang('contact_name'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="24" name="event[contact_name]" maxlength=<?php echo constContact_nameMaxLength; ?> value="<?php
@@ -513,12 +545,12 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     if ($check) { $event['contact_name']=stripslashes($event['contact_name']); }
     echo HTMLSpecialChars($event['contact_name']);
 	}
-?>"> <I>(e.g. Lisa Roberts)</I>
+?>"> <I><?php echo lang('contact_name_example'); ?></I>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Contact phone:</strong>
+      <strong><?php echo lang('contact_phone'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="24" name="event[contact_phone]" maxlength=<?php echo constContact_phoneMaxLength; ?> value="<?php
@@ -526,12 +558,12 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     if ($check) { $event['contact_phone']=stripslashes($event['contact_phone']); }
     echo HTMLSpecialChars($event['contact_phone']);
 	}
-?>"> <I>(e.g. (540) 992-4892)</I>
+?>"> <I><?php echo lang('contact_phone_example'); ?></I>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-       <strong>Contact email:</strong>
+       <strong><?php echo lang('contact_email'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="24" name="event[contact_email]" maxlength=<?php echo constEmailMaxLength; ?> value="<?php
@@ -539,18 +571,17 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     if ($check) { $event['contact_email']=stripslashes($event['contact_email']); }
     echo HTMLSpecialChars(urldecode($event['contact_email']));
 	}
-?>"> <I>(e.g. icinfo@hotmail.com)</I>
+?>"> <I><?php echo lang('contact_email_example'); ?></I>
     </TD>
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Event page<BR>
-      web address:</strong>
+      <strong><?php echo lang('event_page_web_address'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
   if ($check && isset($event['url']) && !checkURL($event['url'])) {
-    feedback("The URL is invalid. Please make sure that you enter: &quot;http://&quot; in front.",1);
+    feedback(lang('url_invalid'),1);
   }
 ?>
       <INPUT type="text" size="50" name="event[url]" maxlength=<?php echo constUrlMaxLength; ?> value="<?php
@@ -560,7 +591,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 	}
 ?>">
       <BR>
-      <I>(e.g. http://www.ic.vt.edu/talks/future.html)</I><BR>
+      <I><?php echo lang('event_page_url_example'); ?></I><BR>
     </TD>
   </TR>
   <TR>
@@ -572,7 +603,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 ?>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Sponsor:</strong>
+      <strong><?php echo lang('sponsor'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <SELECT name="event[sponsorid]" size="1">
@@ -591,7 +622,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   }
 ?>
       </SELECT>
-      <INPUT type="submit" name="defaultallsponsor" value="Restore all sponsor defaults">
+      <INPUT type="submit" name="defaultallsponsor" value="<?php echo lang('button_restore_all_sponsor_defaults'); ?>">
     </TD>
   </TR>
 <?php
@@ -599,8 +630,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 ?>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Displayed<BR>
-      sponsor name:</strong>
+      <strong><?php echo lang('displayed_sponsor_name'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
       <INPUT type="text" size="50" name="event[displayedsponsor]" maxlength=<?php echo constDisplayedsponsorMaxLength; ?> value="<?php
@@ -614,13 +644,12 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
   </TR>
   <TR>
     <TD class="bodytext" valign="top">
-      <strong>Sponsor page<BR>
-      web address:</strong>
+      <strong><?php echo lang('sponsor_page_web_address'); ?>:</strong>
     </TD>
     <TD class="bodytext" valign="top">
 <?php
   if ($check && isset($event['displayedsponsorurl']) && !checkURL($event['displayedsponsorurl'])) {
-    feedback("The URL is invalid. Please make sure that you enter: &quot;http://&quot; in front.",1);
+    feedback(lang('url_invalid'),1);
   }
 ?>
       <INPUT type="text" size="50" name="event[displayedsponsorurl]" maxlength=<?php echo constDisplayedsponsorurlMaxLength; ?> value="<?php
@@ -629,9 +658,8 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
     echo HTMLSpecialChars($event['displayedsponsorurl']);
 	}
 ?>">
-      <INPUT type="submit" name="defaultdisplayedsponsorurl" value="Restore default">
+      <INPUT type="submit" name="defaultdisplayedsponsorurl" value="<?php echo lang('button_restore_default'); ?>">
       <BR>
-      <I>(the default is &quot;<?php echo $sponsor['url']; ?>&quot;)</I><BR>
     </TD>
   </TR>
 <?php
@@ -643,7 +671,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 		<br>
 <?php
   if ($check && !empty($event['showondefaultcal']) && $event['showondefaultcal']==1 && !empty($event['showincategory']) && $event['showincategory']==0) {
-    feedback("Please select a category.",1);
+    feedback(lang('choose_category'),1);
   }
 ?>
 		<table border="0" cellpadding="0" cellspacing="0">
@@ -662,8 +690,8 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 			</td>
   		<td valign="top">&nbsp;</td>
   		<td valign="top">
-			Also display this event on the <?php echo $defaultcalendarname ?><br>
-			and assign it to this category: 
+			<?php echo lang('also_display_on'); ?> <?php echo $defaultcalendarname ?><br>
+			<?php echo lang('assign_to_category'); ?>: 
       <SELECT name="event[showincategory]" size="1">
 <?php
   // read event categories from DB

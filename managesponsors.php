@@ -23,23 +23,23 @@
 		}
 	}
  
-	pageheader("Manage sponsors, Event Calendar",
-					 "Manage sponsors",
+	pageheader(lang('manage_sponsors'),
+					 lang('manage_sponsors'),
 					 "Update","",$database);
 	echo "<BR>\n";
-	box_begin("inputbox","Manage sponsors");
+	box_begin("inputbox",lang('manage_sponsors'));
 ?>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 <form method="post" name="mainform" action="managesponsors.php">
-<a href="editsponsor.php">Add new sponsor</a>
-or modify existing sponsor:<br>
+<a href="editsponsor.php"><?php echo lang('add_new_sponsor'); ?></a>
+<?php echo lang('or_modify_existing_sponsor'); ?><br>
 <br>
 <?php
   $numLines = 15;
 ?>
-<select name="id" size="<?php echo $numLines; ?>">
+<select name="id" size="<?php echo $numLines; ?>" style="width:250px">
 <?php
   $result = DBQuery($database, "SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' ORDER BY name" ); 
 
@@ -51,16 +51,16 @@ or modify existing sponsor:<br>
   } // end: for ($i=0; $i<$result->numRows(); $i++)
 ?>	
 </select><br>
-<input type="submit" name="edit" value="&nbsp;&nbsp;Edit&nbsp;&nbsp;">
-<input type="submit" name="delete" value="Delete"><br>
+<input type="submit" name="edit" value="<?php echo lang('button_edit'); ?>">
+<input type="submit" name="delete" value="<?php echo lang('button_delete'); ?>"><br>
 <br>
-<b><?php echo $result->numRows(); ?> Sponsors total</b>
+<b><?php echo $result->numRows(); ?> <?php echo lang('sponsors_total'); ?></b>
 </form>
 <script language="JavaScript" type="text/javascript"><!--
 document.mainform.id.focus();
 //--></script>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 
 <?php

@@ -6,11 +6,11 @@
   $database = DBopen();
   if (!authorized($database)) { exit; }
  
-	pageheader("Manage events, Event Calendar",
-					 "Manage events",
+	pageheader(lang('manage_events'),
+					 lang('manage_events'),
 					 "Update","",$database);
 	echo "<BR>\n";
-	box_begin("inputbox","Manage events");
+	box_begin("inputbox",lang('manage_events'));
 
   $ievent = 0;
   $today = Decode_Date_US(date("m/d/Y"));
@@ -24,14 +24,14 @@
   $result = DBQuery($database, $query ); 
 ?>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 
-<a href="addevent.php">Add new event</a>
+<a href="addevent.php"><?php echo lang('add_new_event'); ?></a>
 <?php
   if ($result->numRows() > 0 ) {
 ?>
-or manage existing events:<br>
+<?php echo lang('or_manage_existing_events'); ?><br>
 <br>
 <?php
 /*
@@ -42,9 +42,9 @@ However, you can use the <a href="main.php?view=day">day</a>/<a href="main.php?v
 ?>
 <table border="0" cellspacing="0" cellpadding="4">
   <tr bgcolor="#CCCCCC">
-    <td bgcolor="#CCCCCC"><b>Date/Time</b></td>
-    <td bgcolor="#CCCCCC"><b>Title</b></td>
-    <td bgcolor="#CCCCCC"><b>Status</b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('date'); ?>/<?php echo lang('time'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('title'); ?></b></td>
+    <td bgcolor="#CCCCCC"><b><?php echo lang('status'); ?></b></td>
     <td bgcolor="#CCCCCC">&nbsp;</td>
   </tr>
 <?php
@@ -78,7 +78,7 @@ However, you can use the <a href="main.php?view=day">day</a>/<a href="main.php?v
 		}
   }
 	else {
-	  echo "All day";
+	  echo lang('all_day');
 	}
 
 	if (!empty($event['repeatid'])) {
@@ -95,20 +95,22 @@ However, you can use the <a href="main.php?view=day">day</a>/<a href="main.php?v
 ?></td>
     <td bgcolor="<?php echo $color; ?>" valign="top"><b><?php echo $event['title']; ?></b></td>
     <td bgcolor="<?php echo $color; ?>" valign="top">
-<?
+<?php
     if ($event['approved'] == -1) {
       echo '<FONT color="red"><B>rejected</B></FONT>';
       if (!empty($event['rejectreason'])) { echo "<BR><B>Reason:</B> ",$event['rejectreason']; }
     }
     elseif ($event['approved'] == 0) {
-      echo '<FONT color="blue">submitted for approval</FONT><br>';
+      echo '<FONT color="blue">',lang('submitted_for_approval'),'</FONT><br>';
     }
     elseif ($event['approved'] == 1) {
-      echo '<FONT color="green">approved</FONT><br>';
+      echo '<FONT color="green">',lang('approved'),'</FONT><br>';
     }
 ?>
     </td>
-    <td bgcolor="<?php echo $color; ?>" valign="top"><a href="changeeinfo.php?eventid=<?php echo $event['id']; ?>&update=1">edit</a>&nbsp; <a href="changeeinfo.php?eventid=<?php echo $event['id']; ?>&amp;copy=1">copy</a>&nbsp; <a href="deleteevent.php?eventid=<?php echo $event['id']; ?>&check=1">delete</a></td>
+    <td bgcolor="<?php echo $color; ?>" valign="top"><a href="changeeinfo.php?eventid=<?php echo $event['id']; ?>&update=1"><?php echo lang('edit'); ?></a>&nbsp; 
+	<a href="changeeinfo.php?eventid=<?php echo $event['id']; ?>&amp;copy=1"><?php echo lang('copy'); ?></a>&nbsp; 
+	<a href="deleteevent.php?eventid=<?php echo $event['id']; ?>&check=1"><?php echo lang('delete'); ?></a></td>
   </tr>
 <?php
   } // end: for ($i=0; $i<$result->numRows(); $i++)
@@ -118,21 +120,21 @@ However, you can use the <a href="main.php?view=day">day</a>/<a href="main.php?v
   </tr>
 </table>
 <br>
-<b>The status information has the following meaning:</b><br>
+<b><?php echo lang('status_info_message'); ?></b><br>
 <table border="0" cellspacing="0" cellpadding="3">
 <tr>
-  <td><FONT color="red"><B>rejected</B></FONT></td>
-  <td>...event was not approved for publication</td>
+  <td><FONT color="red"><B><?php echo lang('rejected'); ?></B></FONT></td>
+  <td><?php echo lang('rejected_explanation'); ?></td>
 <tr>
-  <td><FONT color="blue">submitted for approval</FONT></td>
-  <td>...update has yet to be reviewed and approved</td>
+  <td><FONT color="blue"><?php echo lang('submitted_for_approval'); ?></FONT></td>
+  <td><?php echo lang('submitted_for_approval_explanation'); ?></td>
 <tr>
-  <td><FONT color="green">approved</FONT></td>
-  <td>...event is displayed in the calendar</td>
+  <td><FONT color="green"><?php echo lang('approved'); ?></FONT></td>
+  <td><?php echo lang('approved_explanation'); ?></td>
 </tr></table>
 <br>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 
 <?php

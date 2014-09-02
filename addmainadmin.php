@@ -30,7 +30,7 @@
     exit;
   };
 
-	if (!empty($userid)) { $user['id'] = $userid; } else { $user['id'] = ""; }
+  if (!empty($userid)) { $user['id'] = $userid; } else { $user['id'] = ""; }
   if (isset($save) && checkuser($user) && !mainAdminExistsInDB($database, $user['id']) && isValidUser($database, $user['id']) ) { // save user into DB
 		$query = "INSERT INTO vtcal_adminuser (id) VALUES ('".sqlescape($user['id'])."')";
 		$result = DBQuery($database, $query ); 
@@ -48,19 +48,19 @@
       exit;
     }
     else {
-      pageheader("VT Event Calendar, Edit User",
-               "Edit User",
-	             "","",$database);
+      pageheader(lang('edit_user'),
+                 lang('edit_user'),
+	             "Update","",$database);
       echo "<BR>\n";
-      box_begin("inputbox","Edit User");
+      box_begin("inputbox",lang('edit_user'));
 		}
   }
   else {
-    pageheader("VT Event Calendar, Add New User",
-               "Add New User",
-               "","",$database);
+    pageheader(lang('add_new_main_admin'),
+               lang('add_new_main_admin'),
+               "Update","",$database);
     echo "<BR>\n";
-    box_begin("inputbox","Add new user");
+    box_begin("inputbox",lang('add_new_main_admin'));
   }
   if (isset($user['id']) && (!isset($check) || $check != 1)) { // load user to update information if it's the first time the form is viewed
     $result = DBQuery($database, "SELECT * FROM vtcal_user WHERE id='".sqlescape($user['id'])."'" ); 
@@ -71,33 +71,33 @@
 <TABLE border="0" cellpadding="2" cellspacing="0">
   <TR>
     <TD class="bodytext" valign="baseline">
-      <b>User-ID:</b>
+      <b><?php echo lang('user_id'); ?>:</b>
     </TD>
     <TD class="bodytext" valign="baseline">
 <?php
   	if (isset($check) && $check && (empty($userid))) {
-      feedback("Please choose a user-id.",1);
+      feedback(lang('choose_user_id'),1);
     }
-    if (isset($check) && $check && mainAdminExistsInDB($database,$userid)) {
-      feedback("This user is already a main admin.",1);
+    elseif (isset($check) && $check && mainAdminExistsInDB($database,$userid)) {
+      feedback(lang('already_main_admin'),1);
     }
-    if (isset($check) && $check && !isValidUser($database, $userid)) {
-      feedback("This user does not exist.",1);
+    elseif (isset($check) && $check && !isValidUser($database, $userid)) {
+      feedback(lang('user_not_exists'),1);
     }
 ?><INPUT type="text" size="20" name="userid" maxlength="50" value="<?php
   if (!empty($userid)) {
 		if ($check) { $userid=stripslashes($userid); }
   	echo $userid;
 	}
-?>"> <I>(e.g. jsmith)</I>
+?>"> <I><?php echo lang('user_id_example'); ?></I>
 <BR>
     </TD>
   </TR>
   <tr>
-	  <td>&nbsp;</td>
-	  <td>
-		  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-      <INPUT type="submit" name="cancel" value="Cancel">
+    <td>&nbsp;</td>
+    <td>
+      <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+      <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
     </td>
 	</tr>
 </TABLE>

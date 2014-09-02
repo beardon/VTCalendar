@@ -19,23 +19,23 @@
     redirect2URL("deleteuser.php?userid=".$userid); exit;
 	}
  
-	pageheader("Manage users, Event Calendar",
-					 "Manage users",
+	pageheader(lang('manage_users'),
+					 lang('manage_users'),
 					 "Update","",$database);
 	echo "<BR>\n";
-	box_begin("inputbox","Manage users");
+	box_begin("inputbox",lang('manage_users'));
 ?>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 <form method="post" name="mainform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-<a href="changeuserinfo.php">Add new user</a>
-or modify existing user:<br>
+<a href="changeuserinfo.php"><?php echo lang('add_new_user'); ?></a>
+<?php echo lang('or_modify_existing_user'); ?><br>
 <br>
 <?php
   $numLines = 15;
 ?>
-<select name="userid" size="<?php echo $numLines; ?>">
+<select name="userid" size="<?php echo $numLines; ?>" style="width:200px">
 <?php
   $result = DBQuery($database, "SELECT * FROM vtcal_user ORDER BY id" ); 
 
@@ -47,8 +47,8 @@ or modify existing user:<br>
   } // end: for ($i=0; $i<$result->numRows(); $i++)
 ?>	
 </select><br>
-<input type="submit" name="edit" value="&nbsp;&nbsp;Edit&nbsp;&nbsp;">
-<input type="submit" name="delete" value="Delete"><br>
+<input type="submit" name="edit" value="<?php echo lang('button_edit'); ?>">
+<input type="submit" name="delete" value="<?php echo lang('button_delete'); ?>"><br>
 <br>
 <b><?php echo $result->numRows(); ?> Users total</b>
 </form>
@@ -56,7 +56,7 @@ or modify existing user:<br>
 document.mainform.userid.focus();
 //--></script>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
 
 <?php

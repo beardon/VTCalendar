@@ -24,34 +24,32 @@
     exit;
   }
 
-  pageheader("Add New Keywords Pair, Event Calendar",
-             "Add New Keywords Pair",
+  pageheader(lang('add_new_keyword_pair'),
+             lang('add_new_keyword_pair'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Add New Keywords Pair");
+  box_begin("inputbox",lang('add_new_keyword_pair'));
 ?>
 <br>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  &nbsp;Do NOT add multiple words.<br>
-	&nbsp;A keyword (or alternative keyword) must
-	not contain spaces.
+  <?php echo lang('add_new_keyword_pair_instructions'); ?>
 	<br>
 	<table cellpadding="3" cellspacing="3" border="0">
 	  <tr>
-		  <td><b>Keyword:</b>
+		  <td><b><?php echo lang('keyword'); ?>:</b>
 <?php
   if ( isset($check) ) {
 		if ( empty($keyword) ) {
-			feedback("<br>The keyword cannot be empty.",1);
+			feedback("<br>".lang('keyword_cannot_be_empty'),1);
 		} 
   }
 ?>
 			</td>
-		  <td><b>Alternative Keyword:</b>
+		  <td><b><?php echo lang('alternative_keyword'); ?></b>
 <?php
   if ( isset($check) ) {
 		if ( empty($alternativekeyword) ) {
-			feedback("<br>The alternative keyword cannot be empty.",1);
+			feedback("<br>".lang('keyword_cannot_be_empty'),1);
 		} 
   }
 ?>
@@ -73,8 +71,8 @@
 	<input type="hidden" name="check" value="1">
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

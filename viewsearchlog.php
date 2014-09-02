@@ -7,17 +7,17 @@
   if (!authorized($database)) { exit; }
   if (!$_SESSION["AUTH_ADMIN"]) { exit; } // additional security
  
-	pageheader("View search log, Event Calendar",
-					 "View search log",
+	pageheader(lang('view_search_log'),
+					 lang('view_search_log'),
 					 "Update","",$database);
 	echo "<BR>\n";
-	box_begin("inputbox","View search log");
+	box_begin("inputbox",lang('view_search_log'));
 
 ?>
 <form method="post" action="update.php">
-	<input type="submit" name="back" value="&laquo; Back to menu">
+	<input type="submit" name="back" value="<?php echo lang('back_to_menu'); ?>">
 </form>
-<a href="deletesearchlog.php">Clear search log</a>
+<a href="deletesearchlog.php"><?php echo lang('clear_search_log'); ?></a>
 <img src="images/spacer.gif" width="400" height="1" alt="1">
 <?php
   box_end();
@@ -33,7 +33,7 @@
 		} // end: for ($i=0; $i<$result->numRows(); $i++)
   }
 	else {
-	  echo "    Search log is empty.";
+	  echo "    ",lang('search_log_is_empty');
 	}
 ?>	
 </pre>

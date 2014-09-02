@@ -42,12 +42,12 @@ function validate ( myForm, id ) {
 		<form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" name="categorylist">
 			<tr align="left" valign="top">
 			<td colspan="4" valign="top">
-				<strong>Select the event categories you want to have displayed:</strong>
+				<strong><?php echo lang('select_categories'); ?></strong>
 			</td>
 		</tr>
 		<tr valign="top">
 			<td colspan="4" align="left" nowrap>
-				<a href="javascript:checkAll(document.categorylist,'filtercategories',true);">select/unselect all</a>
+				<a href="javascript:checkAll(document.categorylist,'filtercategories',true);"><?php echo lang('select_unselect'); ?></a>
 			</td>
 			</tr>
 			<tr valign="top">
@@ -80,7 +80,7 @@ function validate ( myForm, id ) {
 			<tr valign="top">
 				<td colspan="3" align="left" valign="top">
 			  	<br>
-					<input type="submit" name="ok" value="&nbsp;&nbsp;Apply Filter&nbsp;&nbsp;">&nbsp;
+					<input type="submit" name="ok" value="&nbsp;&nbsp;<?php echo lang('apply_filter'); ?>&nbsp;&nbsp;">&nbsp;
 				</td>
 			</tr>
 			<input type="hidden" name="view" value="week">

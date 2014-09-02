@@ -1,1 +1,1 @@
-Subscribe &amp; Download
+<?php echo lang('subscribe_download'); ?>

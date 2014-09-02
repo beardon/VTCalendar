@@ -1,14 +1,19 @@
 <?php
   if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
-?><table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#aaaaaa">
+?><table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="<?php echo $_SESSION["GRIDCOLOR"]; ?>">
         <tr align="center">
-          <td width="14%"><br><strong>Sunday</strong></td>
-          <td width="14%"><br><strong>Monday</strong></td>
-          <td width="14%"><br><strong>Tuesday</strong></td>
-          <td width="14%"><br><strong>Wednesday</strong></td>
-          <td width="14%"><br><strong>Thursday</strong></td>
-          <td width="14%"><br><strong>Friday</strong></td>
-          <td width="14%"><br><strong>Saturday</strong></td>
+        <?php if($week_start == 0){?>
+          <td width="14%"><br><strong><?php echo lang('sunday');?></strong></td>
+         <?php } ?>
+          <td width="14%"><br><strong><?php echo lang('monday');?></strong></td>
+          <td width="14%"><br><strong><?php echo lang('tuesday');?></strong></td>
+          <td width="14%"><br><strong><?php echo lang('wednesday');?></strong></td>
+          <td width="14%"><br><strong><?php echo lang('thursday');?></strong></td>
+          <td width="14%"><br><strong><?php echo lang('friday');?></strong></td>
+          <td width="14%"><br><strong><?php echo lang('saturday');?></strong></td>
+        <?php if($week_start == 1){?>
+          <td width="14%"><br><strong><?php echo lang('sunday');?></strong></td>
+         <?php } ?>
         </tr>
 <?php 
   $ievent = 0;
@@ -66,22 +71,20 @@
 
         echo '<table cellspacing="0" cellpadding="4" border="0" width="100%">',"\n";
 				echo '<tr>',"\n";
-				echo '  <td align="left" bgcolor="eeeeee">',"\n";
+				echo '  <td align="left" bgcolor="'.$iday['color'].'">',"\n";
 
 				echo "<a ";
-				if ( $datediff > 0 ) {
-					echo "style=\"color:#999999; text-decoration:none\" ";
-				}
+			
 				if ($datediff > 0) { echo 'class="past" '; }
-				else { echo 'style="color:#0000ff; text-decoration:none" '; }
+				
 				echo "href=\"main.php?view=day&timebegin=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],12,0,"am")),"&timeend=",urlencode(datetime2timestamp($iday['year'],$iday['month'],$iday['day'],11,59,"pm")),"&sponsorid=",urlencode($sponsorid),"&categoryid=",urlencode($categoryid),"&keyword=",urlencode($keyword),"\">";
 				echo "<b>",$iday['day'],"</b>";
 				echo "</a>\n";
 				echo '  </td>',"\n";
         if (!empty($_SESSION["AUTH_SPONSORID"])) { // display "add event" icon
-  				echo '  <td align="right" bgcolor="eeeeee">',"\n";
-          echo "<a href=\"addevent.php?timebegin_year=".$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\">";
-          echo '<img src="images/addnewevent.gif" height="16" width="16" alt="add new event" border="0"></a>';
+  				echo '  <td align="right" bgcolor="'.$iday['color'].'">',"\n";
+          echo "<a href=\"addevent.php?timebegin_year=".$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\" title=\"",lang('add_new_event'),"\">";
+          echo '<img src="images/nuvola/16x16/actions/filenew.png" height="16" width="16" alt="',lang('add_new_event'),'" border="0"></a>';
   				echo '  </td>',"\n";
         }
 				echo '</tr>',"\n";
@@ -98,7 +101,7 @@
 
           echo "<tr><td class=\"".$iday['css']."\" bgcolor=\"".$iday['color']."\" align=\"left\" valign=\"top\"";
 					if ( $datediff > 0 ) {
-						echo " style=\"color:#999999\"";
+						// echo " style=\"color:#999999\"";
 					}
 					echo ">&#8226;</td>\n";
           echo "<td class=\"".$iday['css']."\" bgcolor=\"".$iday['color']."\" align=\"left\" valign=\"top\">\n";
@@ -106,20 +109,20 @@
       	  // print event
 					echo "<a ";
 					if ( $datediff > 0 ) {
-						echo "style=\"color:#999999\" ";
+						// echo "style=\"color:#999999\" ";
 					}
 					echo "href=\"main.php?view=event&eventid=",$event['eventid'],"\">";
 					echo HTMLSpecialChars($event['title']);
 					// add little update, delete icons
 					if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
-						echo " <br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\">";
-						echo "<img src=\"images/edit.gif\" height=\"16\" width=\"16\" alt=\"update event\" border=\"0\"></a>";
+						echo " <br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
+						echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 			
-						echo "<a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\">";
-						echo "<img src=\"images/copy.gif\" height=\"16\" width=\"17\" alt=\"copy event\" border=\"0\"></a>";
+						echo " <a href=\"changeeinfo.php?copy=1&eventid=",$event['eventid'],"\" title=\"",lang('copy_event'),"\">";
+						echo "<img src=\"images/nuvola/16x16/actions/editcopy.png\" height=\"16\" width=\"16\" alt=\"",lang('copy_event'),"\" border=\"0\"></a>";
 			
-						echo "<a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\">";
-						echo "<img src=\"images/trashcan.gif\" height=\"16\" width=\"13\" alt=\"delete event\" border=\"0\"></a>";
+						echo " <a href=\"deleteevent.php?eventid=",$event['eventid'],"&check=1\" title=\"",lang('delete_event'),"\">";
+						echo "<img src=\"images/nuvola/16x16/actions/button_cancel.png\" height=\"16\" width=\"16\" alt=\"",lang('delete_event'),"\" border=\"0\"></a>";
 					}
 					echo "</a>";
 					echo "<br>\n";

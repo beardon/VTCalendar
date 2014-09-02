@@ -118,30 +118,29 @@
 		}
 		$query.= ")";
 		$result = DBQuery($database, $query ); 
-	  flush();	
 		
     // reroute to sponsormenu page
     redirect2URL("update.php");
 	  exit;
   }
 
-  pageheader("VT Event Calendar, Delete inactive sponsors",
-             "Delete inactive sponsors",
+  pageheader(lang('delete_inactive_sponsors'),
+             lang('delete_inactive_sponsors'),
 	           "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete inactive sponsors");
+  box_begin("inputbox",lang('delete_inactive_sponsors'));
 ?>
 <FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-Delete all sponsors who do NOT had an event during the last
+<?php echo lang('delete_inactive_sponsors_message'); ?> 
 <select name="duration">
-<option value="1" selected>year</option>
-<option value="2">2 years</option>
-<option value="3">3 years</option>
+<option value="1" selected><?php echo lang('delete_inactive_sponsors_year'); ?></option>
+<option value="2"><?php echo lang('delete_inactive_sponsors_2years'); ?></option>
+<option value="3"><?php echo lang('delete_inactive_sponsors_3years'); ?></option>
 </select>.
   <BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

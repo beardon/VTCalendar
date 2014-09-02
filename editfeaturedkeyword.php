@@ -54,11 +54,11 @@
 	}
 
   if ( isset($id) ) {
-    pageheader("Edit Featured Keyword, Event Calendar",
-               "Edit Featured Keyword",
+    pageheader(lang('edit_featured_keyword'),
+               lang('edit_featured_keyword'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Edit Featured Keyword");
+    box_begin("inputbox",lang('edit_featured_keyword'));
 		if ( !isset($check) ) {
   		$result = DBQuery($database, "SELECT * FROM vtcal_searchfeatured WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($id)."'" );
       $searchkeyword = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
@@ -67,25 +67,25 @@
 		}
 	}
 	else {
-    pageheader("Add New Featured Keyword, Event Calendar",
-               "Add New Featured Keyword",
+    pageheader(lang('add_new_featured_keyword'),
+               lang('add_new_featured_keyword'),
                "Update","",$database);
     echo "<BR>";
-    box_begin("inputbox","Add New Featured Keyword");
+    box_begin("inputbox",lang('add_new_featured_keyword'));
 	}
 ?>
 <br>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  Do NOT add multiple words. A keyword must not contain spaces.<br>
+  <?php echo lang('featured_keyword_message'); ?><br>
 	<br>
-	<b>Keyword:</b><br>
+	<b><?php echo lang('keyword'); ?>:</b><br>
 <?php
   if ( isset($check) ) {
 		if ($keywordexists) {
-			feedback("This keyword already exists.",1);
+			feedback(lang('keyword_already_exists'),1);
 		}
 		elseif ( empty($keyword) ) {
-			feedback("The keyword cannot be empty.",1);
+			feedback(lang('keyword_cannot_be_empty'),1);
 		} 
   }
 ?>
@@ -95,11 +95,11 @@
 	<br>
 	<br>
 		
-  <b>Featured Text (or HTML):</b><br>
+  <b><?php echo lang('featured_text'); ?></b><br>
 <?php
   if ( isset($check) ) {
 		if ( empty($featuretext) ) {
-			feedback("The featured text cannot be empty.",1);
+			feedback(lang('featured_text_cannot_be_empty'),1);
 		} 
   }
 ?>
@@ -114,8 +114,8 @@
 ?>
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();

@@ -34,21 +34,20 @@
   }
 
   // print page header
-  pageheader("VT Event Calendar, Delete Main Admin",
-             "Delete Main Admin",
+  pageheader(lang('delete_main_admin'),
+             lang('delete_main_admin'),
              "","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete Main Admin");
+  box_begin("inputbox",lang('delete_main_admin'));
 ?>
 <FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  <B>Do you really want to delete the main admin &quot;<?php echo $userid; ?>&quot;?</B>
+  <B><?php echo lang('delete_main_admin_confirm'); ?> &quot;<?php echo $userid; ?>&quot;</B>
   <BR>
   <BR>
   <INPUT type="hidden" name="userid" value="<?php echo $userid; ?>">
   <INPUT type="hidden" name="deleteconfirmed" value="1">
-  <INPUT type="submit" name="save" value="Yes, delete">
-  &nbsp;
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
   <BR>
 </FORM>
 <?php

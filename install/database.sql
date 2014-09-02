@@ -18,8 +18,13 @@ CREATE TABLE vtcal_calendar (
   bgcolor text,
   maincolor text,
   todaycolor text,
-  viewauthrequired int default '0',
-  forwardeventdefault int NOT NULL default '0',
+  pastcolor text,
+  futurecolor text,
+  textcolor text,
+  linkcolor text,
+  gridcolor text,
+  viewauthrequired int(11) default '0',
+  forwardeventdefault int(11) NOT NULL default '0',  
   PRIMARY KEY (id)
 );
 
@@ -160,7 +165,7 @@ CREATE TABLE vtcal_user (
   email text NOT NULL
 );
 
-INSERT INTO vtcal_calendar (id, name, title, header, footer, bgcolor, maincolor, todaycolor, viewauthrequired) VALUES ('default','MyOrg Main Event Calendar','Calendar','','','#ffffff','#ff9900','#ffcc66',0);
+INSERT INTO vtcal_calendar (id, name, title, header, footer, bgcolor, maincolor, todaycolor, pastcolor, futurecolor, textcolor, linkcolor, gridcolor, viewauthrequired, forwardeventdefault) VALUES ('default', 'MyOrg Main Event Calendar', 'Calendar', '', '', '#ffffff', '#ff9900', '#ffcc66', '#eeeeee', '#ffffff', '#000000', '#3333cc', '#cccccc', 0, 0);
 
 INSERT INTO vtcal_category (calendarid, id, name) VALUES ('default',1,'Category 1');
 

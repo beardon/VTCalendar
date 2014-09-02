@@ -2,15 +2,14 @@
   if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
 
 	function pageheader($title, $headline, $navbaractive, $calendarnavbar, $database) {
-	  global $enableViewMonth;
+	  global $enableViewMonth, $lang;
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <title><?php echo $title; ?></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php
+ echo lang('encoding'); ?>">
     <meta content="en-us" http-equiv=language>
-    <meta content="Jochen Rode" http-equiv=author>
-    <meta content="Web Hosting Group, Virginia Tech" http-equiv=publisher>
     <link href="stylesheet.php" rel="stylesheet" type="text/css">
 		<script language="JavaScript" type="text/javascript"><!--
 		function isIE4()
@@ -26,6 +25,9 @@
 		}
 		//-->
 		</script>
+		<!--[if gte IE 5.5000]>
+        <script src="scripts/fix-ie6.js" type="text/javascript"></script>
+        <![endif]-->
   </head>
   <body bgcolor="<?php echo $_SESSION["BGCOLOR"]; ?>" leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
 <?php 

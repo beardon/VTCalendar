@@ -7,11 +7,11 @@
             <table border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="right" valign="middle"><a href="<?php echo $previous_href; ?>"><strong><img src="images/littlearrowleft.gif" width="15" height="13" border="0" align="absmiddle"></strong></a></td>
-                <td align="left" valign="middle"><a href="<?php echo $previous_href; ?>" style="color:#000000; text-decoration:none"><strong>previous
-                      week</strong></a></td>
+                <td align="left" valign="middle"><a href="<?php echo $previous_href; ?>" ><strong><?php echo lang('previous_week'); ?>
+                      </strong></a></td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td align="right" valign="middle"><a href="<?php echo $next_href; ?>" style="color:#000000; text-decoration:none"><strong>next
-                      week</strong></a></td>
+                <td align="right" valign="middle"><a href="<?php echo $next_href; ?>" ><strong><?php echo lang('next_week'); ?>
+                      </strong></a></td>
                 <td align="right" valign="middle"><a href="<?php echo $next_href; ?>"><strong><img src="images/littlearrowright.gif" width="15" height="13" border="0" align="absmiddle"></strong></a></td>
               </tr>
             </table>

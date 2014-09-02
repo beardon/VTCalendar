@@ -5,23 +5,10 @@
 
   helpbox_begin();
 ?>
-<H3><IMG src="images/help.gif" width="16" height="16" alt="" border="0">
-Approval of submitted events
+<H3><IMG src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0">
+<?php echo lang('help_approval'); ?>
 </H3>
-For security reasons, every update to the event calendar has to be <B>approved
-by the calendar administrator.</B><BR>
-<BR>
-The administrator 
-reviews submitted events and updates. Event information may be approved or rejected.<BR>
-<BR>
-If an update is rejected the information is not publicized; instead, the event is marked with a short comment
-stating the reason for the rejection. By editing a rejected event you can re-submit the information which will
-then be checked the following weekday.<BR>
-<BR>
-Because of the approval mechanism the <B>submitted updates are not immediately publicized</B>.<BR>
-<BR>
-If you delete an event from the calendar an approval is not necessary.
-The event information will be instantly removed from the calendar.
+<?php echo lang('help_approval_contents'); ?>
 
 <?php
   helpbox_end();

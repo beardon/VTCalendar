@@ -39,11 +39,11 @@
   }
 
   // print page header
-  pageheader("VT Event Calendar, Choose Event Template",
-             "Choose Event Template",
+  pageheader(lang('choose_template'),
+             lang('choose_template'),
              "","",$database);
   echo "<BR>";
-  box_begin("inputbox","Choose Event template");
+  box_begin("inputbox",lang('choose_template'));
 ?>
 <BR>
 <FORM method="post" action="changeeinfo.php">
@@ -51,7 +51,7 @@
   echo '<INPUT type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
 ?>
   <SELECT name="templateid" size="6">
-    <OPTION selected value="0">----- blank -----</OPTION>
+    <OPTION selected value="0">----- <?php echo lang('blank'); ?> -----</OPTION>
 <?php
   $result = DBQuery($database, "SELECT * FROM vtcal_template WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
   for ($i=0; $i<$result->numRows(); $i++) {
@@ -62,8 +62,8 @@
   </SELECT>
   <BR>
   <BR>
-  <INPUT type="submit" name="choosetemplate" value="Choose template">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="choosetemplate" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 <?php
   // forward date info, if the page was called with date info appended
   // can later be done with PHP session management

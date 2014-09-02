@@ -80,11 +80,11 @@
   $result = DBQuery($database, "SELECT name,url FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
   $sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
-  pageheader("VT Event Calendar, Delete Event",
-             "Delete Event",
+  pageheader(lang('delete_event'),
+             lang('delete_event'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete event");
+  box_begin("inputbox",lang('delete_event'));
 ?>
 <FORM method="post" action="deleteevent.php">
 <?php
@@ -125,21 +125,21 @@
 ?>
   <BR>
   <BR>
-  <B>Do you really want to delete this event?</B>
+  <B><?php echo lang('delete_event_confirm'); ?></B>
   <BR>
   <BR>
   <INPUT type="hidden" name="eventid" value="<?php echo $eventid; ?>">
   <INPUT type="hidden" name="deleteconfirmed" value="1">
-  <INPUT type="submit" name="deletethis" value="Delete this event">
+  <INPUT type="submit" name="deletethis" value="<?php echo lang('button_delete_this_event'); ?>">
 <?php
   if ($repeat['mode'] > 0) {
-    echo '&nbsp;<INPUT type="submit" name="deleteall" value="Delete ALL recurrences of this event">';
+    echo '&nbsp;<INPUT type="submit" name="deleteall" value="',lang('button_delete_all_recurrences'),'">';
   }
 
     } // end: if (isset($check))
 ?>
   &nbsp;
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
   <BR>
 </FORM>
 <?php

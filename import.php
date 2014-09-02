@@ -50,33 +50,21 @@ global $eventlist,$event,$eventnr,
   if (empty($timeend)) { $timeend = "23:59"; }
   $event['timeend'] = $date." ".$timeend.":00";
   $event['wholedayevent'] = ($timebegin == "00:00") && ($timeend == "23:59");
-/*
-  $event['displayedsponsor'] = addslashes($event['displayedsponsor']);
-  $event['displayedsponsorurl'] = addslashes($event['displayedsponsorurl']);
-  $event['title'] = addslashes($event['title']);
-  $event['description'] = addslashes($event['description']);
-  $event['location'] = addslashes($event['location']);
-  $event['price'] = addslashes($event['price']);
-  $event['contact_name'] = addslashes($event['contact_name']);
-  $event['contact_phone'] = addslashes($event['contact_phone']);
-  $event['contact_email'] = addslashes($event['contact_email']);
-  $event['url'] = addslashes($event['url']);
-*/
 
   // make sure that the previous event got all the input fields
-  if (!(strlen($event['displayedsponsor']) <= MAXLENGTH_SPONSOR)) { feedback("Error!: &lt;displayedsponsor&gt; is too long.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['displayedsponsorurl']) <= MAXLENGTH_URL && checkurl($event['displayedsponsorurl']))) { feedback("Error!: &lt;displayedsponsorurl&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(eventtimebeginvalid($event['timebegin']))) { feedback("Error!: &lt;date&gt; and/or &lt;timebegin&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(eventtimeendvalid($event['timeend']))) { feedback("Error!: &lt;date&gt; and/or &lt;timeend&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(array_key_exists($event['categoryid'],$validcategory))) { feedback("Error!: &lt;categoryid&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(!empty($event['title']) && strlen($event['title']) <= MAXLENGTH_TITLE)) { feedback("Error!: &lt;title&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['description']) <= MAXLENGTH_DESCRIPTION)) { feedback("Error!: &lt;description&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['location']) <= MAXLENGTH_LOCATION)) { feedback("Error!: &lt;location&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['price']) <= MAXLENGTH_PRICE)) { feedback("Error!: &lt;price&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['contact_name']) <= MAXLENGTH_CONTACT_NAME)) { feedback("Error!: &lt;contact_name&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['contact_phone']) <= MAXLENGTH_CONTACT_PHONE)) { feedback("Error!: &lt;contact_phone&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['contact_email']) <= MAXLENGTH_CONTACT_EMAIL)) { feedback("Error!: &lt;contact_email&gt; is invalid.",FEEDBACKNEG); $error = true; }
-  if (!(strlen($event['url']) <= MAXLENGTH_URL && checkurl($event['url']))) { feedback("Error!: &lt;url&gt; is invalid.",FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['displayedsponsor']) <= MAXLENGTH_SPONSOR)) { feedback(lang('import_error_displayedsponsor'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['displayedsponsorurl']) <= MAXLENGTH_URL && checkurl($event['displayedsponsorurl']))) { feedback(lang('import_error_displayedsponsorurl'),FEEDBACKNEG); $error = true; }
+  if (!(eventtimebeginvalid($event['timebegin']))) { feedback(lang('import_error_timebegin'),FEEDBACKNEG); $error = true; }
+  if (!(eventtimeendvalid($event['timeend']))) { feedback(lang('import_error_timeend'),FEEDBACKNEG); $error = true; }
+  if (!(array_key_exists($event['categoryid'],$validcategory))) { feedback(lang('import_error_categoryid'),FEEDBACKNEG); $error = true; }
+  if (!(!empty($event['title']) && strlen($event['title']) <= MAXLENGTH_TITLE)) { feedback(lang('import_error_title'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['description']) <= MAXLENGTH_DESCRIPTION)) { feedback(lang('import_error_description'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['location']) <= MAXLENGTH_LOCATION)) { feedback(lang('import_error_location'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['price']) <= MAXLENGTH_PRICE)) { feedback(lang('import_error_price'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['contact_name']) <= MAXLENGTH_CONTACT_NAME)) { feedback(lang('import_error_contact_name'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['contact_phone']) <= MAXLENGTH_CONTACT_PHONE)) { feedback(lang('import_error_contact_phone'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['contact_email']) <= MAXLENGTH_CONTACT_EMAIL)) { feedback(lang('import_error_contact_email'),FEEDBACKNEG); $error = true; }
+  if (!(strlen($event['url']) <= MAXLENGTH_URL && checkurl($event['url']))) { feedback(lang('import_error_contact_url'),FEEDBACKNEG); $error = true; }
 
   // save all the data of the previous event in the array
 	if (!$error) {
@@ -95,7 +83,7 @@ function xmlstartelement_importevent($parser, $element, $attrs) {
   $xmlelementattrs = $attrs;
 
   if (strtolower($xmlcurrentelement)=="events") {
-    if (!$firstelement) { feedback("Error!: &lt;events&gt; must be the first element.",FEEDBACKNEG); } // <events> must always be the first element
+    if (!$firstelement) { feedback(lang('import_error_events'),FEEDBACKNEG); } // <events> must always be the first element
   }
   elseif (strtolower($xmlcurrentelement)=="event") {
     // start new element
@@ -134,10 +122,10 @@ function xmlcharacterdata_importevent($parser, $data) {
          $date,$timebegin,$timeend,$error;
   
   if (strtolower($xmlcurrentelement)=="displayedsponsor") {
-    $event['displayedsponsor'] = $data;
+    $event['displayedsponsor'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="displayedsponsorurl") {
-    $event['displayedsponsorurl'] = $data;
+    $event['displayedsponsorurl'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="date") {
     $date = $data;
@@ -152,28 +140,28 @@ function xmlcharacterdata_importevent($parser, $data) {
     $event['categoryid'] = $data;
   }
   elseif (strtolower($xmlcurrentelement)=="title") {
-    $event['title'] = $data;
+    $event['title'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="description") {
-    $event['description'] = $data;
+    $event['description'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="location") {
-    $event['location'] = $data;
+    $event['location'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="price") {
-    $event['price'] = $data;
+    $event['price'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="contact_name") {
-    $event['contact_name'] = $data;
+    $event['contact_name'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="contact_phone") {
-    $event['contact_phone'] = $data;
+    $event['contact_phone'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="contact_email") {
-    $event['contact_email'] = $data;
+    $event['contact_email'] .= $data;
   }
   elseif (strtolower($xmlcurrentelement)=="url") {
-    $event['url'] = $data;
+    $event['url'] .= $data;
   }
 } // end: function characterdata_importevents
 
@@ -183,11 +171,11 @@ function xmlerror_importevent($xml_parser) {
   feedback("XML error: ".xml_error_string(xml_get_error_code($xml_parser))." at line ".xml_get_current_line_number($xml_parser),FEEDBACKNEG);
 } // end: function xmlerror
 
-  pageheader("VT Event Calendar, Import Events from a remote location",
-             "Import Events from a remote location",
-             "","",$database);
+  pageheader(lang('import_events'),
+             lang('import_events'),
+             "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Import events");
+  box_begin("inputbox",lang('import_events'));
   
   $showinputbox = 1;
   if (isset($importurl)) {
@@ -208,10 +196,10 @@ function xmlerror_importevent($xml_parser) {
                                  "xmlcharacterdata_importevent",
                                  "xmlerror_importevent");
       if ($parsexmlerror == FILEOPENERROR) {
-        feedback("Error: Cannot open import file. Please check the URL.<br>",FEEDBACKNEG);
+        feedback(lang('import_error_open_url')."<br>",FEEDBACKNEG);
       }
       if ($error) {
-        feedback("<br>No events were imported.<br>",FEEDBACKNEG);
+        feedback("<br>".lang('no_events_imported')."<br>",FEEDBACKNEG);
       }
       if (!$parsexmlerror) {
 			  if (!$error) {
@@ -236,14 +224,14 @@ function xmlerror_importevent($xml_parser) {
 						}
 						$showinputbox = 0;
 						echo "<br>\n";
-						feedback("$eventnr events were successfully imported.",FEEDBACKPOS);
+						feedback($eventnr." ".lang('events_successfully_imported'),FEEDBACKPOS);
 						echo "<br>\n";
 						echo "<form method=\"post\" action=\"update.php\">\n";
-						echo '  <input type="submit" name="back" value="Back to sponsor\'s options">',"\n";
+						echo '  <input type="submit" name="back" value="',lang('back_to_menu'),'">',"\n";
 						echo "</form>\n";
 					}
 					else {
-						feedback("The import file does not contain any events.",FEEDBACKNEG);
+						feedback(lang('import_file_contains_no_events'),FEEDBACKNEG);
 					}
         } // end: if (!$error) 
 			} // end: if (!$parsexmlerror
@@ -251,16 +239,19 @@ function xmlerror_importevent($xml_parser) {
   }
   if ($showinputbox) {
 ?>
-<a target="main" href="helpimport.php"><img src="images/help.gif" width="16" height="16" alt="" border="0"> How do I import events?</a>
+<a target="main" href="helpimport.php"><img src="images/nuvola/16x16/actions/help.png" width="16" height="16" alt="" border="0"> 
+<?php echo lang('how_to_import'); ?></a>
+<br>
+<br>
 <form method="get" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-<b>Please enter the full URL of the XML file containing the events you want to add.</b><br>
+<b><?php echo lang('enter_import_url_message'); ?></b><br>
 <br>
 <input type="text" name="importurl" value="<?php 
 if (isset($importurl)) { echo $importurl; } ?>" size="60" maxlength="<?php echo constImporturlMaxLength; ?>"><br>
-(e.g. &quot;http://www.vtmc.vt.edu/rec/newevents.xml&quot;)<br>
+<?php echo lang('enter_import_url_example'); ?><br>
 <br>
-<input type="submit" name="startimport" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-<INPUT type="submit" name="cancel" value="Cancel">
+<input type="submit" name="startimport" value="<?php echo lang('ok_button_text'); ?>">
+<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   } // end: if ($showinputbox)

@@ -37,18 +37,18 @@
   } // end else: if (isset($save))
   
 
-  pageheader("VT Event Calendar, Change Homepage Address",
-             "Change Homepage",
-	           "","",$database);
+  pageheader(lang('change_homepage'),
+             lang('change_homepage'),
+	           "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Change homepage address");
+  box_begin("inputbox",lang('change_homepage'));
 ?>
-<B>Please enter the address of your organization's homepage:</B><BR>
-<I>(Make sure to enter the full URL including &quot;http://&quot;.)</I>
+<B><?php echo lang('change_homepage_label'); ?></B><BR>
+<I><?php echo lang('change_homepage_example'); ?></I>
 <FORM method="post" action="changehomepage.php">
 <?php
   if (!checkURL($sponsor['url'])) {
-    feedback("The URL is invalid. Please make sure that you enter: &quot;http://&quot; in front.",1);
+    feedback(lang('url_invalid'),1);
 ?>
   <BR>
 <?php
@@ -57,8 +57,8 @@
   <INPUT type="text" name="sponsor_url" maxlength="<?php echo constUrlMaxLength; ?>" size="60" value="<?php echo HTMLSpecialChars($sponsor['url']); ?>">
   <BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

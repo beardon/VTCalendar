@@ -51,11 +51,11 @@
     defaultevent($event,$_SESSION["AUTH_SPONSORID"],$database); // empty template
   } // end else: if (isset($check))
 
-  pageheader("VT Event Calendar, Add new Template",
-             "Add new Template",
+  pageheader(lang('add_new_template'),
+             lang('add_new_template'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Add new template");
+  box_begin("inputbox",lang('add_new_template'));
 ?>
 <BR>
 <FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -64,8 +64,8 @@
   inputtemplatedata($event,$_SESSION["AUTH_SPONSORID"],$check,$template_name,$database);
 ?>
  <BR>
- <INPUT type="submit" name="savetemplate" value="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;">
- <INPUT type="submit" name="cancel" value="Cancel">
+ <INPUT type="submit" name="savetemplate" value="<?php echo lang('ok_button_text'); ?>">
+ <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </FORM>
 <?php
   box_end();

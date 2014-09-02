@@ -46,21 +46,21 @@
     exit;
   }
 
-  pageheader("Delete Calendar, Event Calendar",
-             "Delete Calendar",
+  pageheader(lang('delete_calendar'),
+             lang('delete_calendar'),
              "Update","",$database);
   echo "<BR>";
-  box_begin("inputbox","Delete Calendar");
+  box_begin("inputbox",lang('delete_calendar'));
 ?>
-<font color="#ff0000"><b>Warning!</b></font> The calendar &quot;<b><?php echo $c['name']; ?></b>&quot; will be deleted.
+<font color="#ff0000"><b><?php echo lang('warning_calendar_delete'); ?> &quot;<b><?php echo $c['name']; ?></b>&quot;</b></font>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <?php
   if ( isset ($cal['id']) ) { echo '<input type="hidden" name="cal[id]" value="'.$cal['id'].'">'; }
 ?>	
 	<BR>
   <BR>
-  <INPUT type="submit" name="save" value="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;">
-  <INPUT type="submit" name="cancel" value="Cancel">
+  <INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+  <INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
   box_end();
