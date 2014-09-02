@@ -1,0 +1,29 @@
+@echo off
+
+REM Optionally include other directories in the path.
+REM path %path%;YOUR_PATHS_HERE
+
+REM Change to the script's directory
+cd "%~d0%~p0"
+
+REM Go up one directory (should be the VTCalendar directory)
+cd ..
+
+if NOT EXIST "config.inc.php" (
+	echo config.inc.php does not exist in %CD%. Cannot continue.
+	exit /B 1
+)
+
+if NOT EXIST "cache" (
+	echo cache directory does not exist in %CD%. Cannot continue.
+	exit /B 1
+)
+
+REM Change to the cache directory
+cd cache
+
+REM Generate the files
+php.exe export
+
+REM Return the error level
+exit /B %ERRORLEVEL%

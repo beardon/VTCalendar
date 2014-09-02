@@ -1,10 +1,10 @@
 <?php
 // Returns a DB connection to the database, or a string that represents an error message.
-function DBOpen($DSN = null, &$DebugInfo = NULL) {
+function DBOpen($DSN = null, $DebugInfo = false) {
 	$connection = DB::connect(($DSN === null ? DATABASE : $DSN));
 	
 	if (DB::isError($connection)) {
-		$DebugInfo = $connection->getDebugInfo();
+		if ($DebugInfo) $GLOBALS['DebugInfo'] = $connection->getDebugInfo();
 		return $connection->getMessage();
 	}
 	
@@ -26,7 +26,7 @@ function DBClose($Connection = null) {
 // Runs a query against the database connection.
 // Returns a record list if successful.
 // Returns a string with an error message if unsuccessful.
-function DBQuery($query, $Connection = null, &$DebugInfo = NULL) {
+function DBQuery($query, $Connection = null, $DebugInfo = false) {
 	global $DBCONNECTION;
 	
 	if ($Connection === null) {
@@ -37,7 +37,7 @@ function DBQuery($query, $Connection = null, &$DebugInfo = NULL) {
 	}
 	
 	if (DB::isError($result)) {
-		$DebugInfo = $result->getDebugInfo();
+		if ($DebugInfo) $GLOBALS['DebugInfo'] = $connection->getDebugInfo();
 		return DB::errorMessage($result);
 	}
 	

@@ -45,9 +45,9 @@ if (count($FormErrors) > 0) {
 
 // If the query string is passing a valid CalendarID, set it to a variable.
 if ( isset($_GET['calendarid']) && isValidInput($_GET['calendarid'],'calendarid') )
-	{ $CalendarID = $_GET['calendarid']; }
+	{ setVar($CalendarID,$_GET['calendarid']); }
 elseif ( isset($_GET['calendar']) && isValidInput($_GET['calendar'],'calendarid') ) 
-	{ $CalendarID = $_GET['calendar']; }
+	{ setVar($CalendarID,$_GET['calendar']); }
 
 // Otherwise, the CalendarID is missing or invalid
 else { outputErrorMessage("The CalendarID was not specified or is invalid."); }
@@ -132,7 +132,8 @@ switch($FormData['format']) {
 		echo GenerateVXML($result);
 		break;
 	case "html":
-		if (!isset($_GET['raw'])) Header("Content-Type: text/html");
+		if ($FormData['jshtml']) Header("Content-type: application/x-javascript; charset=ISO-8859-1");
+		elseif (!isset($_GET['raw'])) Header("Content-Type: text/html");
 		echo GenerateHTML($result, $CalendarID, BASEURL, $FormData);
 		break;
 	case "js":

@@ -256,7 +256,7 @@
 		$lang['export_sponsor_error'] = 'You must either select &quot;All sponsors&quot; or enter the specific sponsor to search for.';
 		$lang['export_htmlsettings'] = 'General HTML Settings';
 		$lang['export_keepcategoryfilter'] = 'Keep Category Filter in VTCalendar';
-		$lang['export_keepcategoryfilter_description'] = 'When events are clicked, and users go to the full VTCalendar screen, the category filter is not maintained. Check the box below if you would like to pass the category filter to VTCalendar so the day, week, month, etc. views are also filtered. This will be ignored if you did selected &quot;All categories&quot; in the previous section.';
+		$lang['export_keepcategoryfilter_description'] = 'When events are clicked, and users go to the full VTCalendar screen, the category filter is not maintained. Check the box below if you would like to pass the category filter to VTCalendar so the day, week, month, etc. views are also filtered. This will be ignored if you selected &quot;All categories&quot; in the previous section.';
 		$lang['export_htmltype'] = 'HTML Type';
 		$lang['export_htmltype_description'] = 'For the HTML export formats (including HTML via JavaScript), the output can either be a series of paragraphs or rows in a single table.';
 		$lang['export_htmltype_paragraph'] = 'Paragraph';

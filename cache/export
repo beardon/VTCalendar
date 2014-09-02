@@ -1,0 +1,135 @@
+<?php
+require_once('../application.inc.php');
+require_once('../main_export_data.inc.php');
+
+// Output and mark the starting time.
+echo "Started @ " . date("Y-m-d H:i:s") . "\n\n";
+$StartTime = explode(' ', microtime());
+
+// Generate files for all calendars.
+ProcessCalendars();
+
+// Output the ending time and duration.
+$EndTime = explode(' ', microtime());
+$TotalTime = $EndTime[0] + $EndTime[1] - ($StartTime[1] + $StartTime[0]);
+echo "\nFinished @ " . date("Y-m-d H:i:s") . " in " . round($TotalTime, 3) . " second(s)\n";
+
+/**
+ * Export files for all calendars in the database (that do not require logging in to view).
+ */
+function ProcessCalendars() {
+	echo "Retrieving list of calendars: ";
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_calendar WHERE viewauthrequired = '0'");
+	if (is_string($result)) {
+		echo "FAILED: ".$result."\n";
+	}
+	else {
+		echo "OK\n";
+		for ($i=0; $i < $result->numRows(); $i++) {
+			$record =& $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
+			ProcessCalendar($record);
+		}
+		$result->free();
+	}
+}
+
+/**
+ * Export files for a calendar.
+ * @param object CalendarRecord The record for the calendar.
+ */
+function ProcessCalendar(&$CalendarRecord) {
+	echo "\nGenerating files for calendar '" . $CalendarRecord['id'] . "'\n";
+	
+	$FormData = $GLOBALS['FormData'];
+	
+	// Export a set of files for the entire calendar.
+	$query = BuildExportQuery($CalendarRecord['id'], $FormData);
+	GenerateFiles($CalendarRecord, $query);
+	
+	// Get a list of categories for the calendar
+	$Categories = GetCategories($CalendarRecord['id']);
+	
+	// Export a set of files for each category.
+	for ($i=0; $i < count($Categories); $i++) {
+		$FormData['categories'] = array($Categories[$i]);
+		
+		// Export the files without a category filter.
+		$query = BuildExportQuery($CalendarRecord['id'], $FormData);
+		GenerateFiles($CalendarRecord, $query, $Categories[$i]);
+	}
+}
+
+/**
+ * Get an array of categories for a calendar.
+ * @param string $id The calendar ID to retrieve categories for.
+ * @return array The categories.
+ */
+function GetCategories($id) {
+	echo "    - Retrieving list of categories: ";
+	
+	$Categories = array();
+	$result =& DBQuery("SELECT id FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($id)."'");
+	
+	if (is_string($result)) {
+		echo "FAILED: " . $result . "\n";
+	}
+	else {
+		echo "OK\n";
+		for ($i=0; $i < $result->numRows(); $i++) {
+			$record =& $result->fetchRow(DB_FETCHMODE_ASSOC, $i);
+			$Categories[count($Categories)] = $record['id'];
+		}
+		$result->free();
+	}
+	
+	return $Categories;
+}
+
+/**
+ * Generate the files for a calendar based on the passed query.
+ * @param object CalendarRecord The record for the calendar.
+ * @param string $query The query to execute to get the records.
+ * @param string $CategoryID An optional category ID for which the $query is filtered by.
+ */
+function GenerateFiles(&$CalendarRecord, $query, $CategoryID = NULL) {
+	// TODO: File locking
+	
+	if ($CategoryID === NULL) {
+		echo "    - Entire Calendar: ";
+	}
+	else {
+		echo "    - Category '".$CategoryID."': ";
+	}
+	
+	// Generate ICS File
+	$result =& DBQuery($query);
+	if (is_string($result)) {
+		echo "FAILED on RSS: " . $result . "\n";
+		return;
+	}
+	else {
+		file_put_contents(
+			CACHE_SUBSCRIBE_LINKS_OUTPUTDIR . $CalendarRecord['id'] . ($CategoryID === NULL ? '' : '_' . $CategoryID) . '.ics',
+			GenerateICal($result, $CalendarRecord['name'], BASEURL));
+		$result->free();
+	}
+	
+	// Generate RSS 2.0 File
+	$result =& DBQuery($query);
+	if (is_string($result)) {
+		echo "FAILED on iCal: " . $result . "\n";
+		return;
+	}
+	else {
+		file_put_contents(
+			CACHE_SUBSCRIBE_LINKS_OUTPUTDIR . $CalendarRecord['id'] . ($CategoryID === NULL ? '' : '_' . $CategoryID) . '.xml',
+			GenerateRSS2_0($result, $CalendarRecord['id'], $CalendarRecord['name'] .": ".$CalendarRecord['title'], BASEURL));
+		$result->free();
+	}
+	
+	echo "OK\n";
+}
+
+DBClose();
+	
+?>

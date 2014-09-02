@@ -1,13 +1,14 @@
 <?php
 function GetTables() {
+	global $Form_POSTGRESSCHEMA, $Form_DBTYPE;
 	$TableData = array();
 	
 	// Use different SQL depending on the database
-	if (DBTYPE == 'mysql') {
+	if ($Form_DBTYPE == 'mysql') {
 		$query = "SHOW TABLES";
 	}
-	elseif (DBTYPE == 'postgres') {
-		$query = "SELECT tablename FROM pg_tables WHERE schemaname='" . sqlescape(POSTGRESSCHEMA) . "'";
+	elseif ($Form_DBTYPE == 'postgres') {
+		$query = "SELECT tablename FROM pg_tables WHERE schemaname='" . sqlescape($Form_POSTGRESSCHEMA) . "'";
 		$keyname = 'tablename';
 	}
 	
@@ -37,6 +38,7 @@ function GetTables() {
 }
 
 function GetTableData(&$TableData, $TableName) {
+	global $Form_POSTGRESSCHEMA, $Form_DBTYPE;
 	$TableData[$TableName] = array();
 	$TableData[$TableName]['Fields'] = array();
 	$TableData[$TableName]['Keys'] = array();
@@ -46,11 +48,11 @@ function GetTableData(&$TableData, $TableName) {
 	// ====================================
 	
 	// Use different SQL depending on the database
-	if (DBTYPE == 'mysql') {
+	if ($Form_DBTYPE == 'mysql') {
 		$query = "SHOW FIELDS FROM `" . $TableName . "`";
 	}
-	elseif (DBTYPE == 'postgres') {
-		$query = "SELECT * from information_schema.columns WHERE table_schema='" . sqlescape(POSTGRESSCHEMA) . "' AND table_name='" . sqlescape($TableName) . "'";
+	elseif ($Form_DBTYPE == 'postgres') {
+		$query = "SELECT * from information_schema.columns WHERE table_schema='" . sqlescape($Form_POSTGRESSCHEMA) . "' AND table_name='" . sqlescape($TableName) . "'";
 	}
 	
 	$result =& DBquery($query);
@@ -65,7 +67,7 @@ function GetTableData(&$TableData, $TableName) {
 		for ($i = 0; $i < $count; $i++) {
 			$record =& $result->fetchRow(DB_FETCHMODE_ASSOC, $i);
 			
-			if (DBTYPE == 'mysql') {
+			if ($Form_DBTYPE == 'mysql') {
 				$type = preg_replace('/\([0-9]+\)/', '', $record['Type']);
 				$length = preg_replace('/^.*\(([0-9]+)\).*$/', '$1', $record['Type']);
 				$TableData[$TableName]['Fields'][$record['Field']]['Type'] = GetCommonType($type);
@@ -73,7 +75,7 @@ function GetTableData(&$TableData, $TableName) {
 				$TableData[$TableName]['Fields'][$record['Field']]['NotNull'] = strtolower($record['Null']) != "yes";
 				$TableData[$TableName]['Fields'][$record['Field']]['AutoIncrement'] = strpos($record['Extra'],"auto_increment") !== false;
 			}
-			elseif (DBTYPE == 'postgres') {
+			elseif ($Form_DBTYPE == 'postgres') {
 				$TableData[$TableName]['Fields'][$record['column_name']]['Type'] = GetCommonType($record['data_type']);
 				$TableData[$TableName]['Fields'][$record['column_name']]['Length'] = (!empty($record['character_maximum_length']) ? $record['character_maximum_length'].'' : '');
 				$TableData[$TableName]['Fields'][$record['column_name']]['NotNull'] = strtolower($record['is_nullable']) != "yes";
@@ -88,14 +90,14 @@ function GetTableData(&$TableData, $TableName) {
 	// ====================================
 	
 	// Use different SQL depending on the database
-	if (DBTYPE == 'mysql') {
+	if ($Form_DBTYPE == 'mysql') {
 		$query = "SHOW INDEXES FROM `" . $TableName . "`";
 	}
-	elseif (DBTYPE == 'postgres') {
+	elseif ($Form_DBTYPE == 'postgres') {
 		$query = "SELECT i.*, c.constraint_type"
 			." FROM pg_indexes i LEFT JOIN information_schema.table_constraints c"
 			." ON i.schemaname=c.table_schema AND i.tablename=c.table_name AND i.indexname = c.constraint_name AND c.table_catalog=current_database()"
-			." WHERE i.schemaname='" . sqlescape(POSTGRESSCHEMA) . "' AND i.tablename='" . sqlescape($TableName) . "'";
+			." WHERE i.schemaname='" . sqlescape($Form_POSTGRESSCHEMA) . "' AND i.tablename='" . sqlescape($TableName) . "'";
 	}
 	
 	$result =& DBquery($query);
@@ -109,11 +111,11 @@ function GetTableData(&$TableData, $TableName) {
 		for ($i = 0; $i < $count; $i++) {
 			$record =& $result->fetchRow(DB_FETCHMODE_ASSOC, $i);
 			
-			if (DBTYPE == 'mysql') {
+			if ($Form_DBTYPE == 'mysql') {
 				$TableData[$TableName]['Keys'][$record['Key_name']]['Unique'] = !($record['Non_unique'] != 0);
 				$TableData[$TableName]['Keys'][$record['Key_name']]['Fields'][intval($record['Seq_in_index'])] = $record['Column_name'];
 			}
-			elseif (DBTYPE == 'postgres') {
+			elseif ($Form_DBTYPE == 'postgres') {
 				if (!preg_match('/CREATE (UNIQUE )?INDEX ([^\s]+) ON ([^\s]+) (USING [^\s]+ )?\(([^)]+)\)/', $record['indexdef'], $matches)) {
 					echo "<div class='Error'><b>Error:</b> Could not parse index def for ".htmlentities($TableName).": " . htmlentities($record['indexdef']) . "</div>";
 				}
@@ -145,6 +147,7 @@ function GetTableData(&$TableData, $TableName) {
 }
 
 function SetMaxLengths(&$TableData, $TableName) {
+	global $Form_DBTYPE;
 	$Fields =& $TableData[$TableName]['Fields'];
 	$FieldNames = array_keys($Fields);
 	
@@ -152,10 +155,10 @@ function SetMaxLengths(&$TableData, $TableName) {
 	for ($i = 0; $i < count($FieldNames); $i++) {
 		if ($i > 0) $query .= ", ";
 		if (preg_match('/^(varchar|text)$/', $Fields[$FieldNames[$i]]['Type']) ||
-			(DBTYPE == 'mysql' && preg_match('/^(timestamp|datetime|date|time)$/', $Fields[$FieldNames[$i]]['Type']))) {
+			($Form_DBTYPE == 'mysql' && preg_match('/^(timestamp|datetime|date|time)$/', $Fields[$FieldNames[$i]]['Type']))) {
 			$query .= "max(length(".$FieldNames[$i].")) as ".$FieldNames[$i]."_max";
 		}
-		elseif (DBTYPE == 'postgres' && preg_match('/^(timestamp|date|time)$/', $Fields[$FieldNames[$i]]['Type'])) {
+		elseif ($Form_DBTYPE == 'postgres' && preg_match('/^(timestamp|date|time)$/', $Fields[$FieldNames[$i]]['Type'])) {
 			$query .= "max(length(cast(".$FieldNames[$i]." as varchar))) as ".$FieldNames[$i]."_max";
 		}
 		else {
@@ -259,7 +262,7 @@ function CreateTable($TableName) {
 }
 
 function CheckTable($TableName) {
-	global $CurrentTables, $FinalTables;
+	global $CurrentTables, $FinalTables, $Form_DBTYPE;
 	
 	$changes = 0;
 	
@@ -294,12 +297,12 @@ function CheckTable($TableName) {
 			if (($Diff = CheckField($TableName, $FinalTablesFields[$i])) !== true) {
 				$changes++;
 				
-				if (DBTYPE == 'mysql') {
+				if ($Form_DBTYPE == 'mysql') {
 					if (!empty($TableSQL)) $TableSQL .= ", \n";
 					$TableSQL .= "\tMODIFY COLUMN " . FIELDQUALIFIER . $FinalTablesFields[$i] . FIELDQUALIFIER . " " . GetFieldSQL($FinalTables, $TableName, $FinalTablesFields[$i]);
 					CheckFieldLength($TableName, $FinalTablesFields[$i]);
 				}
-				elseif (DBTYPE == 'postgres') {
+				elseif ($Form_DBTYPE == 'postgres') {
 					CheckFieldLength($TableName, $FinalTablesFields[$i]);
 					$Field = $FinalTables[$TableName]['Fields'][$FinalTablesFields[$i]];
 					
@@ -358,13 +361,13 @@ function CheckTable($TableName) {
 				if ($modifyIndex) {
 					
 					// In MySQL we can drop the key easily
-					if (DBTYPE == 'mysql') {
+					if ($Form_DBTYPE == 'mysql') {
 						$TableSQL .= "DROP PRIMARY KEY, ";
 						//$TableSQL .= "DROP INDEX " . FIELDQUALIFIER . $FinalTablesIndexes[$i] . FIELDQUALIFIER . ", ";
 					}
 					
 					// For PostgreSQL we must drop the primary key by name.
-					elseif (DBTYPE == 'postgres') {
+					elseif ($Form_DBTYPE == 'postgres') {
 						$TableSQL .= "DROP CONSTRAINT " . FIELDQUALIFIER
 							 . ($FinalTablesIndexes[$i] == 'PRIMARY' ? $CurrentTables[$TableName]['Keys'][$CurrentTableIndexes[$i]]['PKeyName'] : $FinalTablesIndexes[$i])
 							. FIELDQUALIFIER . ", ";
@@ -450,9 +453,10 @@ function CheckIndex($TableName, $IndexName) {
 }
 
 function GetFieldSQL(&$TableData, $TableName, $FieldName) {
+	global $Form_DBTYPE;
 	$Field = $TableData[$TableName]['Fields'][$FieldName];
 	
-	if (DBTYPE == 'postgres' && $Field['AutoIncrement']) {
+	if ($Form_DBTYPE == 'postgres' && $Field['AutoIncrement']) {
 		return "SERIAL";
 	}
 	else {

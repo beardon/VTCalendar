@@ -1,0 +1,128 @@
+<strong>The following table describes the data format:</strong><br>
+<br>
+<table border="1" cellspacing="0" cellpadding="5">
+	<tr>
+		<th>field name</th>
+		<th>usage</th>
+	</tr>
+	<tr>
+		<td>eventid</td>
+		<td>the index number of this event</td>
+	</tr>
+	<tr>
+		<td>sponsorid</td>
+		<td>the short identifier of the organization that inputed the event into the calendar</td>
+	</tr>
+	<tr>
+		<td>inputsponsor</td>
+		<td>the name of the organization that inputed the event into the calendar</td>
+	</tr>
+	<tr>
+		<td>displayedsponsor</td>
+		<td>the name of the sponsor that is displayed in the calendar's detailed view</td>
+	</tr>
+	<tr>
+		<td>displayedsponsorurl</td>
+		<td>the URL of the homepage of the sponsor that is displayed in the calendar's detailed view</td>
+	</tr>
+	<tr>
+		<td>date</td>
+		<td>the date the event takes place, written in the ISO-8601 format</td>
+	</tr>
+	<tr>
+		<td>timebegin</td>
+		<td>
+			<ul>
+				<li>the time the event begins, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>if the value is &quot;00:00&quot; and timeend is &quot;23:59&quot; the event is considered to be an 
+						&quot;all day event&quot;</li>
+			</ul>  
+		</td>
+	</tr>
+	<tr>
+		<td>timeend</td>
+		<td>
+			<ul>
+				<li>the time the event ends, written in the ISO-8601 format (military/24 hour time)</li>
+				<li>if the value is completely ommitted the event is considered to not have a specified
+				ending time</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_vcaldef</td>
+		<td>
+			<ul>
+				<li>if the event is a recurring event it contains the recurrence definition in 
+				<a href="http://www.imc.org/pdi/vcal-10.txt">vCalendar format</a></li>
+				<li>e.g. &quot;W1 MO WE FR 20000502T235900&quot; means that an event repeats every week<br>
+						Monday, Wednesday &amp; Friday until May 2, 2000</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_startdate</td>
+		<td>
+			if the event is a recurring event it contains the date where the recurrence starts
+		</td>
+	</tr>
+	<tr>
+		<td>repeat_enddate</td>
+		<td>
+			if the event is a recurring event it contains the date where the recurrence ends
+		</td>
+	</tr>
+	<tr>
+		<td>categoryid</td>
+		<td>
+			an index number indicating the category of the event (see table below)
+		</td>
+	</tr>
+	<tr>
+		<td>category</td>
+		<td>
+			the name of the category associated with the event
+		</td>
+	</tr>
+	<tr>
+		<td>title</td>
+		<td>the event title (displayed in weekly, monthly and detailed view)</td>
+	</tr>
+	<tr>
+		<td>description</td>
+		<td>a long text describing the specifics of an event<br>
+		the description is only displayed in the detailed view</td>
+	</tr>
+	<tr>
+		<td>location</td>
+		<td>the location where the event takes place (building, room etc.)</td>
+	</tr>
+	<tr>
+		<td>price</td>
+		<td>
+			the price of the event
+		</td>
+	</tr>
+	<tr>
+		<td>contact_name</td>
+		<td>the name of a person that can be contacted if further info is required</td>
+	</tr>
+	<tr>
+		<td>contact_phone</td>
+		<td>
+			contact phone number(s)
+		</td>
+	</tr>
+	<tr>
+		<td>contact_email</td>
+		<td>contact email address</td>
+	</tr>
+	<tr>
+		<td>url</td>
+		<td>URL of a web page specifically describing the event</td>
+	</tr>
+	<tr>
+		<td>recordchanged</td>
+		<td>a timestamp indicating when this event was changed the last time</td>
+	</tr>
+</table>

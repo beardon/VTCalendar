@@ -362,7 +362,7 @@ function GenerateJSArray(&$result, $calendarID, $calendarurl) {
 
 function GenerateHTML(&$result, $calendarID, $calendarurl, &$FormData) {
 	$resultString = "";
-	$linkCategoryFilter = isset($FormData['categories']) && isset($FormData['keepcategoryfilter']) ? "&categoryfilter=" . urlencode(implode(',', $FormData['categories'])) : '';
+	$linkCategoryFilter = isset($FormData['categories']) && $FormData['keepcategoryfilter'] ? "&categoryfilter=" . urlencode(implode(',', $FormData['categories'])) : '';
 	
 	if ($FormData['htmltype'] == "paragraph") {
 		if ($result->numRows() == 0) {
@@ -460,7 +460,7 @@ function GenerateHTML(&$result, $calendarID, $calendarurl, &$FormData) {
 		
 		$resultString = $resultString."</table>\n\n";
 	}
-	elseif ($FormData['htmltype'] == "MAINSITE") {
+	elseif ($FormData['htmltype'] == "mainsite") {
 		if ($result->numRows() == 0) {
 			$resultString = '<p align="center"><i>No upcoming events.</i></p>';
 		}
@@ -469,9 +469,9 @@ function GenerateHTML(&$result, $calendarID, $calendarurl, &$FormData) {
 			while ($ievent < $result->numRows()) {
 				$event = $result->fetchRow(DB_FETCHMODE_ASSOC,$ievent);
 				
-				$resultString = $resultString.'<p id="VTCAL_EventNum'.($ievent+1).'"><a href="'.BASEURL.'main.php?calendarid='.urlencode($calendarID).'&view=event&eventid='.urlencode($event['id']).'&timebegin='.urlencode($event['timebegin']).$$linkCategoryFilter.'">';
+				$resultString = $resultString.'<p id="VTCAL_EventNum'.($ievent+1).'"><a href="'.BASEURL.'main.php?calendarid='.urlencode($calendarID).'&view=event&eventid='.urlencode($event['id']).'&timebegin='.urlencode($event['timebegin']).$linkCategoryFilter.'">';
 				$resultString = $resultString.'<b>'.htmlentities(FormatDate($FormData['dateformat'], dbtime2tick($event['timebegin']))).
-					'<br>'.htmlentities(FormatTimeDisplay($event, $FormData))."<b><br></b></b>\n";
+					'<br/>'.htmlentities(FormatTimeDisplay($event, $FormData))."<b><br/></b></b>\n";
 				
 				$resultString = $resultString.'<span><u';
 				if (isset($FormData['maxtitlecharacters']) && ($FormData['maxtitlecharacters'] < strlen($event['title']))) {
@@ -480,7 +480,7 @@ function GenerateHTML(&$result, $calendarID, $calendarurl, &$FormData) {
 				else {
 					$resultString = $resultString.'>'.htmlentities($event['title']);
 				}
-				$resultString = $resultString."</u><br>\n";
+				$resultString = $resultString."</u><br/>\n";
 				
 				if ($event['location'] != "" && $FormData['showlocation'] == '1') {
 					$resultString = $resultString."<i";
@@ -503,7 +503,17 @@ function GenerateHTML(&$result, $calendarID, $calendarurl, &$FormData) {
 		}
 	}
 	
-	return $resultString;
+	if ($FormData['jshtml']) {
+		$jsparts = ceil(strlen($resultString)/200);
+		$jsEscapedResult = "";
+		for ($i = 0; $i < $jsparts; $i++) {
+			$jsEscapedResult .= "document.write('" . escapeJavaScriptString(substr($resultString, $i * 200, 200)) . "');\n";
+		}
+		return $jsEscapedResult;
+	}
+	else {
+		return $resultString;
+	}
 }
 
 function FormatICalText($text) {
@@ -553,7 +563,7 @@ function GenerateICal4Event(&$event, $calendarURL) {
 	}
 	$ical.= "SUMMARY:".$event['title'].CRLF;
 
-	$ical.= "DESCRIPTION:".CRLF." ";
+	$ical.= "DESCRIPTION:";
 	if (!empty($event['description'])) {
 		$ical.= FormatICalText($event['description']);
 		$ical.= "\\n\\n".CRLF;

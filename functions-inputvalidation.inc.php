@@ -335,7 +335,7 @@ function isValidInput($value, $type) {
 		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_SPECIFICSPONSOR.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='htmltype') {
-		if ($value == 'table' || $value == 'paragraph') { return TRUE; }
+		if ($value == 'table' || $value == 'paragraph' || $value == 'mainsite') { return TRUE; }
 	}
 	elseif ($type=='dateformat') {
 		return preg_match("/^(huge|long|normal|short|tiny|micro)$/", $value) === 1;

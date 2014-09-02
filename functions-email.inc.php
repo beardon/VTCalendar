@@ -63,10 +63,11 @@ if (!function_exists('sendemail')) {
 				}
 			}
 			else {
-				return mail($toName." <".$toAddress.">", 
+				$result = @(mail($toName." <".$toAddress.">", 
 					trim($subject), 
 					trim($body), 
-					"From: ".$fromName." <".$fromAddress.">\nContent-type: text/plain; charset=us-ascii");
+					"From: ".$fromName." <".$fromAddress.">\nContent-type: text/plain; charset=us-ascii"));
+				return $result;
 			}
 		}
 		else {

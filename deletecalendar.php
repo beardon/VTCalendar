@@ -46,8 +46,8 @@ require_once('application.inc.php');
 		$result =& DBQuery("DELETE FROM ".SCHEMANAME."vtcal_calendarviewauth WHERE calendarid='".sqlescape($cal['id'])."'" );
 		if (is_string($result)) { DBErrorBox("Error deleting view auth from ".SCHEMANAME."vtcal_calendarviewauth: " . $result); exit; };
 		
-		$result =& DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($cal['id'])."'" );
-		if (is_string($result)) { DBErrorBox("Error deleting auth from vtcal_auth: " . $result); exit; };
+		$result =& DBQuery("DELETE FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting auth from ".SCHEMANAME."vtcal_auth: " . $result); exit; };
 		
 		$result =& DBQuery("DELETE FROM ".SCHEMANAME."vtcal_searchlog WHERE calendarid='".sqlescape($cal['id'])."'" );
 		if (is_string($result)) { DBErrorBox("Error deleting log entries from ".SCHEMANAME."vtcal_searchlog: " . $result); exit; };

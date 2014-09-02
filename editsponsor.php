@@ -104,9 +104,9 @@ require_once('application.inc.php');
 					$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_sponsor SET name='".sqlescape($sponsor['name'])."',email='".sqlescape($sponsor['email'])."',url='".sqlescape($sponsor['url'])."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id = '".sqlescape($id)."'" );
 	
 					// substitute existing auth info with the new one
-					$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+					$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 					for ($i=0; $i<count($pidsAdded); $i++) {
-						$result = DBQuery("INSERT INTO vtcal_auth (calendarid,userid,sponsorid) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($pidsAdded[$i])."','".sqlescape($id)."')" );
+						$result = DBQuery("INSERT INTO ".SCHEMANAME."vtcal_auth (calendarid,userid,sponsorid) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($pidsAdded[$i])."','".sqlescape($id)."')" );
 					}
 				}
 				else {
@@ -119,9 +119,9 @@ require_once('application.inc.php');
 					$id = $s['id'];
 					
 					// substitute existing auth info with the new one
-					$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+					$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 					for ($i=0; $i<count($pidsAdded); $i++) {
-						$result = DBQuery("INSERT INTO vtcal_auth (calendarid,userid,sponsorid) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($pidsAdded[$i])."','".sqlescape($id)."')" );
+						$result = DBQuery("INSERT INTO ".SCHEMANAME."vtcal_auth (calendarid,userid,sponsorid) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($pidsAdded[$i])."','".sqlescape($id)."')" );
 					}
 				}
 									
@@ -232,7 +232,7 @@ if (isset($sponsor) && $sponsor['admin']) {
 			echo $sponsor['admins'];
 		}
 		elseif ( isset($id) ) {
-			$query = "SELECT * FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."' ORDER BY userid";
+			$query = "SELECT * FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."' ORDER BY userid";
 			$result = DBQuery($query ); 
 			$i = 0;
 			while ($i < $result->numRows()) {

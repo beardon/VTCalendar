@@ -20,8 +20,9 @@ if (file_exists(CONFIGFILENAME)) {
 	exit();
 }
 
-require_once("config-code.php");
 require_once("../functions-io.inc.php");
+require_once("../functions-misc.inc.php");
+require_once("config-code.php");
 require_once("config-functions.inc.php");
 
 // An array of error messages about the submitted form values.
@@ -176,7 +177,7 @@ if (isset($_POST['SaveConfig'])) {
 				?>
 				<h1 style="color:#009900">Configuration File Successfully Created</h1>
 				<p>If you want to make any configuration changes please modify the newly created file <code>config.inc.php</code>.</p>
-				<form method="post" action="upgradedb.php?fromconfig=yes"><input type="hidden" name="DSN" value="<?php echo $Form_DATABASE; ?>"/>If this is a <b>fresh install</b> or if you have <b>upgraded to a newer version</b> of VTCalendar, you should <input type="submit" value="Install or Upgrade Database"/> (MySQL databases only).</form>
+				<form method="post" action="upgradedb.php?fromconfig=yes"><input type="hidden" name="DSN" value="<?php echo $Form_DATABASE; ?>"/>If this is a <b>fresh install</b> or if you have <b>upgraded to a newer version</b> of VTCalendar, you should <input type="submit" value="Install or Upgrade the Database"/>.</form>
 				<?php
 			}
 			else {

@@ -13,7 +13,6 @@ if (!isset($_GET['timebegin']) || !setVar($timebegin,$_GET['timebegin'],'timebeg
 if (isset($timebegin)) {
 	$year = intval(substr($timebegin, 0, 4));
 	$month = intval(substr($timebegin, 5, 2));
-	echo "A";
 }
 
 // Create timestamps for the selected month.
@@ -44,7 +43,7 @@ else {
 					<td><?php echo lang('show_events_for'); ?>:</td>
 					
 					<?php
-					$dateresults =& DBQuery("SELECT substr(timebegin,1,7) as yearmonth, count(*) as eventcount FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' GROUP BY 1 ORDER BY 1 DESC");
+					$dateresults =& DBQuery("SELECT substr(timebegin,1,7) as yearmonth, count(*) as eventcount FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' GROUP BY 1 ORDER BY 1 DESC");
 					if (is_string($dateresults)) {
 						?>
 							<td><select name="month">

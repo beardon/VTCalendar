@@ -92,9 +92,9 @@ function checkeventtime(&$event) {
 		if (!checktime($event['timeend_hour'],$event['timeend_min'])) return false;
 
 		// Create two temporary variables to compare times.
-		$timebegin = sprintf("%s%02s%02s", $event['timebegin_ampm'], $event['timebegin_hour'], $event['timebegin_min']);
-		$timeend = sprintf("%s%02s%02s", $event['timeend_ampm'], $event['timeend_hour'], $event['timeend_min']);
-
+		$timebegin = sprintf("%s%02s%02s", $event['timebegin_ampm'], $event['timebegin_hour'] + ($event['timebegin_ampm'] == "pm" && $event['timebegin_hour'] != 12 ? 12 : 0), $event['timebegin_min']);
+		$timeend = sprintf("%s%02s%02s", $event['timeend_ampm'], $event['timeend_hour'] + ($event['timeend_ampm'] == "pm" && $event['timeend_hour'] != 12 ? 12 : 0), $event['timeend_min']);
+		
 		// Fail if the beginning time is the same as or after the ending time.
 		if (strtolower($timebegin) >= strtolower($timeend)) return false;
 	}

@@ -13,6 +13,7 @@ define("ISCALADMIN", isset($_SESSION['AUTH_ISCALENDARADMIN']) && $_SESSION['AUTH
 $FormData['timebegin'] = 'upcoming';
 $FormData['maxevents'] = '25';
 $FormData['sponsor'] = 'all';
+$FormData['keepcategoryfilter'] = '0';
 $FormData['htmltype'] = 'table';
 $FormData['jshtml'] = '1';
 $FormData['dateformat'] = 'normal';
@@ -52,9 +53,9 @@ if (isset($_GET['timebegin'])) { if (preg_match('/^(today|upcoming)?$/', $_GET['
 if (!empty($_GET['timeend'])) if (isValidInput($_GET['timeend'], 'int_gte1') || isValidInput($_GET['timeend'] . " 23:59:59", 'timeend')) $FormData['timeend'] = $_GET['timeend']; else $FormErrors['timeend'] = lang('export_dates_to_error');
 if (empty($_GET['timebegin']) && !empty($_GET['timeend'])) $FormErrors['timeend'] = lang('export_dates_missingfrom');
 
-if (isset($_GET['c']) && !setVar($_GET['categories'],$_GET['c'],'categoryfilter')) $FormErrors['categories'] = lang('export_categories_error');
-if (DOPREVIEW && !isset($_GET['categories'])) $FormErrors['categories'] = lang('export_categories_error');
+if (isset($_GET['c']) && !setVar($FormData['categories'],$_GET['c'],'categoryfilter')) $FormErrors['categories'] = lang('export_categories_error');
 if (isset($_GET['categories']) && is_string($_GET['categories'])) $FormData['categories'] = explode(",", $_GET['categories']);
+if (DOPREVIEW && !isset($FormData['categories'])) $FormErrors['categories'] = lang('export_categories_error');
 
 if (isset($_GET['sponsor'])) setVar($FormData['sponsor'],$_GET['sponsor'],'sponsortype');
 if (isset($_GET['specificsponsor'])) setVar($FormData['specificsponsor'],trim($_GET['specificsponsor']),'specificsponsor');
@@ -62,9 +63,9 @@ if ($FormData['sponsor'] == "all") $FormData['specificsponsor'] = '';
 if ($FormData['sponsor'] == "specific" && empty($FormData['specificsponsor'])) $FormErrors['sponsor'] = lang('export_sponsor_error');
 
 if (isset($FormData['format']) && $FormData['format'] == "html") {
-	if (isset($_GET['keepcategoryfilter'])) setVar($FormData['keepcategoryfilter'],$_GET['keepcategoryfilter'],'boolean_checkbox');
+	if (isset($_GET['keepcategoryfilter'])) setVar($FormData['keepcategoryfilter'],$_GET['keepcategoryfilter'],'boolean');
 	if (isset($_GET['htmltype'])) setVar($FormData['htmltype'],$_GET['htmltype'],'htmltype');
-	if (isset($_GET['jshtml']) && !setVar($FormData['jshtml'],$_GET['jshtml'],'boolean_checkbox')) unset($FormData['jshtml']);
+	if (isset($_GET['jshtml'])) setVar($FormData['jshtml'],$_GET['jshtml'],'boolean');
 	
 	if (isset($_GET['dateformat'])) setVar($FormData['dateformat'],$_GET['dateformat'],'dateformat');
 	if (isset($_GET['timedisplay'])) setVar($FormData['timedisplay'],$_GET['timedisplay'],'timedisplay');

@@ -54,7 +54,7 @@ function print_event($event, $linkfeatures=true) {
 							<td class="EventDetail-Label" align="left" valign="top" nowrap><strong><?php echo lang('sponsor'); ?>:</strong></td>
 							<td><?php 
 								if (!empty($event['displayedsponsorurl'])) {
-									echo '<a href="',$event['displayedsponsorurl'],'">';
+									echo '<a href="',$event['displayedsponsorurl'],'" target="_blank">';
 									echo htmlentities($event['displayedsponsor']);
 									echo "</a>";
 								}

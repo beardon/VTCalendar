@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Optionally include other directories in the path.
+# path %path%:YOUR_PATHS_HERE
+
+# Determine the VTCalendar Root
+SCRIPTDIR=`dirname "$0"`
+SCRIPTDIR=`cd "$SCRIPTDIR"; pwd`
+VTCALROOT=`dirname "$SCRIPTDIR"`
+
+if [ ! -f "$VTCALROOT/config.inc.php" ]; then
+	echo "config.inc.php does not exist in $VTCALROOT. Cannot continue."
+	exit 1
+fi
+
+if [ ! -d "$VTCALROOT/cache" ]; then
+	echo "cache does not exist in $VTCALROOT. Cannot continue."
+	exit 1
+fi
+
+if [ "$VTCALROOT/cache" != "$SCRIPTDIR" ]; then
+	echo "The $0 script is not in the cache directory. Cannot continue."
+	exit 1
+fi
+
+# Change to the cache directory
+cd "$SCRIPTDIR"
+
+# Generate the files
+php export
+
+# Return the error level
+exit $?

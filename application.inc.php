@@ -50,15 +50,10 @@ if (!defined("NOLOADDB")) {
 
 // Get the specified calendar ID from the query string, either as 'calendarid' or 'calendar'.
 if (isset($_GET['calendarid'])) {
-	$calendarid = $_GET['calendarid'];
+	if (!setVar($calendarid,$_GET['calendarid'],'calendarid')) unset($calendarid);
 }
 elseif (isset($_GET['calendar'])) {
-	$calendarid = $_GET['calendar'];
-}
-
-// Unset the calendar ID if it is invalid.
-if (isset($calendarid) && !isValidInput($calendarid,'calendarid')) {
-	unset($calendarid);
+	if (!setVar($calendarid,$_GET['calendar'],'calendarid')) unset($calendarid);
 }
 
 // Unset the calendar ID if it is already set in the session.

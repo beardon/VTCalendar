@@ -52,7 +52,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$result = DBQuery($query ); 
 	
 	// delete from authorization table
-	$query = "DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deletesponsor); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="sponsorid='".sqlescape($deletesponsor[$i])."'";

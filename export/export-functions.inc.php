@@ -40,22 +40,22 @@ Tiny - Oct 25 '06
 Micro - Oct 25 or "Today"
 */
 function FormatDate($format, $tick) {
-	if ($format == "HUGE") {
+	if ($format == "huge") {
 		return date("l, F j, Y", $tick);
 	}
-	elseif ($format == "LONG") {
+	elseif ($format == "long") {
 		return date("D, F j, Y", $tick);
 	}
-	elseif ($format == "NORMAL") {
+	elseif ($format == "normal") {
 		return date("F j, Y", $tick);
 	}
-	elseif ($format == "SHORT") {
+	elseif ($format == "short") {
 		return date("M. j, Y", $tick);
 	}
-	elseif ($format == "TINY") {
+	elseif ($format == "tiny") {
 		return date("M j, 'y", $tick);
 	}
-	elseif ($format == "MICRO") {
+	elseif ($format == "micro") {
 		//if (date("F j, Y", NOW) == date("F j, Y", $tick)) {
 		//	return "Today";
 		//}

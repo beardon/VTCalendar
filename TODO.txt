@@ -2,14 +2,14 @@ TODO for Version 2.x:
 ===========================
 
 High:
-- None
+- Fix problems with the drop-down and event listing (pertaining to repeating events) in manageevents.php.
 
 Low:
 - Give final warning about truncating records in "Upgrade Database" section in upgradedb.php
 - Improve description on export page.
 - After login do a redirect to avoid resubmitting POST when using the back button
 - Allow data currently stored in session to be loaded from the DB or a file.
-- Validate iCalendar export format.
+- Validate iCalendar export format: http://www.kanzaki.com/docs/ical/
 - Assign DB results by reference. Example: $var =& DBQuery(...) or $results =& $db->query(...)
 - Get row by reference. Example $row =& $results->fetchRow()
 - Free results by using $results->free()
@@ -23,12 +23,10 @@ Future:
 - Allow events to be flagged private so that you can only see them if you log in.
 - Rich Text Editor for description (http://developer.yahoo.com/yui/editor/ or http://www.kevinroth.com/rte/)
 - Full text searching
-- A public submit an event form that submits on behalf of a non-admin sponsor (the calendar admin decides which).
-  Events submitted this way would also need an e-mail address (and other contact info) for the person submitting the event.
-  A confirmation e-mail would be sent to the address with a link the submitted will need to click to act as a spam filter.
-  When the event is accepted or rejected, a confirmation e-mail will be sent to the submitter as well.
 - Store IP if logged in and logout if IP changes.
 - Develop tool for assisting with translations.
+- When creating a new calendar allow settings (i.e. colors, header/footer HTML, sponsors) to be copied from another calendar. Allow user to select what settings by (un)checking boxes. [bkgray]
+- List other calendars in the default calendar's column. Allow calendars to chose not be displayed there. Implement it in the export script to allow the list to be displayed on other Web sites. [Wingrunner]
 
 Finished:
 - Check for the url column in upgradedb.php, and move the URL data to description as part of the upgrade (unless the URL data is empty). The URL column should be emptied as well (Finished 2008-11-07)
@@ -68,9 +66,9 @@ Finished:
 - Added new "view authentication" mode that allows any successfully authenticated user to view the calendar.
 
 TODO for Version 3.x:
-- Modular DB
+- Modular DB, allow DB actions to be customized/optimized per database.
 - Modular authentication
-- Approval chain
+- Approval chain (e.g. SponsorA approves SponsorB's events who approves SponsorC's events)
 - Allow multiple reoccurring definitions with an include/exclude flag. See http://www.imc.org/pdi/vcal-10.txt and http://tools.ietf.org/html/rfc2445
 - Allow any sponsor to be the end of the approval chain, to allow sponsors that can make events public without having access to modify the calendar settings.
 - Allow 'additional categories' for events, which would be used when a user filters the calendar.
@@ -79,8 +77,14 @@ TODO for Version 3.x:
 - Event details appear in small box when hovering over event in month/week/day view.
 - Database connection persistence?
 - Allow any sponsor to accept submissions via a public 'add new event' form.
+  Events submitted this way would also need an e-mail address (and other contact info) for the person submitting the event.
+  A confirmation e-mail would be sent to the address with a link the submitter will need to click to act as a spam filter.
+  When the event is accepted or rejected, a confirmation e-mail will be sent to the submitter as well.
 - An address field that will link to Google Maps. Maybe preview the map directly in the page?
 - Allow week/month to be viewed as a list of events (like upcoming view).
+
+Other Ideas:
+- Icons for events that are displayed in the event/day/week/month views. [Wingrunner]
 
 OLD TODO:
 ===========================

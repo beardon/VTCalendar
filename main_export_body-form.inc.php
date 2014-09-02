@@ -90,10 +90,10 @@ function SpecificSponsorChanged() {
 	    		<td><input name="format" type="radio" value="vxml" id="format_vxml" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "vxml") echo "CHECKED"; ?>></td>
 	    		<td><label for="format_vxml">VoiceXML 2.0 (XML)</label></td>
 	   		</tr>
+	   		<?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) { ?>
 	    	<tr>
 	    		<td colspan="2" style="padding-top: 16px;"><b><?php echo lang('export_format_backup'); ?>:</b></td>
 	   		</tr>
-	   		<?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) { ?>
 	    	<tr>
 	    		<td valign="top"><input name="format" type="radio" value="xml" id="format_xml" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "xml") echo "CHECKED"; ?>></td>
 	    		<td><label for="format_xml">VTCalendar (XML)</label><br/><?php echo lang('export_xml_description'); ?></td>
@@ -220,7 +220,16 @@ function SpecificSponsorChanged() {
 	
 	<blockquote>
 		<p><?php echo lang('export_keepcategoryfilter_description'); ?></p>
-		<p><input name="keepcategoryfilter" type="checkbox" id="keepcategoryfilter" value="1" <?php if (isset($FormData['keepcategoryfilter'])) echo "checked"; ?>><label for="keepcategoryfilter"> <?php echo lang('yes'); ?></label></p>
+		<table border="0" cellspacing="1" cellpadding="0">
+			<tr>
+				<td><input name="keepcategoryfilter" id="keepcategoryfilter_yes" type="radio" value="1" <?php if (isset($FormData['keepcategoryfilter']) && $FormData['keepcategoryfilter'] == '1') echo "checked"; ?>></td>
+				<td><label for="keepcategoryfilter_yes"><?php echo lang('yes'); ?></label></td>
+			</tr>
+			<tr>
+				<td><input name="keepcategoryfilter" id="keepcategoryfilter_no" type="radio" value="0" <?php if (isset($FormData['keepcategoryfilter']) && $FormData['keepcategoryfilter'] == '0') echo "checked"; ?>></td>
+				<td><label for="keepcategoryfilter_no"><?php echo lang('no'); ?></label></td>
+			</tr>
+		</table>
 	</blockquote>
 	
 	<p><b><?php echo lang('export_htmltype'); ?>:</b></p>
@@ -237,10 +246,14 @@ function SpecificSponsorChanged() {
 	
 	<blockquote>
 		<p><?php echo lang('export_jsoutput_description'); ?></p>
-	    <table border="0" cellspacing="1" cellpadding="0">
+		<table border="0" cellspacing="1" cellpadding="0">
 			<tr>
-				<td><input name="jshtml" type="checkbox" id="jshtml" value="1" <?php if (isset($FormData['jshtml'])) echo "checked"; ?>></td>
-				<td><label for="jshtml"><?php echo lang('yes'); ?></label></td>
+				<td><input name="jshtml" id="jshtml_yes" type="radio" value="1" <?php if (isset($FormData['jshtml']) && $FormData['jshtml'] == '1') echo "checked"; ?>></td>
+				<td><label for="jshtml_yes"><?php echo lang('yes'); ?></label></td>
+			</tr>
+			<tr>
+				<td><input name="jshtml" id="jshtml_no" type="radio" value="0" <?php if (isset($FormData['jshtml']) && $FormData['jshtml'] == '0') echo "checked"; ?>></td>
+				<td><label for="jshtml_no"><?php echo lang('no'); ?></label></td>
 			</tr>
 		</table>
 	</blockquote>
@@ -335,8 +348,8 @@ function SpecificSponsorChanged() {
 		</select>
 		<!-- If you are using 24-hour time, then remove the select and option tags above and uncomment the section below -->
 		<!--<select name="timeformat">
-			<option value="long" <?php if (isset($FormData['timeformat']) && $FormData['timeformat'] == 'long') echo "selected"; ?>>24:00 EST</option>
-			<option value="normal" <?php if (isset($FormData['timeformat']) && $FormData['timeformat'] == 'normal') echo "selected"; ?>>24:00</option>
+			<option value="long" <?php if (isset($FormData['timeformat']) && $FormData['timeformat'] == 'long') echo "selected"; ?>>23:59 EST</option>
+			<option value="normal" <?php if (isset($FormData['timeformat']) && $FormData['timeformat'] == 'normal') echo "selected"; ?>>23:59</option>
 		</select>-->
 	</blockquote>
 	

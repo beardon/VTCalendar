@@ -39,7 +39,9 @@ if (!defined("HIDEDBERROR")) {?>
 					?><br><b><?php echo htmlentities($DBCONNECTION); ?></b><?php
 				}
 				if (isset($_GET['message'])) {
-					?><br><b><?php echo htmlentities($_GET['message']); ?></b><?php
+					// Use setVar just in case magic_quotes_gpc is on
+					setVar($errormessage,$_GET['message']);
+					?><br><b><?php echo htmlentities($errormessage); ?></b><?php
 				}
 				?></div></td>
 	</tr>

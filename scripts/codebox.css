@@ -1,0 +1,45 @@
+.CodeBox .DeclStart,
+.CodeBox .DeclEnd,
+.CodeBox .DeclAttributes span {
+	color: #990099 !important;
+}
+.CodeBox .ElementStart,
+.CodeBox .ElementEnd,
+.CodeBox .ElementName {
+	color: #000099;
+}
+.CodeBox .ElementName {
+	font-weight: bold;
+}
+.CodeBox .ElementAttr {
+	color: #CC00CC;
+}
+.CodeBox .AttrName,
+.CodeBox .AttrEq {
+	color: #009999;
+}
+.CodeBox .AttrValue,
+.CodeBox .AttrValueQuote {
+	color: #0000FF;
+}
+.CodeBox .Text {
+	color: #666666;
+}
+.CodeBox-Outer {
+	border: 1px solid #666666;
+	background-color: #FFFFFF;
+	padding: 5px;
+}
+.CodeBox {
+	padding: 0;
+	margin: 0;
+	overflow: scroll;
+	width: 100%;
+}
+.CodeBox .Comment {
+	color: #009900;
+	font-style: italic;
+}
+.CodeBox .DocType {
+	color: #0000FF;
+}

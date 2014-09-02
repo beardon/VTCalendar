@@ -32,7 +32,7 @@ if (!empty($category['name'])) {
 }
 
 if (isset($save) && !$namealreadyexists && !empty($category['name']) ) {
-	$result =& DBQuery("INSERTX INTO ".SCHEMANAME."vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
+	$result =& DBQuery("INSERT INTO ".SCHEMANAME."vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
 	if (is_string($result)) {
 			DBErrorBox($result); exit;
 	}

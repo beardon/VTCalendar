@@ -11,29 +11,29 @@ pageheader(lang('update_calendar'), "Update");
 <div id="UpdateBlock"><div style="border: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>;">
 
 <?php
-if (isset($_GET['fbid'])) { $fbid = $_GET['fbid']; } else { unset($fbid); }
-if (isset($_GET['fbparam'])) { $fbparam = $_GET['fbparam']; } else { unset($fbparam); }
-if ( isset($fbid) ) {
+if (isset($_GET['fbid']) && !setVar($fbid,$_GET['fbid'])) unset($fbid);
+if (isset($_GET['fbparam']) && !setVar($fbparam,$_GET['fbparam'])) unset($fbparam);
+if (isset($fbid) && isset($fbparam)) {
 	$startHTML = '<div class="NotificationBG" style="padding: 8px; border-bottom: 1px solid '.$_SESSION['COLOR_BORDER'].';">';
 	$endHTML = '</div>';
 	if ($fbid=="eaddsuccess" && !$_SESSION['AUTH_ISCALENDARADMIN']) {
 		echo $startHTML;
-		feedback(lang('new_event_submitted_notice')." ".stripslashes(urldecode("\"$fbparam\"")),FEEDBACKPOS);
+		feedback(lang('new_event_submitted_notice')." ".urldecode("\"$fbparam\""),FEEDBACKPOS);
 		echo $endHTML;
 	}
 	elseif ($fbid=="eupdatesuccess" && !$_SESSION['AUTH_ISCALENDARADMIN'] ) {
 		echo $startHTML;
-		feedback(lang('updated_event_submitted_notice')." ".stripslashes(urldecode("\"$fbparam\"")),FEEDBACKPOS);
+		feedback(lang('updated_event_submitted_notice')." ".urldecode("\"$fbparam\""),FEEDBACKPOS);
 		echo $endHTML;
 	}
 	elseif ($fbid=="urlchangesuccess") {
 		echo $startHTML;
-		feedback(lang('hompage_changed_notice')." ".stripslashes(urldecode("\"$fbparam\"")),FEEDBACKPOS);
+		feedback(lang('hompage_changed_notice')." ".urldecode("\"$fbparam\""),FEEDBACKPOS);
 		echo $endHTML;
 	}
 	elseif ($fbid=="emailchangesuccess") {
 		echo $startHTML;
-		feedback(lang('email_changed_notice')." ".stripslashes(urldecode("\"$fbparam\"")),FEEDBACKPOS);
+		feedback(lang('email_changed_notice')." ".urldecode("\"$fbparam\""),FEEDBACKPOS);
 		echo $endHTML;
 	}
 }

@@ -19,7 +19,7 @@ require_once('application.inc.php');
 	if (isset($deleteconfirmed)) {
 		// get the user from the database
 		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_user WHERE id='".sqlescape($userid)."'" );
-		$result = DBQuery("DELETE FROM vtcal_auth WHERE userid='".sqlescape($userid)."'" );
+		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_auth WHERE userid='".sqlescape($userid)."'" );
 
 		redirect2URL("manageusers.php");
 		exit;

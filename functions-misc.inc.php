@@ -1,15 +1,7 @@
 <?php
 // Create an ID for an event that is as unique as possible.
 function getNewEventId() {
-	$random = rand(0,999);
-	$id = time();
-	if ($random<100) {
-		if ($random<10) {
-			$id .= "0";
-		}
-		$id .= "0";
-	}
-	return $id.$random;
+	return sprintf('%010s%03s', time(), rand(0,999));
 }
 
 // Used by the calendar admin scripts (e.g. update.php) to output small error messages.
@@ -74,7 +66,7 @@ function sendemail2user($useremail,$subject,$body) {
 // highlights all occurrences of the keyword in the text
 // case-insensitive
 function highlight_keyword($keyword, $text) {
-	$keyword = preg_quote($keyword);
+	$keyword = preg_quote($keyword, '/');
 	$newtext = preg_replace('/'.$keyword.'/Usi','<span class="KeywordHighlight">\\0</span>',$text);
 	return $newtext;
 }
@@ -126,14 +118,14 @@ function make_clickable($text)
 function removeslashes(&$event) {
 	if (get_magic_quotes_gpc()) {
 		$event['title']=stripslashes($event['title']);
-		$event['description']=stripslashes($event['description']);
-		$event['location']=stripslashes($event['location']);
-		$event['price']=stripslashes($event['price']);
-		$event['contact_name']=stripslashes($event['contact_name']);
-		$event['contact_phone']=stripslashes($event['contact_phone']);
-		$event['contact_email']=stripslashes($event['contact_email']);
-		$event['displayedsponsor']=stripslashes($event['displayedsponsor']);
-		$event['displayedsponsorurl']=stripslashes($event['displayedsponsorurl']);
+		if (isset($event['description'])) $event['description']=stripslashes($event['description']);
+		if (isset($event['location'])) $event['location']=stripslashes($event['location']);
+		if (isset($event['price'])) $event['price']=stripslashes($event['price']);
+		if (isset($event['contact_name'])) $event['contact_name']=stripslashes($event['contact_name']);
+		if (isset($event['contact_phone'])) $event['contact_phone']=stripslashes($event['contact_phone']);
+		if (isset($event['contact_email'])) $event['contact_email']=stripslashes($event['contact_email']);
+		if (isset($event['displayedsponsor'])) $event['displayedsponsor']=stripslashes($event['displayedsponsor']);
+		if (isset($event['displayedsponsorurl'])) $event['displayedsponsorurl']=stripslashes($event['displayedsponsorurl']);
 	}
 }
 
@@ -153,7 +145,7 @@ function checkemail($email) {
 }
 
 // Run a sanity check on incoming request variables and set particular variables if checks are passed
-function setVar(&$var,$value,$type,$default=NULL) {
+function setVar(&$var,$value,$type=NULL,$default=NULL) {
 	// Since we are using the ISO-8859-1 we must handle characters from 127 to 159, which are invalid.
 	// These typically come from Microsoft word or from other Web sites.
 	$badchars = array(
@@ -196,7 +188,7 @@ function setVar(&$var,$value,$type,$default=NULL) {
 			}
 		}
 		
-		if (isValidInput($value, $type)) {
+		if ($type === NULL || isValidInput($value, $type)) {
 			$var = $value;
 			return true;
 		}

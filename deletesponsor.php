@@ -38,7 +38,7 @@ require_once('application.inc.php');
 	 		$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_event_public SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 		}
 		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
-		$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" ); 
+		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" ); 
 		redirect2URL("managesponsors.php");
 		exit;
 	}
