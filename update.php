@@ -10,7 +10,7 @@
   // the next if statement is just to avoid that it redirects when using in testing mode 
 	if ( $_SERVER['HTTP_HOST'] != "localhost" ) {
 		$protocol = "http";
-		if ( isset($HTTPS)) { $protocol .= "s"; }
+		if ( isset($_SERVER['HTTPS'])) { $protocol .= "s"; }
 		if ( BASEURL != SECUREBASEURL && $protocol."://".$_SERVER["HTTP_HOST"].$_SERVER["PHP_SELF"] != SECUREBASEURL."update.php" ) {
 			redirect2URL(SECUREBASEURL."update.php?calendar=".$_SESSION["CALENDARID"]);
 		}

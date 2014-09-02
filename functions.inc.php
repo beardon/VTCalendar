@@ -354,8 +354,12 @@ function authorized($database) {
 } // end: Function authorized()
 
 function viewauthorized($database) {
-  global $userid,$password,$HTTPS;
   $authok = 0;
+  if (isset($_POST['login_userid']) && isset($_POST['login_password'])) {
+	  $userid = $_POST['login_userid'];
+	  $password = $_POST['login_password'];
+	  $userid=strtolower($userid);
+  }
 	if ( $_SESSION["VIEWAUTHREQUIRED"] == 0 ) {
 	  $authok = 1;
 	}
@@ -385,8 +389,9 @@ function viewauthorized($database) {
 		$protocol = "http";
 		$path = substr($_SERVER["PHP_SELF"],0,strrpos($_SERVER["PHP_SELF"],"/")+1);
 		$page = substr($_SERVER["PHP_SELF"],strrpos($_SERVER["PHP_SELF"],"/")+1);
-		if ( isset($HTTPS)) { $protocol .= "s"; }
-		if ( BASEURL != SECUREBASEURL && $protocol."://".$_SERVER["HTTP_HOST"].$path != SECUREBASEURL ) {
+		if ( isset($_SERVER['HTTPS'])) { $protocol .= "s"; }
+		if ( BASEURL != SECUREBASEURL && 
+		    $protocol."://".$_SERVER["HTTP_HOST"].$path != SECUREBASEURL ) {
 			redirect2URL(SECUREBASEURL.$page."?calendar=".$_SESSION["CALENDARID"]);
 		}
     displaylogin("",$database);

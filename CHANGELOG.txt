@@ -1,4 +1,8 @@
-2.2.1 (released May, 2005)
+2.2.2 (released May 24, 2005)
+--------------------------------
+- fixed bug [ 1207823 ] Nobody can login if *whole* calendar requires auth
+
+2.2.1 (released May 16, 2005)
 --------------------------------
 - CRITICAL: fixed bug [ 1202293 ] Permission problem (critical)
 - fixed bug [ 1202291 ] Main admins cannot be added or deleted

@@ -78,7 +78,7 @@
   if (!isset($httpreferer)) { $httpreferer = $_SERVER["HTTP_REFERER"]; }
 
   // check that none other than the even owner (or the calendar admin) calls for edit
-  if (isset($eventid)) {
+  if (!empty($eventid)) {
 	  $query = "SELECT sponsorid FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($eventid)."'";
 	  $result = DBQuery($database, $query );
 	  if ($result->numRows() > 0) { 
@@ -96,7 +96,6 @@
 	    exit;
 	  }
   }
-
 
 function passeventvalues(&$event,$sponsorid,&$repeat) {
   // pass the values
