@@ -78,12 +78,14 @@ if (!empty($keyword)) {
 			$query.="(e.location LIKE '%".sqlescape($kw)."%') or (e.title LIKE '%".sqlescape($kw)."%') or (e.description LIKE '%".sqlescape($kw)."%') or (e.displayedsponsor LIKE '%".sqlescape($kw)."%') or (c.name LIKE '%".sqlescape($kw)."%')";
 		
 			// check if there is a matching keyword in the database
-			for ($j=0; $j<count($search_keyword); $j++) {
-				if ($kw==$search_keyword[$j]) {
-					$kwalt = $search_alternative[$j];
-					$query.=" or (e.location LIKE '%".sqlescape($kw)."%') or (e.title LIKE '%".sqlescape($kwalt)."%') or (e.description LIKE '%".sqlescape($kwalt)."%') or (e.displayedsponsor LIKE '%".sqlescape($kwalt)."%') or (c.name LIKE '%".sqlescape($kwalt)."%')";
-				}
-			} // end: for ($j=0; $j<count($search_keyword); $j++) {
+			if (!empty($search_keyword)) {
+				for ($j=0; $j<count($search_keyword); $j++) {
+					if ($kw==$search_keyword[$j]) {
+						$kwalt = $search_alternative[$j];
+						$query.=" or (e.location LIKE '%".sqlescape($kw)."%') or (e.title LIKE '%".sqlescape($kwalt)."%') or (e.description LIKE '%".sqlescape($kwalt)."%') or (e.displayedsponsor LIKE '%".sqlescape($kwalt)."%') or (c.name LIKE '%".sqlescape($kwalt)."%')";
+					}
+				} // end: for ($j=0; $j<count($search_keyword); $j++) {
+		    }
 			$query.=")"; 
 		} // if ( !empty($kw) ) 
 	}	// for ($i=0; $i<count($keywords); $i++)
@@ -130,7 +132,7 @@ while ($ievent < $result->numRows()) {
 	echo "            ",highlight_keyword($keyword,$event['category_name'])," ";
 	if (!empty($event['location'])) { echo "(".highlight_keyword($keyword,$event['location']).")"; }
 
-    if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
+    if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || !empty($_SESSION["AUTH_ADMIN"])) {
 		echo " &nbsp;&nbsp;<a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
 		echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 		

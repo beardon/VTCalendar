@@ -75,6 +75,28 @@
 	
   $database = DBopen();
   if (!authorized($database)) { exit; }
+  if (!isset($httpreferer)) { $httpreferer = $_SERVER["HTTP_REFERER"]; }
+
+  // check that none other than the even owner (or the calendar admin) calls for edit
+  if (isset($eventid)) {
+	  $query = "SELECT sponsorid FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION["CALENDARID"])."' AND id='".sqlescape($eventid)."'";
+	  $result = DBQuery($database, $query );
+	  if ($result->numRows() > 0) { 
+	  	  $e = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
+	  	  if (!(
+	  	        (isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $e['sponsorid']) || 
+	  	        !empty($_SESSION["AUTH_ADMIN"])
+	  	       )) {
+	           redirect2URL($httpreferer);
+	           exit;
+	      }
+	  }
+	  else {
+	    redirect2URL($httpreferer);
+	    exit;
+	  }
+  }
+
 
 function passeventvalues(&$event,$sponsorid,&$repeat) {
   // pass the values
@@ -198,7 +220,6 @@ function inputeventbuttons(&$event,&$repeat,$database) {
 
   // pass on the event id in the update mode
   if (isset($eventid)) { $event['id'] = $eventid; }
-  if (!isset($httpreferer)) { $httpreferer = $_SERVER["HTTP_REFERER"]; }
 
   $eventvalid = checkevent($event,$repeat);
 

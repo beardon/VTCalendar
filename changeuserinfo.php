@@ -28,7 +28,8 @@
 		
   }
 
-  if (isset($userid)) {
+  // prepend the prefix when creating new users
+  if (isset($userid) && !isset($chooseuser)) {
 		if (substr($userid,0,strlen(AUTH_DB_USER_PREFIX))!=AUTH_DB_USER_PREFIX) { 
 			$userid=AUTH_DB_USER_PREFIX.$userid; 
 		}
@@ -60,6 +61,7 @@
   if (isset($userid)) {
   	$user['id'] = $userid;
 	}
+
   if (isset($save) && checkuser($user) && ($chooseuser || !userExistsInDB($database, $user['id'])) ) { // save user into DB
     if (!empty($chooseuser)) { // update an existing user
       if ( $user['password'] == "#nochange$" ) { // update only the e-mail address
@@ -136,7 +138,7 @@
       feedback(lang('user_id_already_exists'),1);
     }
 		
-	  echo AUTH_DB_USER_PREFIX;	
+	 echo AUTH_DB_USER_PREFIX;	
 ?><INPUT type="text" size="10" name="userid" maxlength=<?php echo $maxlength_id; ?>  value="<?php
   if (isset($check) && $check) { $userid=stripslashes($userid); }
   if (isset($userid)) { echo HTMLSpecialChars(substr($userid,strlen(AUTH_DB_USER_PREFIX))); }

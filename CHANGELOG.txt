@@ -1,3 +1,11 @@
+2.2.1 (released May, 2005)
+--------------------------------
+- CRITICAL: fixed bug [ 1202293 ] Permission problem (critical)
+- fixed bug [ 1202291 ] Main admins cannot be added or deleted
+- fixed bug [ 1202842 ] Password of users w/o prefix cannot be changed
+- fixed bug [ 1183446 ] Values in main_week_datetitle
+- fixed bug [ 1183460 ] No keywords error
+
 2.2.0 (released April 7, 2005)
 --------------------------------
 - JavaScript popup calendar for date selection (using the open-source jscalendar)

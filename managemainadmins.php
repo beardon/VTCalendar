@@ -35,7 +35,7 @@
 ?>	
   <tr bgcolor="<?php echo $color; ?>">
     <td bgcolor="<?php echo $color; ?>"><?php echo $user['id']; ?></td>
-    <td bgcolor="<?php echo $color; ?>"><a href="deletemainadmin.php?userid=<?php echo $user['id']; ?>"><?php echo lang('delete'); ?></a></td>
+    <td bgcolor="<?php echo $color; ?>"><a href="deletemainadmin.php?mainuserid=<?php echo $user['id']; ?>"><?php echo lang('delete'); ?></a></td>
   </tr>
 <?php
   } // end: for ($i=0; $i<$result->numRows(); $i++)

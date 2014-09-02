@@ -114,7 +114,7 @@
 					echo "href=\"main.php?view=event&eventid=",$event['eventid'],"\">";
 					echo HTMLSpecialChars($event['title']);
 					// add little update, delete icons
-					if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
+					if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || !empty($_SESSION["AUTH_ADMIN"])) {
 						echo " <br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
 						echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 			

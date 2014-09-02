@@ -81,11 +81,11 @@ function displaylogin($errormsg,$database) {
       <TABLE width="50%" border="0" cellspacing="1" cellpadding="3" align="center">
         <TR>
           <TD class="inputbox" align="right" nowrap><b><?php echo lang('user_id'); ?>:</b></TD>
-          <TD align="left"><INPUT type="text" name="userid" value=""></TD>
+          <TD align="left"><INPUT type="text" name="login_userid" value=""></TD>
         </TR>
         <TR>
           <TD class="inputbox" align="right"><b><?php echo lang('password'); ?></b></TD>
-          <TD align="left"><INPUT type="password" name="password" value="" maxlength="<?php echo constPasswordMaxLength; ?>"></TD>
+          <TD align="left"><INPUT type="password" name="login_password" value="" maxlength="<?php echo constPasswordMaxLength; ?>"></TD>
         </TR>
         <TR>
           <TD class="inputbox">&nbsp;</TD>
@@ -103,7 +103,7 @@ function displaylogin($errormsg,$database) {
       
     </FORM>
 <script language="JavaScript1.2"><!--
-  document.loginform.userid.focus();
+  document.loginform.login_userid.focus();
 //--></script>
     </DIV>
     <BR>
@@ -247,8 +247,12 @@ function userauthenticated($database,$userid,$password) {
 }
 
 function authorized($database) {
-  global $userid,$password,$authsponsorid;
-  $userid=strtolower($userid);
+  global $authsponsorid;
+  if (isset($_POST['login_userid']) && isset($_POST['login_password'])) {
+	  $userid = $_POST['login_userid'];
+	  $password = $_POST['login_password'];
+	  $userid=strtolower($userid);
+  }
 	$message_loginerror = lang('login_failed'); 
 
 	if ( isset($userid) && preg_match(REGEXVALIDUSERID, $userid) && isset($password) ) {
@@ -770,7 +774,8 @@ function print_week_event(&$event,$preview) {
   echo '<span class="eventcategory">'.$event['category_name'].'</span>';
 
     // add little update, delete icons
-    if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || isset($_SESSION["AUTH_ADMIN"])) {
+    if ((isset($_SESSION["AUTH_SPONSORID"]) && $_SESSION["AUTH_SPONSORID"] == $event['sponsorid']) || 
+         !empty($_SESSION["AUTH_ADMIN"]) ) {
       echo "<br><a href=\"changeeinfo.php?eventid=",$event['eventid'],"\" title=\"",lang('update_event'),"\">";
       echo "<img src=\"images/nuvola/16x16/actions/color_line.png\" height=\"16\" width=\"16\" alt=\"",lang('update_event'),"\" border=\"0\"></a>";
 

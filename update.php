@@ -3,8 +3,8 @@
   require_once('globalsettings.inc.php');
   require_once('functions.inc.php');
 
-  if (isset($_POST['userid'])) { setVar($userid,$_POST['userid'],'userid'); } else { unset($userid); }
-  if (isset($_POST['password'])) { setVar($password,$_POST['password'],'password'); } else { unset($password); }
+//  if (isset($_POST['userid'])) { setVar($userid,$_POST['userid'],'userid'); } else { unset($userid); }
+//  if (isset($_POST['password'])) { setVar($password,$_POST['password'],'password'); } else { unset($password); }
   if (isset($_GET['authsponsorid'])) { setVar($authsponsorid,$_GET['authsponsorid'],'sponsorid'); } else { unset($authsponsorid); }
 
   // the next if statement is just to avoid that it redirects when using in testing mode 

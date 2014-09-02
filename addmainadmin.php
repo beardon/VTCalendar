@@ -10,14 +10,14 @@
   if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
   if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
   if (isset($_POST['check'])) { setVar($check,$_POST['check'],'check'); } else { unset($check); }
-  if (isset($_POST['userid'])) { setVar($userid,$_POST['userid'],'userid'); } else { unset($userid); }
+  if (isset($_POST['mainuserid'])) { setVar($mainuserid,$_POST['mainuserid'],'userid'); } else { unset($mainuserid); }
 
-	function checkuser(&$user) {
+  function checkuser(&$user) {
     return (!empty($user['id']) && isValidInput($user['id'],'userid'));
   }
 
-	function mainAdminExistsInDB($database, $userid) {
-		$query = "SELECT count(id) FROM vtcal_adminuser WHERE id='".sqlescape($userid)."'";
+	function mainAdminExistsInDB($database, $mainuserid) {
+		$query = "SELECT count(id) FROM vtcal_adminuser WHERE id='".sqlescape($mainuserid)."'";
 		$result = DBQuery($database, $query ); 
 		$r = $result->fetchRow(0);
 		if ($r[0]>0) { return true; }
@@ -30,7 +30,7 @@
     exit;
   };
 
-  if (!empty($userid)) { $user['id'] = $userid; } else { $user['id'] = ""; }
+  if (!empty($mainuserid)) { $user['id'] = $mainuserid; } else { $user['id'] = ""; }
   if (isset($save) && checkuser($user) && !mainAdminExistsInDB($database, $user['id']) && isValidUser($database, $user['id']) ) { // save user into DB
 		$query = "INSERT INTO vtcal_adminuser (id) VALUES ('".sqlescape($user['id'])."')";
 		$result = DBQuery($database, $query ); 
@@ -42,7 +42,7 @@
 
   // print page header
   if (!empty($chooseuser)) {
-    if (empty($userid)) { // no user was selected
+    if (empty($mainuserid)) { // no user was selected
       // reroute to sponsormenu page
       redirect2URL("update.php?fbid=userupdatefailed");
       exit;
@@ -65,7 +65,7 @@
   if (isset($user['id']) && (!isset($check) || $check != 1)) { // load user to update information if it's the first time the form is viewed
     $result = DBQuery($database, "SELECT * FROM vtcal_user WHERE id='".sqlescape($user['id'])."'" ); 
     $user = $result->fetchRow(DB_FETCHMODE_ASSOC);
-  } // end if: "if (isset($userid))"
+  } // end if: "if (isset($mainuserid))"
 ?>
 <FORM method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" name="mainform">
 <TABLE border="0" cellpadding="2" cellspacing="0">
@@ -75,19 +75,19 @@
     </TD>
     <TD class="bodytext" valign="baseline">
 <?php
-  	if (isset($check) && $check && (empty($userid))) {
+  	if (isset($check) && $check && (empty($mainuserid))) {
       feedback(lang('choose_user_id'),1);
     }
-    elseif (isset($check) && $check && mainAdminExistsInDB($database,$userid)) {
+    elseif (isset($check) && $check && mainAdminExistsInDB($database,$mainuserid)) {
       feedback(lang('already_main_admin'),1);
     }
-    elseif (isset($check) && $check && !isValidUser($database, $userid)) {
+    elseif (isset($check) && $check && !isValidUser($database, $mainuserid)) {
       feedback(lang('user_not_exists'),1);
     }
-?><INPUT type="text" size="20" name="userid" maxlength="50" value="<?php
-  if (!empty($userid)) {
-		if ($check) { $userid=stripslashes($userid); }
-  	echo $userid;
+?><INPUT type="text" size="20" name="mainuserid" maxlength="50" value="<?php
+  if (!empty($mainuserid)) {
+		if ($check) { $mainuserid=stripslashes($mainuserid); }
+  	echo $mainuserid;
 	}
 ?>"> <I><?php echo lang('user_id_example'); ?></I>
 <BR>
