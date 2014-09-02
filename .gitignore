@@ -1,3 +1,6 @@
 # Intellij
 .idea
 *.iml
+
+# VTCalendar
+config.inc.php
