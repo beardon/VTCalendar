@@ -12,6 +12,9 @@ High:
 - Change 'Jump To' in column back to being a single drop-down.
 - Allow data currently stored in session to be loaded from the DB or a file.
 - Update search logging/reporting so that it knows keywords can only be up to 255 characters.
+- Improve description on export page.
+- For upgradedb.php make sure 'int(11)' is aliased to 'int'.
+- Change fields to NotNull. Many fields are allowed to be null.
 
 Low:
 - Assign DB results by reference. Example: $var =& DBQuery(...) or $results =& $db->query(...)
@@ -24,7 +27,6 @@ Low:
 - "Send event to a friend" form.
 - Allow week/month to be viewed as a list of events (like upcoming view).
 - A 'comments' field for sponsors where additional information (e.g. mailing address or phone number) could be stored.
-- Include file from static-includes before sub-calendar headers, and after sub-calendar footers.
 - Develop tool for assisting with translations.
 - Store IP if logged in and logout if IP changes.
 
@@ -35,6 +37,7 @@ Future:
   When the event is accepted or rejected, a confirmation e-mail will be sent to the submitter as well.
 
 Finished:
+- Include file from static-includes before sub-calendar headers, and after sub-calendar footers.
 - Improve 'Upcoming' print view (Finished 08-10-15)
 - Disable admin buttons/icons in print view (Finished 08-10-15)
 - Disable AJAX in month view for little calendar month-navigation arrows.

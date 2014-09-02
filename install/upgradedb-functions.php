@@ -43,7 +43,7 @@ function GetTableData(&$TableData, $TableName) {
 		for ($i = 0; $i < $count; $i++) {
 			$record =& $result->fetchRow(DB_FETCHMODE_ASSOC, $i);
 			
-			$TableData[$TableName]['Fields'][$record['Field']]['Type'] = $record['Type'];
+			$TableData[$TableName]['Fields'][$record['Field']]['Type'] = GetCommonType($record['Type']);
 			$TableData[$TableName]['Fields'][$record['Field']]['NotNull'] = strtolower($record['Null']) != "yes";
 			$TableData[$TableName]['Fields'][$record['Field']]['AutoIncrement'] = strpos($record['Extra'],"auto_increment") !== false;
 		}
@@ -311,5 +311,15 @@ function GetIndexFieldSQL(&$TableData, $TableName, $IndexName) {
 			return "INDEX `" . $IndexName . "` (" . $sql . ")";
 		}
 	}
+}
+
+function GetCommonType($type) {
+	switch ($type) {
+		case 'character varying': return 'varchar';
+		case 'integer': return 'int';
+		case 'int(11)': return 'int';
+		case 'timestamp without time zone': return 'timestamp';
+	}
+	return $type;
 }
 ?>

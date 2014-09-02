@@ -306,13 +306,6 @@ if (!defined("EMAIL_SMTP_TIMEOUT")) define("EMAIL_SMTP_TIMEOUT", 0);
 
 // END GENERATED
 
-//define("ALLOWED_YEARS_AHEAD", 3);
-
-//define("INCLUDE_STATIC_PRE_HEADER", false);
-//define("INCLUDE_STATIC_POST_HEADER", false);
-//define("INCLUDE_STATIC_PRE_FOOTER", false);
-//define("INCLUDE_STATIC_POST_FOOTER", false);
-
 // TODO: Disabled feature.
 define("AUTH_HTTP_CACHE", false);
 define("AUTH_HTTP_CACHE_EXPIRATIONDAYS", 4);
@@ -334,16 +327,9 @@ if (TIMEZONE != '') {
 
 // ---------- The following functions allow you to customize processing based on your database -------
 
-/*// escapes a value to make it safe for a SQL query
-if (!function_exists('sqlescape')) {
-	function sqlescape($value) {
-	  if (preg_match("/^pgsql/",DATABASE)) {
-		  return pg_escape_string($value);
-		}
-		else {
-			return mysql_escape_string($value);
-		}
-	}
+// Escapes a value to make it safe for a SQL query
+/*function sqlescape($value) {
+
 }*/
 
 // --------------- The following functions allow you to customize the date format display ------------
