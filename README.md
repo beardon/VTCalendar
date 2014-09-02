@@ -1,5 +1,4 @@
-
-[Source](http://vtcalendar.sourceforge.net/ "Permalink to VTCalendar")
+This project is an import of the original [VTCalendar](http://vtcalendar.sourceforge.net/ "Permalink to VTCalendar") hosted on SourceForge.
 
 # VTCalendar
 
