@@ -70,6 +70,10 @@
 //          since vendor/vendorSub is no longer used and the sniffer 
 //          was assuming Mozilla. Also belatedly added is_nav8 and 
 //          is_nav8up.
+// 060919 - Some catchup mods here; adding is_opera8, is_opera9, 
+//          and IE7 (thanks to Jonathan Warrington)
+// 061009 - Added is_macosx check and safari to Flash checking, per 
+//          Michael Hopkins 
 //
 // Everything you always wanted to know about your JavaScript client
 // but were afraid to ask. Creates "is_" variables indicating:
@@ -127,13 +131,16 @@
     var is_opera3 = (agt.indexOf("opera 3") != -1 || agt.indexOf("opera/3") != -1);
     var is_opera4 = (agt.indexOf("opera 4") != -1 || agt.indexOf("opera/4") != -1);
     var is_opera5 = (agt.indexOf("opera 5") != -1 || agt.indexOf("opera/5") != -1);
-    var is_opera6 = (agt.indexOf("opera 6") != -1 || agt.indexOf("opera/6") != -1); // new 020128- abk
-    var is_opera7 = (agt.indexOf("opera 7") != -1 || agt.indexOf("opera/7") != -1); // new 021205- dmr
-    var is_opera8 = (agt.indexOf("opera 8") != -1 || agt.indexOf("opera/8") != -1); // new 021205- dmr
+    var is_opera6 = (agt.indexOf("opera 6") != -1 || agt.indexOf("opera/6") != -1); // 020128- abk
+    var is_opera7 = (agt.indexOf("opera 7") != -1 || agt.indexOf("opera/7") != -1); // 021205- dmr
+    var is_opera8 = (agt.indexOf("opera 8") != -1 || agt.indexOf("opera/8") != -1); // 09-19-2006 jonw 
+    var is_opera9 = (agt.indexOf("opera 9") != -1 || agt.indexOf("opera/9") != -1); // 09-19-2006 jonw
+
     var is_opera5up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4);
     var is_opera6up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4 && !is_opera5); // new020128
     var is_opera7up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4 && !is_opera5 && !is_opera6); // new021205 -- dmr
-    var is_opera8up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4 && !is_opera5 && !is_opera6 && !is_opera7); // Addition by Andre Mekkawi
+    var is_opera8up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4 && !is_opera5 && !is_opera6 && !is_opera7); // 09-19-2006 - jonw
+    var is_opera9up = (is_opera && !is_opera2 && !is_opera3 && !is_opera4 && !is_opera5 && !is_opera6 && !is_opera7 &&!is_opera8); // 09-19-2006 - jonw
 
     // Note: On IE, start of appVersion return 3 or 4
     // which supposedly is the version of Netscape it is compatible with.
@@ -258,6 +265,9 @@
     var is_ie6   = (is_ie && is_major == 6);
     var is_ie6up = (is_ie && is_minor >= 6);
 
+    var is_ie7   = (is_ie && is_major == 7);
+    var is_ie7up = (is_ie && is_minor >= 7);
+
 // KNOWN BUG: On AOL4, returns false if IE3 is embedded browser
     // or if this is the first browser window opened.  Thus the
     // variables is_aol, is_aol3, and is_aol4 aren't 100% reliable.
@@ -362,6 +372,7 @@
                                (agt.indexOf("68000")!=-1)));
     var is_macppc = (is_mac && ((agt.indexOf("ppc")!=-1) ||
                                 (agt.indexOf("powerpc")!=-1)));
+    var is_macosx = (is_mac && (agt.indexOf("os x")!=-1));
 
     var is_sun   = (agt.indexOf("sunos")!=-1);
     var is_sun4  = (agt.indexOf("sunos 4")!=-1);
@@ -419,7 +430,7 @@
    var is_Flash        = false;
    var is_FlashVersion = 0;
 
-   if ((is_nav||is_opera||is_moz||is_fb||is_fx)||
+   if ((is_nav||is_opera||is_moz||is_fb||is_fx||is_safari)||
        (is_mac&&is_ie5up)) {
       var plugin = (navigator.mimeTypes && 
                     navigator.mimeTypes["application/x-shockwave-flash"] &&

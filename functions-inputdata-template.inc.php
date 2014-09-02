@@ -1,23 +1,23 @@
 <?php
 function inputtemplatedata(&$event,$sponsorid,$check,$template_name) {
 	?>
-	<TABLE border="0" cellpadding="2" cellspacing="0">
-		<TR>
-			<TD class="bodytext" valign="top">
+	<table border="0" cellpadding="2" cellspacing="0">
+		<tr>
+			<td class="bodytext" valign="top">
 				<strong><?php echo lang('template_name'); ?>:</strong> <span class="WarningText">*</span>
-			</TD>
-			<TD class="bodytext" valign="top">
+			</td>
+			<td class="bodytext" valign="top">
 	<?php
 		if ($check && (empty($template_name))) {
 			feedback(lang('choose_template_name'),FEEDBACKNEG);
 		}
 	?>
-		<INPUT type="text" size="24" name="template_name" maxlength="<?php echo constTemplate_nameMaxLength; ?>" value="<?php
+		<input type="text" size="24" name="template_name" maxlength="<?php echo MAXLENGTH_TEMPLATE_NAME; ?>" value="<?php
 	
 		if ($check) { $template_name=stripslashes($template_name); }
 		echo HTMLSpecialChars($template_name);
 	?>">
-				<I><?php echo lang('template_name_example'); ?></I>
+				<i><?php echo lang('template_name_example'); ?></i>
 			</td>
 		<tr>
 	</table>

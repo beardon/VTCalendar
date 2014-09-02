@@ -18,8 +18,8 @@ else {
 }
 
 // Create timestamps for the selected range.
-//$rangestartTimestamp = $rangestart . " " . $day_beg_h . ":00:00";
-//$rangeendTimestamp = $rangeend . " " . $day_end_h . ":59:59";
+//$rangestartTimestamp = $rangestart . " " . DAY_BEG_H . ":00:00";
+//$rangeendTimestamp = $rangeend . " " . DAY_END_H . ":59:59";
 
 pageheader(lang('searched_keywords'), "Update");
 contentsection_begin(lang('searched_keywords'),true);
@@ -39,7 +39,7 @@ contentsection_begin(lang('searched_keywords'),true);
 </form>
 <?php
 
-$result =& DBquery("SELECT sum(count) as sum, keyword FROM vtcal_searchedkeywords WHERE searchdate >= '" . $rangestart . "' AND searchdate <= '" . $rangeend . "' GROUP BY keyword");
+$result =& DBquery("SELECT sum(count) as sum, keyword FROM ".TABLEPREFIX."vtcal_searchedkeywords WHERE searchdate >= '" . $rangestart . "' AND searchdate <= '" . $rangeend . "' GROUP BY keyword");
 
 if (is_string($result)) {
 	DBErrorBox($result);

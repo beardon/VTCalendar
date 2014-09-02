@@ -134,7 +134,6 @@ function removeslashes(&$event) {
 		$event['contact_name']=stripslashes($event['contact_name']);
 		$event['contact_phone']=stripslashes($event['contact_phone']);
 		$event['contact_email']=stripslashes($event['contact_email']);
-		$event['url']=stripslashes($event['url']);
 		$event['displayedsponsor']=stripslashes($event['displayedsponsor']);
 		$event['displayedsponsorurl']=stripslashes($event['displayedsponsorurl']);
 	}
@@ -156,7 +155,7 @@ function checkemail($email) {
 }
 
 // Run a sanity check on incoming request variables and set particular variables if checks are passed
-function setVar(&$var,$value,$type) {
+function setVar(&$var,$value,$type,$default=NULL) {
 	// Since we are using the ISO-8859-1 we must handle characters from 127 to 159, which are invalid.
 	// These typically come from Microsoft word or from other Web sites.
 	$badchars = array(
@@ -205,8 +204,11 @@ function setVar(&$var,$value,$type) {
 		}
 	}
 	
-	// unless something is explicitly allowed unset the variable
-	$var = NULL;
+	// Set the var to the default if the value was invalid and a default was set.
+	if ($default !== NULL) {
+		$var = $default;
+	}
+	
 	return false;
 }
 
@@ -215,13 +217,20 @@ function lang($sTextKey) {
 	global $lang;
 	
 	if (!isset($lang[$sTextKey])) {
-		require('languages/en.inc.php');
-	}
-	
-	if (!isset($lang[$sTextKey])) {
 		return "";
 	}
 	else {
+		// Debug code that reverses case so inline text (aka: text not using lang()) can easily be located.
+		/*$finalstr = "";
+		for ($i=0; $i < strlen($lang[$sTextKey]); $i++) {
+			if (strtolower(substr($lang[$sTextKey], $i, 1)) === substr($lang[$sTextKey], $i, 1)) {
+				$finalstr .= strtoupper(substr($lang[$sTextKey], $i, 1));
+			}
+			else {
+				$finalstr .= strtolower(substr($lang[$sTextKey], $i, 1));
+			}
+		}
+		return $finalstr;*/
 		return $lang[$sTextKey];
 	}
 }
@@ -229,5 +238,11 @@ function lang($sTextKey) {
 // Formats a string so that it can be placed inside of a JavaScript string (e.g. document.write('');)
 function escapeJavaScriptString($string) {
 	return str_replace("\t", "\\t", str_replace("\r", "\\r", str_replace("\n", "\\n", str_replace("\"", "\\\"", str_replace("'", "\\'", str_replace("\\", "\\\\", $string))))));
+}
+
+if (!function_exists("html_entity_decode")) {
+	function html_entity_decode($string, $quote_style=NULL, $charset=NULL) {
+		return str_replace("&amp;", "&", str_replace("&lt;", "<", str_replace("&gt;", ">", str_replace("&quot;", '"', $string))));
+	}
 }
 ?>

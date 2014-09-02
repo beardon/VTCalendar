@@ -5,7 +5,9 @@ if (!defined("ALLOWINCLUDES")) exit;
 $Form_TITLEPREFIX = '';
 $Form_TITLESUFFIX = '';
 $Form_LANGUAGE = 'en';
+$Form_ALLOWED_YEARS_AHEAD = '3';
 $Form_DATABASE = '';
+$Form_TABLEPREFIX = '';
 $Form_SQLLOGFILE = '';
 $Form_REGEXVALIDUSERID = '/^[A-Za-z][\\._A-Za-z0-9\\-\\\\]{1,49}$/';
 $Form_AUTH_DB = true;
@@ -27,23 +29,40 @@ $Form_BASEPATH = '';
 $Form_BASEDOMAIN = '';
 $Form_BASEURL = '';
 $Form_SECUREBASEURL = '';
-$Form_TIMEZONE_OFFSET = '5';
+$Form_TIMEZONE = '';
 $Form_WEEK_STARTING_DAY = '0';
 $Form_USE_AMPM = true;
 $Form_COLUMNSIDE = 'RIGHT';
 $Form_SHOW_UPCOMING_TAB = true;
 $Form_MAX_UPCOMING_EVENTS = '75';
 $Form_SHOW_MONTH_OVERLAP = true;
-$Form_AUTH_HTTP_CACHE = false;
-$Form_AUTH_HTTP_CACHE_EXPIRATIONDAYS = '4';
+$Form_INCLUDE_STATIC_PRE_HEADER = false;
+$Form_INCLUDE_STATIC_POST_HEADER = false;
+$Form_INCLUDE_STATIC_PRE_FOOTER = false;
+$Form_INCLUDE_STATIC_POST_FOOTER = false;
 $Form_MAX_CACHESIZE_CATEGORYNAME = '100';
+$Form_CACHE_ICS = false;
+$Form_EXPORT_PATH = 'export/export.php';
+$Form_MAX_EXPORT_EVENTS = '100';
+$Form_EXPORT_CACHE_MINUTES = '5';
+$Form_PUBLIC_EXPORT_VTCALXML = false;
+$Form_EMAIL_USEPEAR = false;
+$Form_EMAIL_SMTP_HOST = 'localhost';
+$Form_EMAIL_SMTP_PORT = '25';
+$Form_EMAIL_SMTP_AUTH = false;
+$Form_EMAIL_SMTP_USERNAME = '';
+$Form_EMAIL_SMTP_PASSWORD = '';
+$Form_EMAIL_SMTP_HELO = 'localhost';
+$Form_EMAIL_SMTP_TIMEOUT = '0';
 
 // Load Submitted Form Values
 if (isset($_POST['SaveConfig'])) {
 	$Form_TITLEPREFIX = $_POST['TITLEPREFIX'];
 	$Form_TITLESUFFIX = $_POST['TITLESUFFIX'];
 	$Form_LANGUAGE = $_POST['LANGUAGE'];
+	$Form_ALLOWED_YEARS_AHEAD = $_POST['ALLOWED_YEARS_AHEAD'];
 	$Form_DATABASE = $_POST['DATABASE'];
+	$Form_TABLEPREFIX = $_POST['TABLEPREFIX'];
 	$Form_SQLLOGFILE = $_POST['SQLLOGFILE'];
 	$Form_REGEXVALIDUSERID = $_POST['REGEXVALIDUSERID'];
 	$Form_AUTH_DB = isset($_POST['AUTH_DB']);
@@ -73,7 +92,7 @@ if (isset($_POST['SaveConfig'])) {
 	$Form_BASEDOMAIN = $_POST['BASEDOMAIN'];
 	$Form_BASEURL = $_POST['BASEURL'];
 	$Form_SECUREBASEURL = $_POST['SECUREBASEURL'];
-	$Form_TIMEZONE_OFFSET = $_POST['TIMEZONE_OFFSET'];
+	$Form_TIMEZONE = $_POST['TIMEZONE'];
 	$Form_WEEK_STARTING_DAY = $_POST['WEEK_STARTING_DAY'];
 	$Form_USE_AMPM = isset($_POST['USE_AMPM']);
 	$Form_COLUMNSIDE = $_POST['COLUMNSIDE'];
@@ -82,11 +101,28 @@ if (isset($_POST['SaveConfig'])) {
 		$Form_MAX_UPCOMING_EVENTS = $_POST['MAX_UPCOMING_EVENTS'];
 	}
 	$Form_SHOW_MONTH_OVERLAP = isset($_POST['SHOW_MONTH_OVERLAP']);
-	$Form_AUTH_HTTP_CACHE = isset($_POST['AUTH_HTTP_CACHE']);
-	if ($Form_AUTH_HTTP_CACHE) {
-		$Form_AUTH_HTTP_CACHE_EXPIRATIONDAYS = $_POST['AUTH_HTTP_CACHE_EXPIRATIONDAYS'];
-	}
+	$Form_INCLUDE_STATIC_PRE_HEADER = isset($_POST['INCLUDE_STATIC_PRE_HEADER']);
+	$Form_INCLUDE_STATIC_POST_HEADER = isset($_POST['INCLUDE_STATIC_POST_HEADER']);
+	$Form_INCLUDE_STATIC_PRE_FOOTER = isset($_POST['INCLUDE_STATIC_PRE_FOOTER']);
+	$Form_INCLUDE_STATIC_POST_FOOTER = isset($_POST['INCLUDE_STATIC_POST_FOOTER']);
 	$Form_MAX_CACHESIZE_CATEGORYNAME = $_POST['MAX_CACHESIZE_CATEGORYNAME'];
+	$Form_CACHE_ICS = isset($_POST['CACHE_ICS']);
+	$Form_EXPORT_PATH = $_POST['EXPORT_PATH'];
+	$Form_MAX_EXPORT_EVENTS = $_POST['MAX_EXPORT_EVENTS'];
+	$Form_EXPORT_CACHE_MINUTES = $_POST['EXPORT_CACHE_MINUTES'];
+	$Form_PUBLIC_EXPORT_VTCALXML = isset($_POST['PUBLIC_EXPORT_VTCALXML']);
+	$Form_EMAIL_USEPEAR = isset($_POST['EMAIL_USEPEAR']);
+	if ($Form_EMAIL_USEPEAR) {
+		$Form_EMAIL_SMTP_HOST = $_POST['EMAIL_SMTP_HOST'];
+		$Form_EMAIL_SMTP_PORT = $_POST['EMAIL_SMTP_PORT'];
+		$Form_EMAIL_SMTP_AUTH = isset($_POST['EMAIL_SMTP_AUTH']);
+		if ($Form_EMAIL_SMTP_AUTH) {
+			$Form_EMAIL_SMTP_USERNAME = $_POST['EMAIL_SMTP_USERNAME'];
+			$Form_EMAIL_SMTP_PASSWORD = $_POST['EMAIL_SMTP_PASSWORD'];
+		}
+		$Form_EMAIL_SMTP_HELO = $_POST['EMAIL_SMTP_HELO'];
+		$Form_EMAIL_SMTP_TIMEOUT = $_POST['EMAIL_SMTP_TIMEOUT'];
+	}
 }
 
 // Build Code for config.inc.php
@@ -104,16 +140,34 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output Language
 	$ConfigOutput .= '// Config: Language'."\n";
-	$ConfigOutput .= '// Example: en, de'."\n";
+	$ConfigOutput .= '// Example: en (English), de (German), sv (Swedish)'."\n";
+	$ConfigOutput .= '// Default: en'."\n";
 	$ConfigOutput .= '// Language used (refers to language file in directory /languages)'."\n";
 	$ConfigOutput .= 'define("LANGUAGE", \''. escapephpstring($GLOBALS['Form_LANGUAGE']) .'\');'."\n\n";
+
+	// Output Max Year Ahead for New Events
+	$ConfigOutput .= '// Config: Max Year Ahead for New Events'."\n";
+	$ConfigOutput .= '// Default: 3'."\n";
+	$ConfigOutput .= '// The number of years into the future that the calendar will allow users to create events for.'."\n";
+	$ConfigOutput .= '// For example, if the current year is 2000 then a value of \'3\' will allow users to create events up to 2003.'."\n";
+	$ConfigOutput .= 'define("ALLOWED_YEARS_AHEAD", \''. escapephpstring($GLOBALS['Form_ALLOWED_YEARS_AHEAD']) .'\');'."\n\n";
 
 	// Output Database Connection String
 	$ConfigOutput .= '// Config: Database Connection String'."\n";
 	$ConfigOutput .= '// Example: mysql://vtcal:abc123@localhost/vtcalendar'."\n";
 	$ConfigOutput .= '// This is the database connection string used by the PEAR library.'."\n";
-	$ConfigOutput .= '// It has the format: "mysql://user:password@host/databasename" or "postgres://user:password@host/databasename"'."\n";
+	$ConfigOutput .= '// It has the format: "mysql://user:password@host/databasename" or "pgsql://user:password@host/databasename"'."\n";
 	$ConfigOutput .= 'define("DATABASE", \''. escapephpstring($GLOBALS['Form_DATABASE']) .'\');'."\n\n";
+
+	// Output Table Prefix
+	$ConfigOutput .= '// Config: Table Prefix'."\n";
+	$ConfigOutput .= '// Example: public'."\n";
+	$ConfigOutput .= '// In some databases (such as PostgreSQL) you may have multiple sets of VTCalendar tables within the same database, but in different schemas.'."\n";
+	$ConfigOutput .= '// If this is the case for you, enter the name of the schema here.'."\n";
+	$ConfigOutput .= '// It will be prefixed to the table name like so: TABLEPREFIX.vtcal_calendars.'."\n";
+	$ConfigOutput .= '// If necessary include quotes. Use a backtick (`) for MySQL or double quotes (") for PostgreSQL.'."\n";
+	$ConfigOutput .= '// Note: If specified, the table prefix MUST end with a period.'."\n";
+	$ConfigOutput .= 'define("TABLEPREFIX", \''. escapephpstring($GLOBALS['Form_TABLEPREFIX']) .'\');'."\n\n";
 
 	// Output SQL Log File
 	$ConfigOutput .= '// Config: SQL Log File'."\n";
@@ -125,11 +179,13 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output User ID Regular Expression
 	$ConfigOutput .= '// Config: User ID Regular Expression'."\n";
+	$ConfigOutput .= '// Default: /^[A-Za-z][\\._A-Za-z0-9\\-\\\\]{1,49}$/'."\n";
 	$ConfigOutput .= '// This regular expression defines what is considered a valid user-ID.'."\n";
 	$ConfigOutput .= 'define("REGEXVALIDUSERID", \''. escapephpstring($GLOBALS['Form_REGEXVALIDUSERID']) .'\');'."\n\n";
 
 	// Output Database Authentication
 	$ConfigOutput .= '// Config: Database Authentication'."\n";
+	$ConfigOutput .= '// Default: true'."\n";
 	$ConfigOutput .= '// Authenticate users against the database.'."\n";
 	$ConfigOutput .= '// If enabled, this is always performed before any other authentication.'."\n";
 	$ConfigOutput .= 'define("AUTH_DB", ' . ($GLOBALS['Form_AUTH_DB'] ? 'true' : 'false') .');'."\n\n";
@@ -150,6 +206,7 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output LDAP Authentication
 	$ConfigOutput .= '// Config: LDAP Authentication'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
 	$ConfigOutput .= '// Authenticate users against a LDAP server.'."\n";
 	$ConfigOutput .= '// If enabled, HTTP authenticate will be ignored.'."\n";
 	$ConfigOutput .= 'define("AUTH_LDAP", ' . ($GLOBALS['Form_AUTH_LDAP'] ? 'true' : 'false') .');'."\n\n";
@@ -162,6 +219,7 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output LDAP Port
 	$ConfigOutput .= '// Config: LDAP Port'."\n";
+	$ConfigOutput .= '// Default: 389'."\n";
 	$ConfigOutput .= '// The port to connect to. Ignored if LDAP Host Name is a URL.'."\n";
 	$ConfigOutput .= 'define("LDAP_PORT", \''. escapephpstring($GLOBALS['Form_LDAP_PORT']) .'\');'."\n\n";
 
@@ -196,6 +254,7 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output HTTP Authentication
 	$ConfigOutput .= '// Config: HTTP Authentication'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
 	$ConfigOutput .= '// Authenticate users by sending an HTTP request to a server.'."\n";
 	$ConfigOutput .= '// A HTTP status code of 200 will authorize the user. Otherwise, they will not be authorized.'."\n";
 	$ConfigOutput .= '// If LDAP authentication is enabled, this will be ignored.'."\n";
@@ -232,30 +291,36 @@ function BuildOutput(&$ConfigOutput) {
 	// Output Secure Calendar Base URL
 	$ConfigOutput .= '// Config: Secure Calendar Base URL'."\n";
 	$ConfigOutput .= '// Example: https://localhost/calendar/'."\n";
+	$ConfigOutput .= '// Default: '."\n";
 	$ConfigOutput .= '// This is the absolute path where the secure version of the calendar is located.'."\n";
 	$ConfigOutput .= '// If you are not using URL, set this to the same address as BASEURL.'."\n";
 	$ConfigOutput .= '// This MUST end with a slash "/"'."\n";
 	$ConfigOutput .= 'define("SECUREBASEURL", \''. escapephpstring($GLOBALS['Form_SECUREBASEURL']) .'\');'."\n\n";
 
-	// Output Timezone Offset
-	$ConfigOutput .= '// Config: Timezone Offset'."\n";
-	$ConfigOutput .= '// Example: -5'."\n";
-	$ConfigOutput .= '// Defines the offset to GMT, can be positive or negative'."\n";
-	$ConfigOutput .= 'define("TIMEZONE_OFFSET", \''. escapephpstring($GLOBALS['Form_TIMEZONE_OFFSET']) .'\');'."\n\n";
+	// Output Timezone
+	$ConfigOutput .= '// Config: Timezone'."\n";
+	$ConfigOutput .= '// Example: America/New_York'."\n";
+	$ConfigOutput .= '// Default: '."\n";
+	$ConfigOutput .= '// The timezone in which the calendar will set the local time for. All new events, logs, etc will be affected by this setting.'."\n";
+	$ConfigOutput .= '// For a list of supported timezone identifiers see http://us.php.net/manual/en/timezones.php'."\n";
+	$ConfigOutput .= 'define("TIMEZONE", \''. escapephpstring($GLOBALS['Form_TIMEZONE']) .'\');'."\n\n";
 
 	// Output Week Starting Day
 	$ConfigOutput .= '// Config: Week Starting Day'."\n";
+	$ConfigOutput .= '// Default: 0'."\n";
 	$ConfigOutput .= '// Defines the week starting day'."\n";
 	$ConfigOutput .= '// Allowable values - 0 for "Sunday" or 1 for "Monday"'."\n";
 	$ConfigOutput .= 'define("WEEK_STARTING_DAY", \''. escapephpstring($GLOBALS['Form_WEEK_STARTING_DAY']) .'\');'."\n\n";
 
 	// Output Use AM/PM
 	$ConfigOutput .= '// Config: Use AM/PM'."\n";
+	$ConfigOutput .= '// Default: true'."\n";
 	$ConfigOutput .= '// Defines time format e.g. 1am-11pm (true) or 1:00-23:00 (false)'."\n";
 	$ConfigOutput .= 'define("USE_AMPM", ' . ($GLOBALS['Form_USE_AMPM'] ? 'true' : 'false') .');'."\n\n";
 
 	// Output Column Position
 	$ConfigOutput .= '// Config: Column Position'."\n";
+	$ConfigOutput .= '// Default: RIGHT'."\n";
 	$ConfigOutput .= '// Which side the little calendar, \'jump to\', \'today is\', etc. will be on.'."\n";
 	$ConfigOutput .= '// RIGHT is more user friendly for users with low resolutions.'."\n";
 	$ConfigOutput .= '// Values must be LEFT or RIGHT.'."\n";
@@ -263,36 +328,142 @@ function BuildOutput(&$ConfigOutput) {
 
 	// Output Show Upcoming Tab
 	$ConfigOutput .= '// Config: Show Upcoming Tab'."\n";
+	$ConfigOutput .= '// Default: true'."\n";
 	$ConfigOutput .= '// Whether or not the upcoming tab will be shown.'."\n";
 	$ConfigOutput .= 'define("SHOW_UPCOMING_TAB", ' . ($GLOBALS['Form_SHOW_UPCOMING_TAB'] ? 'true' : 'false') .');'."\n\n";
 
 	// Output Max Upcoming Events
 	$ConfigOutput .= '// Config: Max Upcoming Events'."\n";
+	$ConfigOutput .= '// Default: 75'."\n";
 	$ConfigOutput .= '// The maximum number of upcoming events displayed.'."\n";
 	$ConfigOutput .= 'define("MAX_UPCOMING_EVENTS", \''. escapephpstring($GLOBALS['Form_MAX_UPCOMING_EVENTS']) .'\');'."\n\n";
 
 	// Output Show Month Overlap
 	$ConfigOutput .= '// Config: Show Month Overlap'."\n";
+	$ConfigOutput .= '// Default: true'."\n";
 	$ConfigOutput .= '// Whether or not events in month view on days that are not actually part of the current month should be shown.'."\n";
 	$ConfigOutput .= '// For example, if the first day of the month starts on a Wednesday, then Sunday-Tuesday are from the previous month.'."\n";
 	$ConfigOutput .= '// Values must be true or false.'."\n";
 	$ConfigOutput .= 'define("SHOW_MONTH_OVERLAP", ' . ($GLOBALS['Form_SHOW_MONTH_OVERLAP'] ? 'true' : 'false') .');'."\n\n";
 
-	// Output HTTP Authentication Cache
-	$ConfigOutput .= '// Config: HTTP Authentication Cache'."\n";
-	$ConfigOutput .= '// Cache successful HTTP authentication attempts as hashes in DB.'."\n";
-	$ConfigOutput .= '// This acts as a failover if the HTTP authentication fails due to a server error.'."\n";
-	$ConfigOutput .= 'define("AUTH_HTTP_CACHE", ' . ($GLOBALS['Form_AUTH_HTTP_CACHE'] ? 'true' : 'false') .');'."\n\n";
+	// Output Include Static Pre-Header HTML
+	$ConfigOutput .= '// Config: Include Static Pre-Header HTML'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Include the file located at ./static-includes/subcalendar-pre-header.txt before the calendar header HTML for all calendars.'."\n";
+	$ConfigOutput .= '// This allows you to enforce a standard header for all calendars.'."\n";
+	$ConfigOutput .= '// This does not affect the default calendar.'."\n";
+	$ConfigOutput .= 'define("INCLUDE_STATIC_PRE_HEADER", ' . ($GLOBALS['Form_INCLUDE_STATIC_PRE_HEADER'] ? 'true' : 'false') .');'."\n\n";
 
-	// Output HTTP Authentication Cache Expiration
-	$ConfigOutput .= '// Config: HTTP Authentication Cache Expiration'."\n";
-	$ConfigOutput .= '// The number of days in which data in the HTTP authentication cache is valid.'."\n";
-	$ConfigOutput .= 'define("AUTH_HTTP_CACHE_EXPIRATIONDAYS", \''. escapephpstring($GLOBALS['Form_AUTH_HTTP_CACHE_EXPIRATIONDAYS']) .'\');'."\n\n";
+	// Output Include Static Post-Header HTML
+	$ConfigOutput .= '// Config: Include Static Post-Header HTML'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Include the file located at ./static-includes/subcalendar-post-header.txt after the calendar header HTML for all calendars.'."\n";
+	$ConfigOutput .= '// This allows you to enforce a standard header for all calendars.'."\n";
+	$ConfigOutput .= '// This does not affect the default calendar.'."\n";
+	$ConfigOutput .= 'define("INCLUDE_STATIC_POST_HEADER", ' . ($GLOBALS['Form_INCLUDE_STATIC_POST_HEADER'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output Include Static Pre-Footer HTML
+	$ConfigOutput .= '// Config: Include Static Pre-Footer HTML'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Include the file located at ./static-includes/subcalendar-pre-footer.txt before the calendar footer HTML for all calendars.'."\n";
+	$ConfigOutput .= '// This allows you to enforce a standard footer for all calendars.'."\n";
+	$ConfigOutput .= '// This does not affect the default calendar.'."\n";
+	$ConfigOutput .= 'define("INCLUDE_STATIC_PRE_FOOTER", ' . ($GLOBALS['Form_INCLUDE_STATIC_PRE_FOOTER'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output Include Static Post-Footer HTML
+	$ConfigOutput .= '// Config: Include Static Post-Footer HTML'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Include the file located at ./static-includes/subcalendar-post-footer.txt after the calendar footer HTML for all calendars.'."\n";
+	$ConfigOutput .= '// This allows you to enforce a standard footer for all calendars.'."\n";
+	$ConfigOutput .= '// This does not affect the default calendar.'."\n";
+	$ConfigOutput .= 'define("INCLUDE_STATIC_POST_FOOTER", ' . ($GLOBALS['Form_INCLUDE_STATIC_POST_FOOTER'] ? 'true' : 'false') .');'."\n\n";
 
 	// Output Max Category Name Cache Size
 	$ConfigOutput .= '// Config: Max Category Name Cache Size'."\n";
+	$ConfigOutput .= '// Default: 100'."\n";
 	$ConfigOutput .= '// Cache the list of category names in memory if the calendar has less than or equal to this number.'."\n";
 	$ConfigOutput .= 'define("MAX_CACHESIZE_CATEGORYNAME", \''. escapephpstring($GLOBALS['Form_MAX_CACHESIZE_CATEGORYNAME']) .'\');'."\n\n";
+
+	// Output Cache 'Subscribe & Download' ICS Files
+	$ConfigOutput .= '// Config: Cache \'Subscribe & Download\' ICS Files'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// When a lot of users subscribe to your calendar via the \'Subscribe & Download\' page, this can put a heavy load on your server.'."\n";
+	$ConfigOutput .= '// To avoid this, you can either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the ICS files to disk for each category '."\n";
+	$ConfigOutput .= 'define("CACHE_ICS", ' . ($GLOBALS['Form_CACHE_ICS'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output 
+	$ConfigOutput .= '// Config: '."\n";
+	$ConfigOutput .= '// Default: export/export.php'."\n";
+	$ConfigOutput .= '// The URL extension to the export script. Must NOT being with a slash (/).'."\n";
+	$ConfigOutput .= 'define("EXPORT_PATH", \''. escapephpstring($GLOBALS['Form_EXPORT_PATH']) .'\');'."\n\n";
+
+	// Output Maximum Exported Events
+	$ConfigOutput .= '// Config: Maximum Exported Events'."\n";
+	$ConfigOutput .= '// Default: 100'."\n";
+	$ConfigOutput .= '// The maximum number of events that can be exported using the subscribe, download or export pages.'."\n";
+	$ConfigOutput .= '// Calendar and main admins can export all data using the VTCalendar (XML) format.'."\n";
+	$ConfigOutput .= 'define("MAX_EXPORT_EVENTS", \''. escapephpstring($GLOBALS['Form_MAX_EXPORT_EVENTS']) .'\');'."\n\n";
+
+	// Output Export Data Lifetime (in minutes)
+	$ConfigOutput .= '// Config: Export Data Lifetime (in minutes)'."\n";
+	$ConfigOutput .= '// Default: 5'."\n";
+	$ConfigOutput .= '// The number of minutes that a browser will be told to cache exported data.'."\n";
+	$ConfigOutput .= 'define("EXPORT_CACHE_MINUTES", \''. escapephpstring($GLOBALS['Form_EXPORT_CACHE_MINUTES']) .'\');'."\n\n";
+
+	// Output Allow Export in VTCalendar (XML) Format
+	$ConfigOutput .= '// Config: Allow Export in VTCalendar (XML) Format'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// The VTCalendar (XML) export format contains all information about an event, which you may not want to allow the public to view.'."\n";
+	$ConfigOutput .= '// However, users that are part of the admin sponsor, or are main admins, can always export in this format.'."\n";
+	$ConfigOutput .= 'define("PUBLIC_EXPORT_VTCALXML", ' . ($GLOBALS['Form_PUBLIC_EXPORT_VTCALXML'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output Send E-mail via Pear::Mail
+	$ConfigOutput .= '// Config: Send E-mail via Pear::Mail'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Send e-mail using Pear::Mail rather than the built-in PHP Mail function.'."\n";
+	$ConfigOutput .= '// This should be used if you are on Windows or do not have sendmail installed.'."\n";
+	$ConfigOutput .= 'define("EMAIL_USEPEAR", ' . ($GLOBALS['Form_EMAIL_USEPEAR'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output SMTP Host
+	$ConfigOutput .= '// Config: SMTP Host'."\n";
+	$ConfigOutput .= '// Default: localhost'."\n";
+	$ConfigOutput .= '// The SMTP host name to connect to.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_HOST", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_HOST']) .'\');'."\n\n";
+
+	// Output SMTP Port
+	$ConfigOutput .= '// Config: SMTP Port'."\n";
+	$ConfigOutput .= '// Default: 25'."\n";
+	$ConfigOutput .= '// The SMTP port number to connect to.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_PORT", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_PORT']) .'\');'."\n\n";
+
+	// Output SMTP Authentication
+	$ConfigOutput .= '// Config: SMTP Authentication'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// Whether or not to use SMTP authentication.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_AUTH", ' . ($GLOBALS['Form_EMAIL_SMTP_AUTH'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output SMTP Username
+	$ConfigOutput .= '// Config: SMTP Username'."\n";
+	$ConfigOutput .= '// The username to use for SMTP authentication.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_USERNAME", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_USERNAME']) .'\');'."\n\n";
+
+	// Output SMTP Password
+	$ConfigOutput .= '// Config: SMTP Password'."\n";
+	$ConfigOutput .= '// The password to use for SMTP authentication.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_PASSWORD", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_PASSWORD']) .'\');'."\n\n";
+
+	// Output SMTP EHLO/HELO
+	$ConfigOutput .= '// Config: SMTP EHLO/HELO'."\n";
+	$ConfigOutput .= '// Default: localhost'."\n";
+	$ConfigOutput .= '// The value to give when sending EHLO or HELO.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_HELO", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_HELO']) .'\');'."\n\n";
+
+	// Output SMTP Timeout
+	$ConfigOutput .= '// Config: SMTP Timeout'."\n";
+	$ConfigOutput .= '// Default: 0'."\n";
+	$ConfigOutput .= '// The SMTP connection timeout.'."\n";
+	$ConfigOutput .= '// Set the value to 0 to have no timeout.'."\n";
+	$ConfigOutput .= 'define("EMAIL_SMTP_TIMEOUT", \''. escapephpstring($GLOBALS['Form_EMAIL_SMTP_TIMEOUT']) .'\');'."\n\n";
 
 }
 ?>

@@ -14,6 +14,7 @@ function pageheader($title, $navbaractive) {
 		<?php } else { ?>
 			<meta name="robots" content="noindex,follow">
 		<?php } ?>
+		<link rel="alternate" type="application/rss+xml" title="<?php lang('rss_feed_title'); ?>" href="export/export.php?calendarid=<?php echo urlencode($_SESSION['CALENDAR_ID']); ?>&format=rss2_0">
 		<script type="text/javascript" src="scripts/browsersniffer.js"></script>
 		<script type="text/javascript" src="scripts/general.js"></script>
 		<script type="text/javascript" src="scripts/update.js"></script>
@@ -28,9 +29,7 @@ function pageheader($title, $navbaractive) {
 			document.write("<s"+"cript type=\"text/javascript\" src=\"scripts/main.js\"></s"+"cript>");
 		}
 		//--></script>
-		<!--[if gte IE 5.5000]>
-		<script src="scripts/fix-ie6.js" type="text/javascript"></script>
-		<![endif]-->
+		<!--[if lt IE 7]><style type="text/css">img, .png { behavior: url(scripts/iepngfix.htc); }</style><![endif]-->
 		<!--<link href="stylesheet.php" rel="stylesheet" type="text/css">-->
 		<link href="calendar.css.php" rel="stylesheet" type="text/css" media="screen">
 		<link href="print.css" rel="stylesheet" type="text/css" media="print">
@@ -40,8 +39,12 @@ function pageheader($title, $navbaractive) {
 	</head>
 	<body leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
 	
+	<?php if (INCLUDE_STATIC_PRE_HEADER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-pre-header.txt')); ?>
+	
 	<!-- Start Calendar Header --><?php echo $_SESSION['CALENDAR_HEADER']; ?><!-- End Calendar Header -->
 
+	<?php if (INCLUDE_STATIC_POST_HEADER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-post-header.txt')); ?>
+	
 	<div id="CalendarBlock">
 	
 	<!-- Start of Top Navi Table -->
@@ -79,7 +82,7 @@ function pageheader($title, $navbaractive) {
 									echo ")";
 								}
 								?>&nbsp;<?php //echo lang('is_logged_on'); ?></td>
-							<td valign="bottom" class="NaviBar-Tab"><div><a href="logout.php">Logout</a></div></td>
+							<td valign="bottom" class="NaviBar-Tab"><div><a href="logout.php"><?php echo lang('logout'); ?></a></div></td>
 								<?php
 							}
 							else {
@@ -103,9 +106,13 @@ function pagefooter() {
 	// End of <div id="CalendarBlock">
 	?></div>
 
+	<?php if (INCLUDE_STATIC_PRE_FOOTER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-pre-footer.txt')); ?>
+
 	<!-- Start Calendar Footer -->
 	<?php echo $_SESSION['CALENDAR_FOOTER']; ?>
 	<!-- End Calendar Footer -->
+
+	<?php if (INCLUDE_STATIC_POST_FOOTER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-post-footer.txt')); ?>
 
 	</body>
 	</html>

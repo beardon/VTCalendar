@@ -1,7 +1,6 @@
 <?php
 // checks the input against regular expressions
 function isValidInput($value, $type) {
-	global $use_ampm;
 	if (!isset($value)) { 
 		return FALSE; 
 	}
@@ -22,10 +21,10 @@ function isValidInput($value, $type) {
 		return TRUE;
 	}
 	elseif ($type=='calendarid') {
-		if (preg_match('/^[A-Z0-9\-\.]{1,'.constCalendaridMAXLENGTH.'}$/i',$value)) { return TRUE; }
+		if (preg_match('/^[A-Z0-9\-\.]{1,'.MAXLENGTH_CALENDARID.'}$/i',$value)) { return TRUE; }
 	}
 	elseif ($type=='calendarTitle') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constCalendarTitleMAXLENGTH.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_CALENDARTITLE.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='cancel') {
 		if (!empty($value)) { return TRUE; }
@@ -34,13 +33,14 @@ function isValidInput($value, $type) {
 		if (is_numeric($value) && $value>=0 && $value<=100000) { return TRUE; }
 	}
 	elseif ($type=='categoryidlist') {
-		return preg_match('/^[0-9]+(,[0-9]+)*$/', $value) == 0;
+		// TODO: is '== 1' correct? This was '== 0' but that didn't seem to make sense.
+		return preg_match('/^[0-9]+(,[0-9]+)*$/', $value) == 1;
 	}
 	elseif ($type=='category_name') {
-		if (preg_match('/^['.constValidTextCharWithSpacesRegEx.']{1,'.constCategory_nameMaxLength.'}$/i',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_SPACES.']{1,'.MAXLENGTH_CATEGORY_NAME.'}$/i',$value)) { return TRUE; }
 	}
 	elseif ($type=='calendarname') {
-		if (preg_match('/^[A-Z0-9\-\.\&\' ,]{1,'.constCalendarnameMAXLENGTH.'}$/i',$value)) { return TRUE; }
+		if (preg_match('/^[A-Z0-9\-\.\&\' ,]{1,'.MAXLENGTH_CALENDARNAME.'}$/i',$value)) { return TRUE; }
 	}
 	elseif ($type=='check') {
 		if ($value=='1') { return TRUE; }
@@ -52,20 +52,20 @@ function isValidInput($value, $type) {
 		if ($value=='0' || $value=='1') { return TRUE; }
 	}
 	elseif ($type=='color') {
-		if (preg_match('/^#[0-9a-fA-F]{2}[0-9a-fA-F]{2}[0-9a-fA-F]{2}$/',$value)) { return TRUE; }
+		if (preg_match('/^#[0-9a-fA-F]{6,6}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='background') {
 		// TODO: Does this need improving?
 		return true;
 	}
 	elseif ($type=='contact_name') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constContact_nameMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_CONTACT_NAME.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='contact_phone') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constContact_phoneMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_CONTACT_PHONE.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='contact_email') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constEmailMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_EMAIL.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='copy') {
 		if (!empty($value)) { return TRUE; }
@@ -89,19 +89,19 @@ function isValidInput($value, $type) {
 		if (!empty($value)) { return TRUE; }
 	}
 	elseif ($type=='description') {
-		if (preg_match('/^['.constValidTextCharFullRegEx.']{1,'.constDescriptionMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_DESCRIPTION.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='displayedsponsor') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constDisplayedsponsorMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_DISPLAYEDSPONSOR.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='duration') {
-		if ($value=='1' || $value='2' || $value='3') { return TRUE; }
+		if ($value=='1' || $value=='2' || $value=='3') { return TRUE; }
 	}
 	elseif ($type=='edit') { // 'Go back and make changes' button
 		if (strlen($value) > 1) { return TRUE; }
 	}
 	elseif ($type=='email') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constEmailMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_EMAIL.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='eventid') { // e.g. "1064818293904-0017"
 		if (preg_match('/^[0-9]{13}$/',$value) || preg_match('/^[0-9]{13}-[0-9]{4}$/',$value)) { return TRUE; }
@@ -160,7 +160,7 @@ function isValidInput($value, $type) {
 		if (strlen($value)<500) { return TRUE; }
 	}
 	elseif ($type=='importurl') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constImporturlMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_IMPORTURL.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='interval1') {
 		if ($value=='every' || $value=='everyother' || $value=='everythird' || $value=='everyfourth') { return TRUE; }
@@ -169,25 +169,22 @@ function isValidInput($value, $type) {
 		if ($value=='month' || $value=='2months' || $value=='3months' || $value=='4months' || $value=='6months' || $value=='year') { return TRUE; }
 	}
 	elseif ($type=='keyword') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constKeywordMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_KEYWORD.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='location') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constLocationMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_LOCATION.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='mode') { // repeat['mode']
 		if (is_numeric($value) && $value>=0 && $value<=10) { return TRUE; }
 	}
 	elseif ($type=='password') {
-		if (preg_match(constPasswordRegEx,$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR.']{1,'.MAXLENGTH_PASSWORD.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='preview') {
 		if (!empty($value)) { return TRUE; }
 	}
 	elseif ($type=='price') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constPriceMaxLength.'}$/',$value)) { return TRUE; }
-	}
-	elseif ($type=='rangedays') {
-		if (is_numeric($value) && $value>=1 && $value<=100000) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_PRICE.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='reject') {
 		if ($value=='1') { return TRUE; }
@@ -199,7 +196,7 @@ function isValidInput($value, $type) {
 		if (!empty($value)) { return TRUE; }
 	}
 	elseif ($type=='rejectreason') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,500}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,500}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='repeatid') { // e.g. "1064818293904"
 		if (preg_match('/^[0-9]{13}$/',$value)) { return TRUE; }
@@ -220,28 +217,22 @@ function isValidInput($value, $type) {
 		if (is_numeric($value) && $value>=0 && $value<=100000) { return TRUE; }
 	}
 	elseif ($type=='showondefaultcal') {
-		if ($value=='0' || $value='1') { return TRUE; }
-	}
-	elseif ($type=='specificsponsor') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constSpecificsponsorMaxLength.'}$/',$value)) { return TRUE; }
+		if ($value=='0' || $value=='1') { return TRUE; }
 	}
 	elseif ($type=='sponsorid') {
 		if ($value=='all' || (is_numeric($value) && $value>=1 && $value<=100000)) { return TRUE; }
 	}
-	elseif ($type=='sponsortype') {
-		if ($value=='all' || $value='self' || $value='specific') { return TRUE; }
-	}
 	elseif ($type=='sponsor_admins') { // needs refinement, allow newlines
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,500}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,500}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='sponsor_email') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,100}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,100}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='sponsor_name') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,100}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,100}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='sponsor_url') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constUrlMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_URL.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='startimport') {
 		if (!empty($value)) { return TRUE; }
@@ -250,7 +241,7 @@ function isValidInput($value, $type) {
 		if (is_numeric($value) && $value>=0 && $value<=100000) { return TRUE; }
 	}
 	elseif ($type=='template_name') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constTemplate_nameMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_TEMPLATE_NAME.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='timebegin' || $type=='timeend' || $type=='littlecal') { // e.g. "2004-05-26 00:00:00" or "today"
 		if ($value=='today' || $value=='now') { return TRUE; }
@@ -266,7 +257,7 @@ function isValidInput($value, $type) {
 		if (is_numeric($value) && $value>=1 && $value<=31) { return TRUE; }
 	}
 	elseif ($type=='timebegin_hour' || $type=='timeend_hour') {
-		if (is_numeric($value) && ( ($value>=1 && $value<=12 && $use_ampm) || ($value>=0 && $value<=23 && !$use_ampm) )) { return TRUE; }
+		if (is_numeric($value) && ( ($value>=1 && $value<=12 && USE_AMPM) || ($value>=0 && $value<=23 && !USE_AMPM) )) { return TRUE; }
 	}
 	elseif ($type=='timebegin_min' || $type=='timeend_min') {
 		if (is_numeric($value) && $value>=0 && $value<=59) { return TRUE; }
@@ -275,31 +266,85 @@ function isValidInput($value, $type) {
 		if ($value=='am' || $value=='pm') { return TRUE; }
 	}
 	elseif ($type=='title') {
-		if (preg_match('/^['.constValidTextCharFullRegEx.']{1,'.constTitleMaxLength.'}$/',$value)) { return TRUE; }
-	}
-	elseif ($type=='type') {
-		if ($value=="xml" || $value=="rss" || $value=="ical" || $value=="rss1_0" || $value=="vxml") { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_TITLE.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='viewauthrequired') {
-		if ($value=='0' || $value=='1') { return TRUE; }
+		if ($value=='0' || $value=='1' || $value=='2') { return TRUE; }
 	}
 	elseif ($type=='url') {
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,'.constUrlMaxLength.'}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_URL.'}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='userid') {
 		if (preg_match(REGEXVALIDUSERID,$value)) { return TRUE; }
 	}
 	elseif ($type=='users') { // needs refinement, allow newlines
-		if (preg_match('/^['.constValidTextCharWithWhitespaceRegEx.']{1,2000}$/',$value)) { return TRUE; }
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,2000}$/',$value)) { return TRUE; }
 	}
 	elseif ($type=='view') {
-		if ($value=='upcoming' || $value=='day' || $value=='week' || $value=='month' || $value=='search' || $value=='searchresults' || $value=='event' || $value=='subscribe' || $value=='filter') { return TRUE; }
+		return ($value=='upcoming' || $value=='day' || $value=='week' || $value=='month' || $value=='search' || $value=='searchresults' || $value=='event' || $value=='subscribe' || $value=='filter' || $value=='export');
 	}
 	elseif ($type=='wholedayevent') {
 		if ($value=='0' || $value=='1') { return TRUE; }
 	}
 	elseif ($type=='page') {
 		if (is_numeric($value) && $value > 0) { return TRUE; }
+	}
+	
+	/* =========================================================
+	                      Generic Types
+	========================================================= */
+	
+	// Used for two radio <input> where one is yes and the other is no.
+	elseif ($type=='boolean') {
+		if ($value === '1' || $value === '0') { return TRUE; }
+	}
+	
+	// Used for a checkbox <input> where it does not submit a value if not checked.
+	elseif ($type=='boolean_checkbox') {
+		if ($value === '1') { return TRUE; }
+	}
+	
+	elseif ($type=='int') {
+		return preg_match("/^-?[0-9]+$/", $value) === 1;
+	}
+	
+	elseif ($type=='int_gte1') {
+		if (preg_match("/^[0-9]+$/", $value) && intval($value) >= 1) { return TRUE; }
+	}
+	
+	/* =========================================================
+	                   Export Page Validation
+	========================================================= */
+	
+	elseif ($type=='type') {
+		if ($value=="xml" || $value=="rss" || $value=="ical" || $value=="rss1_0" || $value=="vxml") { return TRUE; }
+	}
+	elseif ($type=='exportformat') {
+		if ($value=="html" || $value=="js" || $value=="xml" || $value=="rss" || $value=="ical" || $value=="rss1_0" || $value=="rss2_0" || $value=="vxml") { return TRUE; }
+	}
+	elseif ($type=='rangedays') {
+		if (is_numeric($value) && $value>=1 && $value<=100000) { return TRUE; }
+	}
+	elseif ($type=='sponsortype') {
+		if ($value == 'all' || $value == 'self' || $value == 'specific') { return TRUE; }
+	}
+	elseif ($type=='specificsponsor') {
+		if (preg_match('/^['.REGEX_VALIDTEXTCHAR_WITH_WHITESPACE.']{1,'.MAXLENGTH_SPECIFICSPONSOR.'}$/',$value)) { return TRUE; }
+	}
+	elseif ($type=='htmltype') {
+		if ($value == 'table' || $value == 'paragraph') { return TRUE; }
+	}
+	elseif ($type=='dateformat') {
+		return preg_match("/^(huge|long|normal|short|tiny|micro)$/", $value) === 1;
+	}
+	elseif ($type=='timedisplay') {
+		return preg_match("/^(start|startendlong|startendnormal|startendtiny|startdurationlong|startdurationnormal|startdurationshort)$/", $value) === 1;
+	}
+	elseif ($type=='timeformat') {
+		return preg_match("/^(huge|long|normal|short)$/", $value) === 1;
+	}
+	elseif ($type=='durationformat') {
+		return preg_match("/^(long|normal|short|tiny|micro)$/", $value) === 1;
 	}
 	
 	return FALSE;

@@ -26,22 +26,22 @@
 <form method="get" action="main.php" name="searchform">
 	<input type="hidden" name="calendarid" value="<?php echo urlencode($_SESSION['CALENDAR_ID']); ?>">
 	<input type="hidden" name="view" value="searchresults">
-	<TABLE border="0" cellpadding="3" cellspacing="2">
-		<TR>
-			<TD class="bodytext" valign="baseline">
+	<table border="0" cellpadding="3" cellspacing="2">
+		<tr>
+			<td class="bodytext" valign="baseline">
 				<strong><?php echo lang('keyword'); ?>:&nbsp;&nbsp;&nbsp;</strong>
-			</TD>
-			<TD class="bodytext" valign="baseline">
-				<INPUT type="text" size="40" name="keyword" value="<?php echo $keyword; ?>" maxlength="<?php echo constKeywordMaxLength; ?>"><br>
+			</td>
+			<td class="bodytext" valign="baseline">
+				<input type="text" size="40" name="keyword" value="<?php echo $keyword; ?>" maxlength="<?php echo MAXLENGTH_KEYWORD; ?>"><br>
 				<?php echo lang('case_insensit'); ?><br>
 				<br>
-			</TD>
-		</TR>
+			</td>
+		</tr>
 		<tr>
-			<TD class="bodytext" valign="baseline">
+			<td class="bodytext" valign="baseline">
 				<strong><?php echo lang('starting_from'); ?></strong>
-			</TD>
-			<TD class="bodytext" valign="baseline">
+			</td>
+			<td class="bodytext" valign="baseline">
 
 <?php
 inputdate($timebegin_month,"timebegin_month",
@@ -52,12 +52,12 @@ inputdate($timebegin_month,"timebegin_month",
 					</td></tr>
 						<tr>
 							<td>&nbsp;</td>
-							<td><br><INPUT type="submit" name="search" value="&nbsp;&nbsp;&nbsp;<?php echo lang('search'); ?>&nbsp;&nbsp;&nbsp;"></td>
+							<td><br><input type="submit" name="search" value="&nbsp;&nbsp;&nbsp;<?php echo lang('search'); ?>&nbsp;&nbsp;&nbsp;"></td>
 						</tr>
 					
-				</TABLE>
-	<BR>
-</FORM>				
+				</table>
+	<br>
+</form>				
 				</td>
 				</tr>
 			</table>

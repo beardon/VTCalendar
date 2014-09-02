@@ -5,7 +5,7 @@
 <title>Create Main Admin Accounts</title>
 <link href="styles.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="scripts.js"></script>
-<!--[if lt IE 7]><style type="text/css">.png { behavior: url(../scripts/png.htc); }</style><![endif]-->
+<!--[if lt IE 7]><style type="text/css">.png { behavior: url(../scripts/iepngfix.htc); }</style><![endif]-->
 </head>
 
 <body>

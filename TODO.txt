@@ -1,26 +1,67 @@
-NEW TODO:
+TODO for Version 2.x:
 ===========================
 
-X Add helpsignup.php link back to displaylogin() in functions.inc.php
-X Should probably remove checking for HTTPS and just use
-  SECUREBASEURL for the action of any forms that need to be
-  secured. Search scripts for: _SERVER['HTTPS']
-X Filters need to work on upcoming events view.
-X A message should output when a keyword is being used in day/week/month view. There is currently no way for a user to know its filtering.
-X $iday['css'] and $iday['color'] should be removed if not being used.
-- Check input validation constants in constants.inc.php to determine the correct values and merge the constants as necessary.
-X Check current database schema vs 2.2.2.
-X Determine what 'detailscaller' did and if they can be removed.
-X Why was the saveall button disabled? ((Logic was unstable. Was removed in 2.2.2))
+High:
+- Move all lang files to languages/en.inc.php
+- Update install/upgradedb.php for PostgreSQL.
+- Add a customizable prefix for table names to support multiple sets of vtcalendar tables within one Postgres database:
+  Search: (?<!"\.TABLEPREFIX\.")(?<![."'])(?=vtcal_(adminuser|admin|calendar|calendarviewauth|category|colors|event|searchedkeywords|searchfeatured|searchkeyword|searchlog|sponsor|template|user))
+  Replace: ".TABLEPREFIX."
+- Validate iCalendar export format.
+- Check help text to see if it is still accurate.
+- Change 'Jump To' in column back to being a single drop-down.
+- Allow data currently stored in session to be loaded from the DB or a file.
+- Update search logging/reporting so that it knows keywords can only be up to 255 characters.
+
+Low:
 - Assign DB results by reference. Example: $var =& DBQuery(...) or $results =& $db->query(...)
 - Get row by reference. Example $row =& $results->fetchRow()
 - Free results by using $results->free()
 - Properly handle string returns from functions like DBQuery.
-- Change _data files to _preheader just to make it easier to understand
-X Add colors to vtcal_colors for new CSS
 - Expand AUTH_HTTP_CACHE to LDAP
 - Improve the way AUTH_HTTP checks if the authentication was successful or not successful by also checking the body text.
+- Allow events to be flagged private so that you can only see them if you log in.
+- "Send event to a friend" form.
+- Allow week/month to be viewed as a list of events (like upcoming view).
+- A 'comments' field for sponsors where additional information (e.g. mailing address or phone number) could be stored.
+- Include file from static-includes before sub-calendar headers, and after sub-calendar footers.
+- Develop tool for assisting with translations.
+- Store IP if logged in and logout if IP changes.
 
+Future:
+- A public submit an event form that submits on behalf of a non-admin sponsor (the calendar admin decides which).
+  Events submitted this way would also need an e-mail address (and other contact info) for the person submitting the event.
+  A confirmation e-mail would be sent to the address with a link the submitted will need to click to act as a spam filter.
+  When the event is accepted or rejected, a confirmation e-mail will be sent to the submitter as well.
+
+Finished:
+- Improve 'Upcoming' print view (Finished 08-10-15)
+- Disable admin buttons/icons in print view (Finished 08-10-15)
+- Disable AJAX in month view for little calendar month-navigation arrows.
+- Add helpsignup.php link back to displaylogin() in functions.inc.php
+- Should probably remove checking for HTTPS and just use SECUREBASEURL for the action of any forms that need to be secured. Search scripts for: _SERVER['HTTPS']
+- Filters need to work on upcoming events view.
+- A message should output when a keyword is being used in day/week/month view. There is currently no way for a user to know its filtering.
+- $iday['css'] and $iday['color'] should be removed if not being used.
+- Check current database schema vs 2.2.2.
+- Determine what 'detailscaller' did and if they can be removed.
+- Why was the saveall button disabled? ((Logic was unstable. Was removed in 2.2.2))
+- Add colors to vtcal_colors for new CSS
+- Allow SMTP e-mail via Pear::Mail.
+- Check input validation constants in constants.inc.php to determine the correct values and merge the constants as necessary.
+- Static files are now included pre/post the header/footer for sub-calendars. This allows for mandatory header/footer HTML.
+- Added new "view authentication" mode that allows any successfully authenticated user to view the calendar.
+
+TODO for Version 3.x:
+- Modular DB
+- Modular authentication
+- Approval chain
+- Allow any sponsor to be the end of the approval chain, to allow sponsors that can make events public without having access to modify the calendar settings.
+- Allow 'additional categories' for events, which would be used when a user filters the calendar.
+- Allow URLs to built programmatically to allow links like http://localhost/vtcalendar/{calendarid}/{eventid} or http://localhost/vtcalendar/{calendarid}/month/2008-01
+- Allow an instance of an event to be separated from the original repeating event. This would essentially be a copy, followed by adding an exclude to the repeating definition once the copy is posted.
+- Event details appear in small box when hovering over event in month/week/day view.
+- Database connection persistence?
 
 OLD TODO:
 ===========================

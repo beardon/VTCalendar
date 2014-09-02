@@ -8,7 +8,7 @@ if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include 
 if (isset($eventid)) {
 	if (isset($copy) && $copy == 1) {
 		pageheader(lang('copy_event'), "Update");
-		echo "<INPUT type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n";
+		echo "<input type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n";
 	} else {
 		pageheader(lang('update_event'), "Update");
 	}
@@ -25,7 +25,7 @@ if (!isset($check)) {
 // Load template if necessary
 if (isset($templateid)) {
 	if ($templateid > 0) {
-		$result = DBQuery("SELECT * FROM vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($templateid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($templateid)."'" ); 
 		$event = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	}
 }
@@ -37,19 +37,19 @@ if (isset($timebegin_day)) { $event['timebegin_day']=$timebegin_day; }
 
 // Load event to update information if it's the first time the form is viewed.
 if (isset($eventid) && (!isset($check) || $check != 1)) {
-	$result = DBQuery("SELECT * FROM vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 	
-	// Event exists in vtcal_event.
+	// Event exists in "vtcal_event".
 	if ($result->numRows() > 0) {
 		$event = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	}
-	// For some reason the event is not in vtcal_event (even though it should be).
+	// For some reason the event is not in "vtcal_event" (even though it should be).
 	// Try to load it from "event_public".
 	else {
-		$result = DBQuery("SELECT * FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 
 		// Event exists in "event_public".
-		// Insert into vtcal_event since it is missing.
+		// Insert into "vtcal_event" since it is missing.
 		if ($result->numRows() > 0) {
 			$event = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 			//eventaddslashes($event);
@@ -72,11 +72,11 @@ inputeventbuttons($httpreferer);
 
 if (!isset($check)) { $check = 0; }
 inputeventdata($event,$event['sponsorid'],1,$check,1,$repeat,$copy);
-echo '<INPUT type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
-if (isset($eventid)) { echo "<INPUT type=\"hidden\" name=\"eventid\" value=\"",$event['id'],"\">\n"; }
-echo '<INPUT type="hidden" name="event[repeatid]" value="', isset($event['repeatid']) ? HTMLSpecialChars($event['repeatid']) : "" ,"\">\n";
-if (!$_SESSION['AUTH_ISCALENDARADMIN']) { echo "<INPUT type=\"hidden\" name=\"event[sponsorid]\" value=\"",$event['sponsorid'],"\">\n"; }
-if (isset($copy)) { echo "<INPUT type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n"; }
+echo '<input type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
+if (isset($eventid)) { echo "<input type=\"hidden\" name=\"eventid\" value=\"",$event['id'],"\">\n"; }
+echo '<input type="hidden" name="event[repeatid]" value="', isset($event['repeatid']) ? HTMLSpecialChars($event['repeatid']) : "" ,"\">\n";
+if (!$_SESSION['AUTH_ISCALENDARADMIN']) { echo "<input type=\"hidden\" name=\"event[sponsorid]\" value=\"",$event['sponsorid'],"\">\n"; }
+if (isset($copy)) { echo "<input type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n"; }
 
 inputeventbuttons($httpreferer);
 echo "</form>\n";
@@ -85,8 +85,8 @@ contentsection_end();
 
 function inputeventbuttons($httpreferer) {
 	?>
-	<p><INPUT type="submit" name="preview" value="<?php echo lang('preview_event'); ?>">
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>"  onclick="location.href = '<?php echo $httpreferer; ?>'; return false;"></p>
+	<p><input type="submit" name="preview" value="<?php echo lang('preview_event'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>"  onclick="location.href = '<?php echo $httpreferer; ?>'; return false;"></p>
 	<?php
 }
 ?>

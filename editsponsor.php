@@ -4,23 +4,20 @@ require_once('application.inc.php');
 	if (!authorized()) { exit; }
 	if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 
-	if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-	if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
-	if (isset($_POST['check'])) { setVar($check,$_POST['check'],'check'); } else { unset($check); }
-	if (isset($_POST['id'])) { setVar($id,$_POST['id'],'sponsorid'); } 
-	else { 
-		if (isset($_GET['id'])) { setVar($id,$_GET['id'],'sponsorid'); } 
-		else { unset($id); }
+	if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+	if (!isset($_POST['save']) || !setVar($save,$_POST['save'],'save')) unset($save);
+	if (!isset($_POST['check']) || !setVar($check,$_POST['check'],'check')) unset($check);
+	if (!isset($_POST['id']) || !setVar($id,$_POST['id'],'sponsorid')) { 
+		if (!isset($_GET['id']) || !setVar($id,$_GET['id'],'sponsorid')) unset($id);
 	}
 	if (isset($_POST['sponsor'])) { 
-		if (isset($_POST['sponsor']['name'])) { setVar($sponsor['name'],$_POST['sponsor']['name'],'sponsor_name'); } 
-		else { unset($sponsor['name']); }
-		if (isset($_POST['sponsor']['email'])) { setVar($sponsor['email'],$_POST['sponsor']['email'],'email'); } 
-		else { unset($sponsor['email']); }
-		if (isset($_POST['sponsor']['url'])) { setVar($sponsor['url'],$_POST['sponsor']['url'],'sponsor_url'); } 
-		else { unset($sponsor['url']); }
-		if (isset($_POST['sponsor']['admins'])) { setVar($sponsor['admins'],$_POST['sponsor']['admins'],'sponsor_admins'); } 
-		else { unset($sponsor['admins']); }
+		if (!isset($_POST['sponsor']['name']) || !setVar($sponsor['name'],$_POST['sponsor']['name'],'sponsor_name')) unset($sponsor['name']);
+		if (!isset($_POST['sponsor']['email']) || !setVar($sponsor['email'],$_POST['sponsor']['email'],'email')) unset($sponsor['email']);
+		if (!isset($_POST['sponsor']['url']) || !setVar($sponsor['url'],$_POST['sponsor']['url'],'sponsor_url')) $sponsor['url'] = '';
+		if (!isset($_POST['sponsor']['admins']) || !setVar($sponsor['admins'],$_POST['sponsor']['admins'],'sponsor_admins')) $sponsor['admins'] = '';
+	}
+	else {
+		unset($sponsor);
 	}
 
 	if (isset($cancel)) {
@@ -31,7 +28,7 @@ require_once('application.inc.php');
 	function checksponsor(&$sponsor) {
 		return (!empty($sponsor['name']) &&
 			 	    !empty($sponsor['email']) &&
-						checkURL($sponsor['url']));
+						(empty($sponsor['url']) || checkURL($sponsor['url'])));
 	}
 
 	function emailsponsoraccountchanged(&$sponsor) {
@@ -50,8 +47,9 @@ require_once('application.inc.php');
 
 	$sponsorexists = false;
 	$addPIDError="";
+	$pidsAdded = array();
 	if (isset($save) && checksponsor($sponsor) ) {
-		$result = DBQuery("SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."'" );
+		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."'" );
 		if ( $result->numRows()>0 ) {
 			if ($result->numRows()>1) {
 				$sponsorexists = true;
@@ -106,7 +104,7 @@ require_once('application.inc.php');
 
 			if (empty($addPIDError)) {    
 				if ( isset ($id) ) { // edit, not new
-					$result = DBQuery("UPDATE vtcal_sponsor SET name='".sqlescape($sponsor['name'])."',email='".sqlescape($sponsor['email'])."',url='".sqlescape($sponsor['url'])."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id = '".sqlescape($id)."'" );
+					$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_sponsor SET name='".sqlescape($sponsor['name'])."',email='".sqlescape($sponsor['email'])."',url='".sqlescape($sponsor['url'])."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id = '".sqlescape($id)."'" );
 	
 					// substitute existing auth info with the new one
 					$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
@@ -115,11 +113,11 @@ require_once('application.inc.php');
 					}
 				}
 				else {
-					$query = "INSERT INTO vtcal_sponsor (calendarid,name,email,url) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($sponsor['name'])."','".sqlescape($sponsor['email'])."','".sqlescape($sponsor['url'])."')";
+					$query = "INSERT INTO ".TABLEPREFIX."vtcal_sponsor (calendarid,name,email,url) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($sponsor['name'])."','".sqlescape($sponsor['email'])."','".sqlescape($sponsor['url'])."')";
 					$result = DBQuery($query ); 
 	
 					// determine the automatically generated sponsor-id
-					$result = DBQuery("SELECT id FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."' AND email='".sqlescape($sponsor['email'])."' AND url='".sqlescape($sponsor['url'])."'" ); 
+					$result = DBQuery("SELECT id FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."' AND email='".sqlescape($sponsor['email'])."' AND url='".sqlescape($sponsor['url'])."'" ); 
 					$s = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 					$id = $s['id'];
 					
@@ -141,7 +139,7 @@ require_once('application.inc.php');
 		pageheader(lang('edit_sponsor'), "Update");
 		contentsection_begin(lang('edit_sponsor'));
 		if ( !isset($check) ) {
-			$result = DBQuery("SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+			$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 			$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 		}
 	}
@@ -152,19 +150,19 @@ require_once('application.inc.php');
 ?>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <?php
-if ($sponsor['admin']) {
+if (isset($sponsor) && $sponsor['admin']) {
 	?><p><b>Note:</b> Users added to this sponsor will have administrative access to this calendar.</p><?php
 } else {
 	echo "<br>";
 }
 ?>
-<TABLE border="0" cellpadding="2" cellspacing="0">
-	<TR>
-		<TD class="bodytext" valign="top">
+<table border="0" cellpadding="2" cellspacing="0">
+	<tr>
+		<td class="bodytext" valign="top">
 			<strong><?php echo lang('sponsor_name'); ?></strong>
 			<span class="WarningText">*</span>
-		</TD>
-		<TD class="bodytext" valign="top">
+		</td>
+		<td class="bodytext" valign="top">
 <?php
 		if ( isset($check) ) {
 			if (empty($sponsor['name'])) {
@@ -175,58 +173,58 @@ if ($sponsor['admin']) {
 			}
 		}
 ?>
-			<INPUT type="text" size="50" name="sponsor[name]" maxlength=<?php echo constSponsor_nameMaxLength; ?>  value="<?php
+			<input type="text" size="50" name="sponsor[name]" maxlength=<?php echo MAXLENGTH_SPONSOR_NAME; ?>  value="<?php
 		if ( isset($check) ) { $sponsor['name']=stripslashes($sponsor['name']); }
 		if ( isset($sponsor['name']) ) { echo HTMLSpecialChars($sponsor['name']); }
-?>"> <I><?php echo lang('sponsor_name_example'); ?></I><BR>
-		</TD>
-	</TR>
-	<TR>
-		<TD class="bodytext" valign="top">
+?>"> <i><?php echo lang('sponsor_name_example'); ?></i><br>
+		</td>
+	</tr>
+	<tr>
+		<td class="bodytext" valign="top">
 			<strong><?php echo lang('email'); ?></strong>
 			<span class="WarningText">*</span>
-		</TD>
-		<TD class="bodytext" valign="top">
+		</td>
+		<td class="bodytext" valign="top">
 <?php
 	if (isset($check) && (empty($sponsor['email']))) {
 		feedback(lang('choose_email'),FEEDBACKNEG);
 	}
 ?>
-			<INPUT type="text" size="20" name="sponsor[email]" maxlength=<?php echo constEmailMaxLength; ?> value="<?php
+			<input type="text" size="20" name="sponsor[email]" maxlength=<?php echo MAXLENGTH_EMAIL; ?> value="<?php
 	if ( isset($check) ) { $sponsor['email']=stripslashes($sponsor['email']); }
 	if ( isset($sponsor['email'])) { echo HTMLSpecialChars($sponsor['email']); }
 ?>">
-			<I><?php echo lang('email_example'); ?></I><BR>
-		</TD>
-	</TR>
-	<TR>
-		<TD class="bodytext" valign="top">
+			<i><?php echo lang('email_example'); ?></i><br>
+		</td>
+	</tr>
+	<tr>
+		<td class="bodytext" valign="top">
 			<strong><?php echo lang('homepage'); ?></strong>
-		</TD>
-		<TD class="bodytext" valign="top">
+		</td>
+		<td class="bodytext" valign="top">
 <?php
 	if ( isset($check) && !checkURL($sponsor['url']) ) {
 		feedback(lang('url_invalid'),FEEDBACKNEG);
 	}
 ?>
-			<INPUT type="text" size="50" name="sponsor[url]" maxlength=<?php echo constUrlMaxLength; ?> value="<?php
+			<input type="text" size="50" name="sponsor[url]" maxlength=<?php echo MAXLENGTH_URL; ?> value="<?php
 	if ( isset($check) ) { $sponsor['url']=stripslashes($sponsor['url']); }
 	if ( isset($sponsor['url']) ) { echo HTMLSpecialChars($sponsor['url']); }
 ?>">
-			<I><?php echo lang('url_example'); ?></I><BR>
-		</TD>
-	</TR>
-	<TR>
-		<TD class="bodytext" valign="top">
+			<i><?php echo lang('url_example'); ?></i><br>
+		</td>
+	</tr>
+	<tr>
+		<td class="bodytext" valign="top">
 			<strong><?php
-				if ($sponsor['admin']) {
+				if (isset($sponsor) && $sponsor['admin']) {
 					echo lang('administrative_members');
 				} else {
 					echo lang('sponsor_members');
 				}
 			?></strong>
-		</TD>
-		<TD class="bodytext" valign="top">
+		</td>
+		<td class="bodytext" valign="top">
 <?php
 	if (!empty($addPIDError)) {    
 		feedback($addPIDError,1);
@@ -249,17 +247,17 @@ if ($sponsor['admin']) {
 		}
 		?></textarea><br>
 		<i><?php echo lang('administrative_members_example'); ?></i>
-		</TD>
-	</TR>
-</TABLE>
+		</td>
+	</tr>
+</table>
 	<input type="hidden" name="check" value="1">
 <?php
 	if ( isset ($id) ) { echo '<input type="hidden" name="id" value="',$id,'">'; }
 ?>
-	<BR>
-	<BR>
-	<INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<br>
+	<br>
+	<input type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
 	contentsection_end();

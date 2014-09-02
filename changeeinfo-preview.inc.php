@@ -15,7 +15,7 @@ assemble_timestamp($event);
 removeslashes($event);
 
 // determine the name of the category
-$result = DBQuery("SELECT id,name AS category_name FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['categoryid'])."'" ); 
+$result = DBQuery("SELECT id,name AS category_name FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['categoryid'])."'" ); 
 
 if ($result->numRows() > 0) { // error checking, actually there should be always a category
 	$e = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
@@ -41,14 +41,14 @@ contentsection_begin(lang('preview_event'));
 print_event($event);
 ?></td></tr></table>
 
-<BR>
+<br>
 <?php
 if (!checkeventtime($event)) {
-	echo "<BR>";
+	echo "<br>";
 	feedback(lang('warning_ending_time_before_starting_time'),FEEDBACKNEG);
 }
 if ($event['timeend_hour']==0) {
-	echo "<BR>";
+	echo "<br>";
 	feedback(lang('warning_no_ending_time'),FEEDBACKNEG);
 }
 
@@ -60,7 +60,7 @@ if ($repeat['mode'] > 0) {
 		$event['timebegin_month'],
 		$event['timebegin_day'],
 		$repeatdef);
-	echo "<BR>";
+	echo "<br>";
 	$repeatlist = producerepeatlist($event,$repeat);
 	printrecurrencedetails($repeatlist);
 }
@@ -70,11 +70,11 @@ else {
 
 passeventvalues($event,$event['sponsorid'],$repeat); // add the common input fields
 
-?><INPUT type="hidden" name="check" value="1"><?php
+?><input type="hidden" name="check" value="1"><?php
 
-echo '<INPUT type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
-if (isset($eventid)) { echo "<INPUT type=\"hidden\" name=\"eventid\" value=\"",$event['id'],"\">\n"; }
-if (isset($copy)) { echo "<INPUT type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n"; }
+echo '<input type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
+if (isset($eventid)) { echo "<input type=\"hidden\" name=\"eventid\" value=\"",$event['id'],"\">\n"; }
+if (isset($copy)) { echo "<input type=\"hidden\" name=\"copy\" value=\"",$copy,"\">\n"; }
 ?>
 <p><input type="submit" name="savethis" value="<?php echo lang('save_changes'); ?>">
 <input type="submit" name="edit" value="<?php echo lang('go_back_to_make_changes'); ?>"> &nbsp;&nbsp;&nbsp;

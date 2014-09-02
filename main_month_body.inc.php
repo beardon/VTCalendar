@@ -3,7 +3,7 @@
 	
 	$ievent = 0;
 	// Create base query to retrieve all events for this month
-	$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM vtcal_event_public e, vtcal_category c ";
+	$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM ".TABLEPREFIX."vtcal_event_public e, ".TABLEPREFIX."vtcal_category c ";
 	$query .= "WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.timebegin >= '".sqlescape($monthstart['timestamp'])."' AND e.timeend <= '".sqlescape($monthend['timestamp'])."'";
 	
 	// Filter by sponsor if necessary
@@ -39,7 +39,7 @@
 		<table id="MonthTable" width="100%" border="0" cellpadding="3" cellspacing="0">
 			<thead>
 				<tr align="center">
-					<?php if($week_start == 0){?>
+					<?php if(WEEK_STARTING_DAY == 0){?>
 					<td><strong><?php echo lang('sunday');?></strong></td>
 					<?php } ?>
 					<td><strong><?php echo lang('monday');?></strong></td>
@@ -48,7 +48,7 @@
 					<td><strong><?php echo lang('thursday');?></strong></td>
 					<td><strong><?php echo lang('friday');?></strong></td>
 					<td><strong><?php echo lang('saturday');?></strong></td>
-					<?php if($week_start == 1){?>
+					<?php if(WEEK_STARTING_DAY == 1){?>
 					<td><strong><?php echo lang('sunday');?></strong></td>
 					<?php } ?>
 				</tr>
@@ -116,7 +116,7 @@
 						
 						// Display an "add event" icon
 						if (!empty($_SESSION["AUTH_SPONSORID"])) {
-							echo '<td><a style="font-size: 11px;" href="addevent.php?calendarid='.urlencode($_SESSION['CALENDAR_ID']).'&timebegin_year='.$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\" title=\"",lang('add_new_event'),"\">";
+							echo '<td class="NoPrint"><a style="font-size: 11px;" href="addevent.php?calendarid='.urlencode($_SESSION['CALENDAR_ID']).'&timebegin_year='.$iday['year']."&timebegin_month=".$iday['month']."&timebegin_day=".$iday['day']."\" title=\"",lang('add_new_event'),"\">";
 							echo '<img src="images/new.gif" height="16" width="16" title="',lang('add_new_event'),'" alt="',lang('add_new_event'),'" border="0">';
 							echo '</a></td>';
 						}

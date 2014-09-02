@@ -1,9 +1,9 @@
 <?php
 require_once('application.inc.php');
 
-if (isset($_GET['cancel'])) { setVar($cancel,$_GET['cancel'],'cancel'); } else { unset($cancel); }
-if (isset($_GET['importurl'])) { setVar($importurl,$_GET['importurl'],'importurl'); } else { unset($importurl); }
-if (isset($_GET['startimport'])) { setVar($startimport,$_GET['startimport'],'startimport'); } else { unset($startimport); }
+if (!isset($_GET['cancel']) || !setVar($cancel,$_GET['cancel'],'cancel')) unset($cancel);
+if (!isset($_GET['importurl']) || !setVar($importurl,$_GET['importurl'],'importurl')) unset($importurl);
+if (!isset($_GET['startimport']) || !setVar($startimport,$_GET['startimport'],'startimport')) unset($startimport);
 
 if (!authorized()) { exit; }
 
@@ -47,19 +47,18 @@ function saveevent() {
 	$event['wholedayevent'] = ($timebegin == "00:00") && ($timeend == "23:59");
 
 	// make sure that the previous event got all the input fields
-	if (!(strlen($event['displayedsponsor']) <= MAXLENGTH_SPONSOR)) { feedback(lang('import_error_displayedsponsor').": ".htmlentities($event['displayedsponsor']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['displayedsponsorurl']) <= constUrlMaxLength && checkurl($event['displayedsponsorurl']))) { feedback(lang('import_error_displayedsponsorurl').": ".htmlentities($event['displayedsponsorurl']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['displayedsponsor']) <= MAXLENGTH_DISPLAYEDSPONSOR)) { feedback(lang('import_error_displayedsponsor').": ".htmlentities($event['displayedsponsor']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['displayedsponsorurl']) <= MAXLENGTH_URL && checkurl($event['displayedsponsorurl']))) { feedback(lang('import_error_displayedsponsorurl').": ".htmlentities($event['displayedsponsorurl']),FEEDBACKNEG); $error = true; }
 	if (!(eventtimebeginvalid($event['timebegin']))) { feedback(lang('import_error_timebegin').": ".htmlentities($event['timebegin']),FEEDBACKNEG); $error = true; }
 	if (!(eventtimeendvalid($event['timeend']))) { feedback(lang('import_error_timeend').": ".htmlentities($event['timeend']),FEEDBACKNEG); $error = true; }
 	if (!(array_key_exists($event['categoryid'],$validcategory))) { feedback(lang('import_error_categoryid').": ".htmlentities($event['categoryid']),FEEDBACKNEG); $error = true; }
 	if (!(!empty($event['title']) && strlen($event['title']) <= MAXLENGTH_TITLE)) { feedback(lang('import_error_title').": ".htmlentities($event['']),FEEDBACKNEG); $error = true; }
 	if (!(strlen($event['description']) <= MAXLENGTH_DESCRIPTION)) { feedback(lang('import_error_description').": ".htmlentities($event['description']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['location']) <= constLocationMaxLength)) { feedback(lang('import_error_location').": ".htmlentities($event['location']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['price']) <= constPriceMaxLength)) { feedback(lang('import_error_price').": ".htmlentities($event['price']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['contact_name']) <= constContact_nameMaxLength)) { feedback(lang('import_error_contact_name').": ".htmlentities($event['contact_name']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['contact_phone']) <= constContact_phoneMaxLength)) { feedback(lang('import_error_contact_phone').": ".htmlentities($event['contact_phone']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['contact_email']) <= constEmailMaxLength)) { feedback(lang('import_error_contact_email').": ".htmlentities($event['contact_email']),FEEDBACKNEG); $error = true; }
-	if (!(strlen($event['url']) <= constUrlMaxLength && checkurl($event['url']))) { feedback(lang('import_error_contact_url').": ".htmlentities($event['url']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['location']) <= MAXLENGTH_LOCATION)) { feedback(lang('import_error_location').": ".htmlentities($event['location']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['price']) <= MAXLENGTH_PRICE)) { feedback(lang('import_error_price').": ".htmlentities($event['price']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['contact_name']) <= MAXLENGTH_CONTACT_NAME)) { feedback(lang('import_error_contact_name').": ".htmlentities($event['contact_name']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['contact_phone']) <= MAXLENGTH_CONTACT_PHONE)) { feedback(lang('import_error_contact_phone').": ".htmlentities($event['contact_phone']),FEEDBACKNEG); $error = true; }
+	if (!(strlen($event['contact_email']) <= MAXLENGTH_EMAIL)) { feedback(lang('import_error_contact_email').": ".htmlentities($event['contact_email']),FEEDBACKNEG); $error = true; }
 
 	// save all the data of the previous event in the array
 	if (!$error) {
@@ -95,7 +94,6 @@ function xmlstartelement_importevent($parser, $element, $attrs) {
 		$event['contact_name']="";
 		$event['contact_phone']="";
 		$event['contact_email']="";
-		$event['url']="";
 	}
 	
 	$firstelement = 0;
@@ -155,9 +153,6 @@ function xmlcharacterdata_importevent($parser, $data) {
 	elseif (strtolower($xmlcurrentelement)=="contact_email") {
 		$event['contact_email'] .= $data;
 	}
-	elseif (strtolower($xmlcurrentelement)=="url") {
-		$event['url'] .= $data;
-	}
 } // end: function characterdata_importevents
 
 // default error handler
@@ -173,7 +168,7 @@ $showinputbox = 1;
 if (isset($importurl)) {
 	if (checkurl($importurl)) {
 		// get list of valid category-IDs
-		$result = DBQuery("SELECT * FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" ); 
+		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" ); 
 		for($i=0; $i<$result->numRows(); $i++) {
 			$category = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
 			$validcategory[$category['id']] = true;
@@ -197,7 +192,7 @@ if (isset($importurl)) {
 			if (!$error) {
 				if ($eventnr > 0) {
 					// determine sponsor name & URL
-					$result = DBQuery("SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['sponsorid'])."'" ); 
+					$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['sponsorid'])."'" ); 
 					$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 				
 					$id = getNewEventId();
@@ -235,11 +230,11 @@ if ($showinputbox) {
 	<b><?php echo lang('enter_import_url_message'); ?></b><br>
 	<br>
 	<input type="text" name="importurl" value="<?php 
-	if (isset($importurl)) { echo $importurl; } ?>" size="60" maxlength="<?php echo constImporturlMaxLength; ?>"><br>
+	if (isset($importurl)) { echo $importurl; } ?>" size="60" maxlength="<?php echo MAXLENGTH_IMPORTURL; ?>"><br>
 	<?php echo lang('enter_import_url_example'); ?><br>
 	<br>
 	<input type="submit" name="startimport" value="<?php echo lang('ok_button_text'); ?>">
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 	</form>
 	<?php
 } // end: if ($showinputbox)

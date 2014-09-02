@@ -64,6 +64,14 @@ tr.TableHeaderBG td, td.TableHeaderBG {
 	border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>;
 	background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;
 }
+#CalendarBlock div.FormSectionHeader h3 {
+	margin: 0;
+	padding: 0;
+}
+
+#CalendarBlock label {
+	cursor: pointer;
+}
 
 /*===================================
              Top Navi Bar
@@ -593,6 +601,20 @@ td.EventDetail-Label {
 }
 
 /*===================================
+             Export View
+===================================*/
+
+#ExportForm.HideHTML .HTMLOnly {
+	display: none;
+}
+
+#ExportForm p.FormError {
+	padding: 4px;
+	background-color: #EEEEEE;
+	border-top: 2px solid <?php echo $_SESSION['COLOR_TEXT_WARNING']; ?>;
+}
+
+/*===================================
             Misc Styles
 ===================================*/
 
@@ -738,3 +760,4 @@ div#MenuButton a:hover, div#MenuButton a:focus {
 	background-repeat: no-repeat;
 	background-position: 0 3px;
 }
+

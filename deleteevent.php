@@ -1,23 +1,16 @@
 <?php
 require_once('application.inc.php');
 
-	if (isset($_POST['httpreferer'])) { setVar($httpreferer,$_POST['httpreferer'],'httpreferer'); } else { unset($httpreferer); }
-	if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-	if (isset($_POST['check'])) { setVar($check,$_POST['check'],'check'); } 
-	else { 
-		if (isset($_GET['check'])) { setVar($check,$_GET['check'],'check'); } 
-		else {
-			unset($check); 
-		}
+	if (!isset($_POST['httpreferer']) || !setVar($httpreferer,$_POST['httpreferer'],'httpreferer')) unset($httpreferer);
+	if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+	if (!isset($_POST['check']) || !setVar($check,$_POST['check'],'check')) { 
+		if (!isset($_GET['check']) || !setVar($check,$_GET['check'],'check')) unset($check);
 	}
-	if (isset($_POST['deleteconfirmed'])) { setVar($deleteconfirmed,$_POST['deleteconfirmed'],'deleteconfirmed'); } else { unset($deleteconfirmed); }
-	if (isset($_POST['deletethis'])) { setVar($deletethis,$_POST['deletethis'],'deletethis'); } else { unset($deletethis); }
-	if (isset($_POST['deleteall'])) { setVar($deleteall,$_POST['deleteall'],'deleteall'); } else { unset($deleteall); }
-	if (isset($_POST['eventid'])) { setVar($eventid,$_POST['eventid'],'eventid'); } else { 
-		if (isset($_GET['eventid'])) { setVar($eventid,$_GET['eventid'],'eventid'); } 
-		else { 
-			unset($eventid); 
-		}
+	if (!isset($_POST['deleteconfirmed']) || !setVar($deleteconfirmed,$_POST['deleteconfirmed'],'deleteconfirmed')) unset($deleteconfirmed);
+	if (!isset($_POST['deletethis']) || !setVar($deletethis,$_POST['deletethis'],'deletethis')) unset($deletethis);
+	if (!isset($_POST['deleteall']) || !setVar($deleteall,$_POST['deleteall'],'deleteall')) unset($deleteall);
+	if (!isset($_POST['eventid']) || !setVar($eventid,$_POST['eventid'],'eventid')) { 
+		if (!isset($_GET['eventid']) || !setVar($eventid,$_GET['eventid'],'eventid')) unset($eventid);
 	}
 
 	if (!authorized()) { exit; }
@@ -32,13 +25,13 @@ require_once('application.inc.php');
 	}
 
 	// check that the event exists.
-	$query = "SELECT sponsorid FROM vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+	$query = "SELECT sponsorid FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 	$result = DBQuery($query );
 	if ($result->numRows() > 0) { 
 			$e = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	}
 	else {
-		$query = "SELECT * FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+		$query = "SELECT * FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 		$result = DBQuery($query ); 
 		
 		// If the event exists in "event_public", then insert it into "event" since it is missing...
@@ -71,7 +64,7 @@ require_once('application.inc.php');
 	
 	if (isset($deleteconfirmed)) {
 		// get the event title from the database
-		$result = DBQuery("SELECT * FROM vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 		if ($result->numRows() > 0) { $event  = $result->fetchRow(DB_FETCHMODE_ASSOC,0); }
 		else { $event['title']=""; }
 
@@ -80,7 +73,7 @@ require_once('application.inc.php');
 		
 		// also delete the copies of an event that have been forwarded to the default calendar
 		if ( $_SESSION['CALENDAR_ID'] != "default" ) {
-			$query = "DELETE FROM vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
+			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
 			$result = DBQuery($query ); 
 		} // end: if ( $_SESSION['CALENDAR_ID'] != "default" )
 		
@@ -92,7 +85,7 @@ require_once('application.inc.php');
 			// also delete the copies of an event that have been forwarded to the default calendar
 			if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 				if (!empty($event['repeatid'])) {
-					$query = "DELETE FROM vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($event['repeatid'])."'";
+					$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($event['repeatid'])."'";
 					$result = DBQuery($query ); 
 				}
 			} // end: if ( $_SESSION['CALENDAR_ID'] != "default" )
@@ -109,18 +102,18 @@ require_once('application.inc.php');
 	}
 
 	// read sponsor name from DB
-	$result = DBQuery("SELECT name,url FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+	$result = DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 	$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 	pageheader(lang('delete_event'), "Update");
 	contentsection_begin(lang('delete_event'));
 ?>
-<FORM method="post" action="deleteevent.php">
+<form method="post" action="deleteevent.php">
 <?php
-		echo '<INPUT type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
+		echo '<input type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
 
 		if (isset($check)) { // ask for delete confirmation
-			$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.contact_name,e.contact_email,e.contact_phone,e.price,e.url,e.displayedsponsor,e.displayedsponsorurl,e.wholedayevent,e.repeatid,e.categoryid,c.id,c.name AS category_name FROM vtcal_event e, vtcal_category c WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.id='".sqlescape($eventid)."'";
+			$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.contact_name,e.contact_email,e.contact_phone,e.price,e.displayedsponsor,e.displayedsponsorurl,e.wholedayevent,e.repeatid,e.categoryid,c.id,c.name AS category_name FROM ".TABLEPREFIX."vtcal_event e, ".TABLEPREFIX."vtcal_category c WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.id='".sqlescape($eventid)."'";
 			$result = DBQuery($query );
 
 			if ($result->numRows() > 0) { // display the preview only if there is a corresponding entry in "event"
@@ -134,7 +127,7 @@ require_once('application.inc.php');
 
 				print_event($event);  
 ?>
-		<BR>
+		<br>
 <?php
 		if (!empty($event['repeatid'])) {
 			echo '<span class="NotificationText">';
@@ -151,25 +144,25 @@ require_once('application.inc.php');
 		$repeat['mode'] = 0;
 	}
 ?>
-	<BR>
-	<BR>
-	<B><?php echo lang('delete_event_confirm'); ?></B>
-	<BR>
-	<BR>
-	<INPUT type="hidden" name="eventid" value="<?php echo $eventid; ?>">
-	<INPUT type="hidden" name="deleteconfirmed" value="1">
-	<INPUT type="submit" name="deletethis" value="<?php echo lang('button_delete_this_event'); ?>">
+	<br>
+	<br>
+	<b><?php echo lang('delete_event_confirm'); ?></b>
+	<br>
+	<br>
+	<input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
+	<input type="hidden" name="deleteconfirmed" value="1">
+	<input type="submit" name="deletethis" value="<?php echo lang('button_delete_this_event'); ?>">
 <?php
 	if ($repeat['mode'] > 0) {
-		echo '&nbsp;<INPUT type="submit" name="deleteall" value="',lang('button_delete_all_recurrences'),'">';
+		echo '&nbsp;<input type="submit" name="deleteall" value="',lang('button_delete_all_recurrences'),'">';
 	}
 
 		} // end: if (isset($check))
 ?>
 	&nbsp;
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
-	<BR>
-</FORM>
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<br>
+</form>
 <?php
 	contentsection_end();
 	pagefooter();

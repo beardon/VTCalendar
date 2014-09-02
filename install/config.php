@@ -20,10 +20,8 @@ if (file_exists(CONFIGFILENAME)) {
 	exit();
 }
 
-require_once("DB.php");
 require_once("config-code.php");
 require_once("../functions-io.inc.php");
-require_once("../functions-db-generic.inc.php");
 require_once("config-functions.inc.php");
 
 // An array of error messages about the submitted form values.
@@ -153,17 +151,14 @@ if (isset($_POST['SaveConfig'])) {
 		$FormErrors[count($FormErrors)] = "You must specify the Secure Calendar Base URL.";
 	}
 	
-	if (preg_match("/^(-?)[0-9]+$/", $Form_TIMEZONE_OFFSET) == 0) {
-		$FormErrors[count($FormErrors)] = "The timezone offset must be a positive or negative integer.";
-	}
-	
 	if ($Form_SHOW_UPCOMING_TAB && preg_match("/^[0-9]+$/", $Form_MAX_UPCOMING_EVENTS) == 0) {
 		$FormErrors[count($FormErrors)] = "The Max Upcoming Events must be an integer.";
 	}
 	
-	if ($Form_AUTH_HTTP_CACHE && preg_match("/^[0-9]+$/", $Form_AUTH_HTTP_CACHE_EXPIRATIONDAYS) == 0) {
+	// TODO: Disabled feature.
+	/*if ($Form_AUTH_HTTP_CACHE && preg_match("/^[0-9]+$/", $Form_AUTH_HTTP_CACHE_EXPIRATIONDAYS) == 0) {
 		$FormErrors[count($FormErrors)] = "The HTTP Authentication Cache Expiration must be an integer.";
-	}
+	}*/
 	
 	if (preg_match("/^[0-9]+$/", $Form_MAX_CACHESIZE_CATEGORYNAME) == 0) {
 		$FormErrors[count($FormErrors)] = "The Max Category Name Cache Size must be an integer.";

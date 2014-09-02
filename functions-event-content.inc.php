@@ -1,6 +1,5 @@
 <?php
 function print_event($event, $linkfeatures=true) {
-	global $lang, $day_end_h;
 	?>
 	<table id="EventTable" width="100%" border="0" cellpadding="6" cellspacing="0">
 		<tr>
@@ -9,7 +8,7 @@ function print_event($event, $linkfeatures=true) {
 				<?php 
 					if ($event['wholedayevent']==0) {
 						echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
-						if ( ! ($event['timeend_hour']==$day_end_h && $event['timeend_min']==59) ) {
+						if ( ! ($event['timeend_hour']==DAY_END_H && $event['timeend_min']==59) ) {
 							echo "<br>",lang('to'),"<br>";
 							echo timestring($event['timeend_hour'],$event['timeend_min'],$event['timeend_ampm']);
 						}
@@ -27,9 +26,6 @@ function print_event($event, $linkfeatures=true) {
 				if (!empty($event['description'])) {
 					?><p id="EventDescription"><?php echo str_replace("\r", "<br>", make_clickable(htmlentities($event['description']))); ?></p><?php
 				}
-				if (!empty($event['url']) && $event['url'] != "http://") {
-					?><div id="EventURL"><a href="<?php echo htmlentities($event['url']),"\">",lang('more_information');?></a></div><?php
-				} // end: if (!empty($event['url'])) {
 				?>
 				
 				<div id="EventDetailPadding"><table id="EventDetail" border="0" cellpadding="6" cellspacing="0"><?php 
@@ -104,12 +100,11 @@ function print_event($event, $linkfeatures=true) {
 							<?php
 							if (!empty($event['id'])) {
 								?>						
-								<a 
-									href="icalendar.php?eventid=<?php echo $event['id']; ?>"><img 
+								<a href="<?php echo EXPORT_PATH; ?>?calendarid=default&format=ical&id=<?php echo urlencode($event['id']); ?>"><img 
 									src="images/vcalendar.gif" width="20" height="20" border="0" align="absmiddle"></a>
-								<a href="icalendar.php?eventid=<?php echo $event['id']; ?>"><?php echo lang('copy_event_to_pda'); ?></a>
+								<a href="<?php echo EXPORT_PATH; ?>?calendarid=default&format=ical&id=<?php echo urlencode($event['id']); ?>"><?php echo lang('copy_event_to_pda'); ?></a>
 								<?php
-							} // end: if (!empty($event['id']))
+							}
 							?>
 					</div>
 					<?php

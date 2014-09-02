@@ -6,7 +6,7 @@ if (!authorized()) { exit; }
 pageheader(lang('manage_templates'), "Update");
 contentsection_begin(lang('manage_templates'), true);
 
-$result =& DBQuery("SELECT * FROM vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' ORDER BY name" ); 
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' ORDER BY name" ); 
 if (is_string($result)) {
 	DBErrorBox($result);
 }

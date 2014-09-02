@@ -1,24 +1,7 @@
 <?php
 if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
 
-/* ============================================================
-         Constants that define valid values for fields.
-				 TODO: Merge with section later in this file.
-============================================================ */
-
-define("REGEXVALIDCOLOR","/^#[ABCDEFabcdef0-9]{6,6}$/");
-//NOT USED define("BGCOLORNAVBARACTIVE","#993333");
-//NOT USED define("BGCOLORWEEKMONTHNAVBAR","#993333");
-//NOT USED define("BGCOLORDETAILSHEADER","#993333");
-define("MAXLENGTH_URL","100"); // NOT CONSISTANT (see below)
-define("MAXLENGTH_TITLE","75"); // NOT CONSISTANT (see below)
-define("MAXLENGTH_DESCRIPTION","5000"); // NOT CONSISTANT (see below)
-//define("MAXLENGTH_LOCATION","100");
-//define("MAXLENGTH_PRICE","100");
-//define("MAXLENGTH_CONTACT_NAME","100");
-//define("MAXLENGTH_CONTACT_PHONE","100");
-//define("MAXLENGTH_CONTACT_EMAIL","100");
-define("MAXLENGTH_SPONSOR","50"); // NOT CONSISTANT (see below)
+define("CRLF", "\r\n");
 define("FEEDBACKPOS","0");
 define("FEEDBACKNEG","1");
 
@@ -35,38 +18,35 @@ define("NOW_AS_TIMENUM",  timestamp2timenumber(NOW_AS_TEXT));
 ============================================================ */
 
 // Regular Expressions that validate text input
-define("constValidTextCharFullRegEx",'\s\x20-\x7E\xA0-\xFF'); // Includes all valid ISO-8859-1 characters
-define("constValidTextCharWithoutSpacesRegEx",'\w~!@#\$%^&*\(\)\-+=\{\}\[\]\|\\\:";\'<>?,.\/'.chr(188).chr(189).chr(190)); //188, 189, 190 are 1/4, 1/2, 3/4 respectively
-define("constValidTextCharWithSpacesRegEx",' '.constValidTextCharWithoutSpacesRegEx);
-define("constValidTextCharWithWhitespaceRegEx",'\s'.constValidTextCharWithoutSpacesRegEx);
-
-define("constPasswordMaxLength",20);
-define("constPasswordRegEx", '/^['.constValidTextCharWithoutSpacesRegEx.']{1,'.constPasswordMaxLength.'}$/');
+define("REGEX_VALIDTEXTCHAR",'\x21-\x7E\xA1-\xFF'); // Includes all valid ISO-8859-1 characters except whitespace.
+define("REGEX_VALIDTEXTCHAR_WITH_SPACES",'\x20'.REGEX_VALIDTEXTCHAR);
+define("REGEX_VALIDTEXTCHAR_WITH_WHITESPACE",'\s'.REGEX_VALIDTEXTCHAR);
 
 // Max length of input
-define("constCalendaridMAXLENGTH",50);
-define("constCalendarnameMAXLENGTH",100);
-define("constCalendarTitleMAXLENGTH",50);
-define("constKeywordMaxLength",100);
-define("constSpecificsponsorMaxLength",100);
-define("constTitleMaxLength",1024);
-define("constImporturlMaxLength",100);
-define("constUrlMaxLength",100);
-define("constLocationMaxLength",100);
-define("constPriceMaxLength",100);
-define("constContact_nameMaxLength",100);
-define("constContact_phoneMaxLength",100);
-define("constDescriptionMaxLength",10000);
-define("constDisplayedsponsorMaxLength",100);
-define("constDisplayedsponsorurlMaxLength",100);
-define("constTemplate_nameMaxLength",100);
-define("constEmailMaxLength",100);
-define("constCategory_nameMaxLength",100);
-define("constSponsor_nameMaxLength",100);
+define("MAXLENGTH_PASSWORD",20);
+define("MAXLENGTH_CALENDARID",50);
+define("MAXLENGTH_CALENDARNAME",100);
+define("MAXLENGTH_CALENDARTITLE",50);
+define("MAXLENGTH_KEYWORD",100);
+define("MAXLENGTH_SPECIFICSPONSOR",100);
+define("MAXLENGTH_TITLE",1024);
+define("MAXLENGTH_IMPORTURL",100);
+define("MAXLENGTH_URL",100);
+define("MAXLENGTH_LOCATION",100);
+define("MAXLENGTH_PRICE",100);
+define("MAXLENGTH_CONTACT_NAME",100);
+define("MAXLENGTH_CONTACT_PHONE",100);
+define("MAXLENGTH_DESCRIPTION",10000);
+define("MAXLENGTH_DISPLAYEDSPONSOR",100);
+define("MAXLENGTH_DISPLAYEDSPONSORURL",100);
+define("MAXLENGTH_TEMPLATE_NAME",100);
+define("MAXLENGTH_EMAIL",100);
+define("MAXLENGTH_CATEGORY_NAME",100);
+define("MAXLENGTH_SPONSOR_NAME",100);
 
 // Special error messages for invalid input
-define("constCalendaridVALIDMESSAGE", '1 to '.constCalendaridMAXLENGTH.' characters (A-Z,a-z,0-9,-,.)');
-define("constCalendarnameVALIDMESSAGE", '1 to '.constCalendarnameMAXLENGTH.' characters (A-Z,a-z,0-9,-,.,&amp;,\',[space],[comma])');
+define("constCalendaridVALIDMESSAGE", '1 to '.MAXLENGTH_CALENDARID.' characters (A-Z,a-z,0-9,-,.)');
+define("constCalendarnameVALIDMESSAGE", '1 to '.MAXLENGTH_CALENDARNAME.' characters (A-Z,a-z,0-9,-,.,&amp;,\',[space],[comma])');
 
 /* ============================================================
              Constants used for XML processing

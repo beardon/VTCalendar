@@ -5,9 +5,9 @@ require_once('application.inc.php');
 	$calendarurl .= "://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'], "/"))."/";
 	helpwindow_header();
 ?>
-<H3><IMG alt="" border=0 height=16 src="images/help.gif" width=16>
+<h3><img alt="" border=0 height=16 src="images/help.gif" width=16>
 <?php echo lang('help_export'); ?>
-</H3>
+</h3>
 <?php echo lang('help_export_intro'); ?>
 	&quot;<?php echo $calendarurl; ?>export.php?calendar=<?php echo $_SESSION['CALENDAR_ID']; ?>&amp;type=xml&amp;timebegin=2000-03-17&amp;timeend=2000-05-20</a>&quot;.</li>
 </ul>
@@ -51,14 +51,14 @@ require_once('application.inc.php');
 </pre>
 <hr size="1">
 <br>
-<P>
+<p>
 <?php echo lang('help_export_data_format'); ?>
 <br>
 <strong><?php echo lang('help_export_categoryid_intro'); ?></strong><br>
 <br>
 <?php
 // read event categories from DB
-$result =& DBQuery("SELECT * FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
 
 if (is_string($result)) {
 	DBErrorBox($result); 

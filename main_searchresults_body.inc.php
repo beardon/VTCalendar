@@ -1,10 +1,10 @@
 <?php
 if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include files
 ?>
-<FORM method="get" action="main.php" style="margin: 0; padding: 0;">
+<form method="get" action="main.php" style="margin: 0; padding: 0;">
 <input type="hidden" name="calendarid" value="<?php echo htmlentities($_SESSION['CALENDAR_ID']) ?>">
 <input type="hidden" name="view" value="search">
-<p><INPUT type="submit" value="&laquo; <?php echo lang('back_to_prev_page'); ?>"></p>
+<p><input type="submit" value="&laquo; <?php echo lang('back_to_prev_page'); ?>"></p>
 <table id="DayTable" width="100%" cellpadding="6" cellspacing="0" border="0">
 <?php
 if (isset($timebegin_year)) { // details was called from the searchform
@@ -24,7 +24,7 @@ if (!isset($timeend) || $timeend=="today") {
 
 $ievent = 0;
 
-$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM vtcal_event_public e, vtcal_category c ";
+$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM ".TABLEPREFIX."vtcal_event_public e, ".TABLEPREFIX."vtcal_category c ";
 $query.= "WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id";
 
 if (!empty($timebegin)) { $query.= " AND e.timebegin >= '".sqlescape($timebegin)."'"; }
@@ -46,7 +46,7 @@ if (!empty($keyword)) {
 	$keywords = split ( " ", $keyword );
 		
 	// read alternative keywords from database
-	$r =& DBQuery("SELECT * FROM vtcal_searchkeyword WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" );
+	$r =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_searchkeyword WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" );
 	
 	for ($i=0; $i < $r->numRows(); $i++) {
 		$searchkeyword = $r->fetchRow(DB_FETCHMODE_ASSOC,$i);
@@ -55,7 +55,7 @@ if (!empty($keyword)) {
 	}
 
 	// read featured keywords from database
-	$featuredresult = DBQuery("SELECT * FROM vtcal_searchfeatured WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" );
+	$featuredresult = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_searchfeatured WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" );
 		for ($i=0; $i < $featuredresult->numRows(); $i++) {
 			$feature = $featuredresult->fetchRow(DB_FETCHMODE_ASSOC,$i);
 		$search_featured[$feature['keyword']]=$feature['featuretext'];
@@ -175,14 +175,14 @@ while ($ievent < $result->numRows()) {
 	
 
 // keep search log of keywords
-DBQuery("INSERT INTO vtcal_searchlog (calendarid,time,ip,numresults,keyword) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape(date("Y-m-d H:i:s", time()))."','".sqlescape($_SERVER['REMOTE_ADDR'])."','".sqlescape($result->numRows())."','".sqlescape($keyword)."')" );
+DBQuery("INSERT INTO ".TABLEPREFIX."vtcal_searchlog (calendarid,time,ip,numresults,keyword) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape(date("Y-m-d H:i:s", time()))."','".sqlescape($_SERVER['REMOTE_ADDR'])."','".sqlescape($result->numRows())."','".sqlescape($keyword)."')" );
 
 /*if (!empty($keyword)) {
 	$keywords = split (" ", $keyword);
 	for ($x = 0; $x < count($keywords); $x++) {
 		if (strlen($keywords[$x]) <= 25) {
 			DBquery(
-				"INSERT INTO vtcal_searchedkeywords (calendarid, keyword, searchdate, count)"
+				"INSERT INTO ".TABLEPREFIX."vtcal_searchedkeywords (calendarid, keyword, searchdate, count)"
 				. " VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."', '".sqlescape($keywords[$x])."', '" . date("Y-m-d", NOW) . "', 1)"
 				. " ON DUPLICATE KEY UPDATE count = count + 1");
 		}
@@ -190,4 +190,4 @@ DBQuery("INSERT INTO vtcal_searchlog (calendarid,time,ip,numresults,keyword) VAL
 }*/
 ?>
 </table>
-</FORM>
+</form>

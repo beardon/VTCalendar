@@ -4,11 +4,16 @@ require_once('application.inc.php');
 	if (!authorized()) { exit; }
 	if (!$_SESSION['AUTH_ISMAINADMIN'] ) { exit; } // additional security
 
-	if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-	if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
-	if (isset($_POST['cal']) && isset($_POST['cal']['id'])) { setVar($cal['id'],$_POST['cal']['id'],'calendarid'); }
-	elseif (isset($_GET['cal']) && isset($_GET['cal']['id'])) { setVar($cal['id'],$_GET['cal']['id'],'calendarid'); } 
-	else { unset($cal); }
+	if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+	if (!isset($_POST['save']) || !setVar($save,$_POST['save'],'save')) unset($save);
+	if (isset($_POST['cal']) || isset($_GET['cal'])) {
+		if (!isset($_POST['cal']['id']) || !setVar($cal['id'],$_POST['cal']['id'],'calendarid')) {
+			if (!isset($_GET['cal']['id']) || !setVar($cal['id'],$_GET['cal']['id'],'calendarid')) unset($cal['id']);
+		}
+	}
+	else {
+		unset($cal);
+	}
 
 
 	if (isset($cancel)) {
@@ -17,7 +22,9 @@ require_once('application.inc.php');
 	}
 
 	// make sure the calendar exists
-	$result = DBQuery("SELECT * FROM vtcal_calendar WHERE id='".sqlescape($cal['id'])."'" );
+	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_calendar WHERE id='".sqlescape($cal['id'])."'" );
+	if (is_string($result)) { DBErrorBox("Error determining if calendar exists: " . $result); exit; };
+	
 	if ( $result->numRows() != 1 ) {
 		redirect2URL("managecalendars.php");
 		exit;
@@ -27,18 +34,42 @@ require_once('application.inc.php');
 	}
 
 	if (isset($save) ) {
-		$result = DBQuery("DELETE FROM vtcal_event WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_event_repeat WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_event_public WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_calendarviewauth WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_searchlog WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_searchkeyword WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_searchfeatured WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_category WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_template WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_sponsor WHERE calendarid='".sqlescape($cal['id'])."'" );
-		$result = DBQuery("DELETE FROM vtcal_calendar WHERE id='".sqlescape($cal['id'])."'" );
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting events from ".TABLEPREFIX."vtcal_event: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event_repeat WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting repeating events from ".TABLEPREFIX."vtcal_event_repeat: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting public events from ".TABLEPREFIX."vtcal_event_public: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_calendarviewauth WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting view auth from ".TABLEPREFIX."vtcal_calendarviewauth: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting auth from vtcal_auth: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_searchlog WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting log entries from ".TABLEPREFIX."vtcal_searchlog: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_searchkeyword WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting keywords from ".TABLEPREFIX."vtcal_searchkeyword: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_searchfeatured WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error deleting featured keywords from ".TABLEPREFIX."vtcal_searchfeatured: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error categories from ".TABLEPREFIX."vtcal_category: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error templates from ".TABLEPREFIX."vtcal_template: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error sponsors from ".TABLEPREFIX."vtcal_sponsor: " . $result); exit; };
+		
+		$result =& DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_calendar WHERE id='".sqlescape($cal['id'])."'" );
+		if (is_string($result)) { DBErrorBox("Error the calendar from ".TABLEPREFIX."vtcal_calendar: " . $result); exit; };
+		
 		redirect2URL("managecalendars.php");
 		exit;
 	}
@@ -51,10 +82,10 @@ require_once('application.inc.php');
 <?php
 	if ( isset ($cal['id']) ) { echo '<input type="hidden" name="cal[id]" value="'.$cal['id'].'">'; }
 ?>	
-	<BR>
-	<BR>
-	<INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<br>
+	<br>
+	<input type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
 	contentsection_end();

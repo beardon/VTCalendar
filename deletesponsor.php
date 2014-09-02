@@ -4,17 +4,13 @@ require_once('application.inc.php');
 	if (!authorized()) { exit; }
 	if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 
-	if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
-	if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-	if (isset($_POST['deleteevents'])) { setVar($deleteevents,$_POST['deleteevents'],'deleteevents'); } else { unset($deleteevents); }
-	if (isset($_POST['id'])) { setVar($id,$_POST['id'],'sponsorid'); } 
-	else { 
-		if (isset($_GET['id'])) { setVar($id,$_GET['id'],'sponsorid'); }
-		else {
-			unset($id); 
-		}
+	if (!isset($_POST['save']) || !setVar($save,$_POST['save'],'save')) unset($save);
+	if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+	if (!isset($_POST['deleteevents']) || !setVar($deleteevents,$_POST['deleteevents'],'deleteevents')) unset($deleteevents);
+	if (!isset($_POST['id']) || !setVar($id,$_POST['id'],'sponsorid')) { 
+		if (!isset($_GET['id']) || !setVar($id,$_GET['id'],'sponsorid')) unset($id);
 	}
-	if (isset($_POST['newsponsorid'])) { setVar($newsponsorid,$_POST['newsponsorid'],'sponsorid'); } else { unset($newsponsorid); }
+	if (!isset($_POST['newsponsorid']) || !setVar($newsponsorid,$_POST['newsponsorid'],'sponsorid')) unset($newsponsorid);
 
 
 	if (isset($cancel)) {
@@ -23,7 +19,7 @@ require_once('application.inc.php');
 	}
 
 	// make sure the sponsor exists
-	$result = DBQuery("SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 	if ( $result->numRows() != 1 ) {
 		redirect2URL("managesponsors.php");
 		exit;
@@ -34,14 +30,14 @@ require_once('application.inc.php');
 
 	if (isset($save) ) {
 		if ($deleteevents=="1") {
-			$result = DBQuery("DELETE FROM vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
-			$result = DBQuery("DELETE FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+			$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+			$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 		}
 		else {
-	 		$result = DBQuery("UPDATE vtcal_event SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
-	 		$result = DBQuery("UPDATE vtcal_event_public SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+	 		$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_event SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+	 		$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_event_public SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 		}
-		$result = DBQuery("DELETE FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+		$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 		$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" ); 
 		redirect2URL("managesponsors.php");
 		exit;
@@ -57,7 +53,7 @@ require_once('application.inc.php');
 	<?php echo lang('reassign_all_events_to_sponsor'); ?>
 	<select name="newsponsorid" size="1">
 <?php
-	$result = DBQuery("SELECT * FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id!='".sqlescape($id)."' ORDER BY name" ); 
+	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id!='".sqlescape($id)."' ORDER BY name" ); 
 
 	// print list with categories from the DB
 	for ($i=0; $i<$result->numRows(); $i++) {
@@ -70,10 +66,10 @@ require_once('application.inc.php');
 <?php
 	if ( isset ($id) ) { echo '<input type="hidden" name="id" value="'.$id.'">'; }
 ?>	
-	<BR>
-	<BR>
-	<INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<br>
+	<br>
+	<input type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
 	contentsection_end();

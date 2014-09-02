@@ -3,14 +3,14 @@
 
 require_once('application.inc.php');
 
-if (isset($_GET['sponsorid'])) { setVar($sponsorid,$_GET['sponsorid'],'sponsorid'); } else { unset($sponsorid); }
+if (!isset($_GET['sponsorid']) || !setVar($sponsorid,$_GET['sponsorid'],'sponsorid')) unset($sponsorid);
 if (isset($_GET['type'])) { $type = $_GET['type']; } else { unset($type); }
 
 if (!isset($sponsorid)) {
 	echo "INVALID_SPONSOR_ID:", $_GET['sponsorid'];
 }
 else {
-	$result =& DBQuery("SELECT * FROM vtcal_sponsor WHERE id='".sqlescape($sponsorid)."'" );
+	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE id='".sqlescape($sponsorid)."'" );
 	if (is_string($result)) {
 		echo "ERROR:" . $result;
 	}

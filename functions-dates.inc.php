@@ -13,11 +13,10 @@ function yearmonthday2timestamp($year, $month, $day) {
 
 /* converts a date/time to a timestamp in the format "1999-09-16 18:57:00" */
 function datetime2timestamp($year, $month, $day, $hour, $min, $ampm) {
-	global $use_ampm;
 	$timestamp="$year-";
 	if (strlen($month)==1) { $timestamp.="0$month-"; } else { $timestamp.="$month-"; }
 	if (strlen($day)==1) { $timestamp.="0$day "; } else { $timestamp.="$day "; }
-	if($use_ampm){  // if am, pm format is used
+	if(USE_AMPM){  // if am, pm format is used
 	 if (($ampm=="pm") && ($hour!=12)) { $hour+=12; }; /* 12pm is noon */
 		 if (($ampm=="am") && ($hour==12)) { $hour=0; }; /* 12am is midnight */
 	}
@@ -29,7 +28,6 @@ function datetime2timestamp($year, $month, $day, $hour, $min, $ampm) {
 
 /* converts a timestamp "1999-09-16 18:57:00" to a date/time format */
 function timestamp2datetime($timestamp) {
-	 global $use_ampm;
 	/* split the date/time field-info into its parts */
 	/* format returned by postgres is "1999-09-10 07:30:00" */
 	$datetime['year']  = substr($timestamp,0,4);
@@ -45,7 +43,7 @@ function timestamp2datetime($timestamp) {
 	$datetime['hour']  = substr($timestamp,11,2);
 
 	/* convert 24 hour into 1-12am/pm  if am, pm in data format is used*/
-	if($use_ampm){  
+	if(USE_AMPM){  
 		 $datetime['ampm'] = "pm";
 		 if ($datetime['hour'] < 12) {
 			 if ($datetime['hour'] == 0) { $datetime['hour'] = 12; }
@@ -172,8 +170,6 @@ function settimeenddate2timebegindate(&$event) {
 
 // Assign timestamps (YYYY-MM-DD HH-MM-SS AMPM) for the events begin/end times
 function assemble_timestamp(&$event) {
-	global $day_beg_h, $day_end_h, $use_ampm;
-	
 	// Assign the begin timestamp.
 	$event['timebegin'] = datetime2timestamp(
 		$event['timebegin_year'],
@@ -184,10 +180,10 @@ function assemble_timestamp(&$event) {
 		$event['timebegin_ampm']);
 
 	// If event doesn't have an ending time, set it to the end of the day.
-	if ($event['timeend_hour']==0) {
-		$event['timeend_hour']=$day_end_h;
+	if (!isset($event['timeend_hour']) || $event['timeend_hour']==0) {
+		$event['timeend_hour']=DAY_END_H;
 		$event['timeend_min']=59;
-		if($use_ampm)
+		if(USE_AMPM)
 			 $event['timeend_ampm']="pm";
 	}
 
@@ -210,7 +206,10 @@ function timestring($hour,$min,$ampm) {
 
 // returns true if the ending time is not 11:59pm (meaning: not specified)
 function endingtime_specified(&$event) {
-	return !($event['timeend_hour']==11 &&
+	return !(isset($event['timeend_hour']) &&
+		isset($event['timeend_min']) &&
+		isset($event['timeend_ampm']) && 
+		$event['timeend_hour']==11 &&
 		$event['timeend_min']==59 &&
 		$event['timeend_ampm']=="pm");
 }

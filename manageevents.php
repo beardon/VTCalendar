@@ -2,6 +2,7 @@
 require_once('application.inc.php');
 
 $lang['no_managed_events'] = 'You have not submitted any events for the month of ';
+$lang['show_events_for'] = 'Show events for';
 
 if (!authorized()) { exit; }
 
@@ -12,8 +13,8 @@ if (!isset($_GET['year']) || !setVar($year,$_GET['year'],'timebegin_year')) { $y
 if (!isset($_GET['month']) || !setVar($month,$_GET['month'],'timebegin_month')) { $month = date("n", NOW); }
 
 // Create timestamps for the selected month.
-$startTimestamp = datetime2timestamp($year, $month, 1, $day_beg_h, 0, "am");
-$endTimestamp = datetime2timestamp($year + ($month == 12 ? 1 : 0), $month + ($month == 12 ? -11 : 1), 1, $day_beg_h, 0, "am");
+$startTimestamp = datetime2timestamp($year, $month, 1, DAY_BEG_H, 0, "am");
+$endTimestamp = datetime2timestamp($year + ($month == 12 ? 1 : 0), $month + ($month == 12 ? -11 : 1), 1, DAY_BEG_H, 0, "am");
 
 $ievent = 0;
 $today = Decode_Date_US(date("m/d/Y", NOW));
@@ -21,8 +22,8 @@ $today['timestamp_daybegin']=datetime2timestamp($today['year'],$today['month'],$
 
 // Output list with events
 $query =
-	"SELECT calendarid = 'default' as isdefaultcal, calendarid as calendarid, id AS id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,url"
-	." FROM vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'"
+	"SELECT calendarid = 'default' as isdefaultcal, calendarid as calendarid, id AS id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email"
+	." FROM ".TABLEPREFIX."vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'"
 	." AND timebegin >= '".sqlescape($startTimestamp)."' AND timeend < '".sqlescape($endTimestamp)."'"
 	." ORDER BY timebegin DESC, wholedayevent DESC, id, isdefaultcal";
 
@@ -36,7 +37,7 @@ else {
 	<form method="get" action="manageevents.php">
 		<table  border="0" cellspacing="0" cellpadding="2">
 				<tr>
-					<td>Show events for:</td>
+					<td><?php echo lang('show_events_for'); ?>:</td>
 					<td><select name="month">
 						<?php
 						for ($m = 1; $m <= 12; $m++) {
@@ -149,14 +150,14 @@ else {
 					<td <?php if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) { echo 'style="padding-top: 0; padding-bottom: 7px;" colspan="2"'; } ?> bgcolor="<?php echo $color; ?>" valign="top">
 						<?php
 						if ($event['approved'] == -1) {
-							echo '<FONT color="red"><B>rejected</B></FONT>';
-							if (!empty($event['rejectreason'])) { echo "<BR><B>Reason:</B> ",htmlentities($event['rejectreason']); }
+							echo '<font color="red"><b>rejected</b></font>';
+							if (!empty($event['rejectreason'])) { echo "<br><b>Reason:</b> ",htmlentities($event['rejectreason']); }
 						}
 						elseif ($event['approved'] == 0) {
-							echo '<FONT color="blue">',lang('submitted_for_approval'),'</FONT><br>';
+							echo '<font color="blue">',lang('submitted_for_approval'),'</font><br>';
 						}
 						elseif ($event['approved'] == 1) {
-							echo '<FONT color="green">',lang('approved'),'</FONT><br>';
+							echo '<font color="green">',lang('approved'),'</font><br>';
 						}
 						?></td>
 					<?php
@@ -180,13 +181,13 @@ else {
 		<br><b><?php echo lang('status_info_message'); ?></b><br>
 		<table border="0" cellspacing="0" cellpadding="3">
 		<tr>
-			<td><FONT color="red"><B><?php echo lang('rejected'); ?></B></FONT></td>
+			<td><font color="red"><b><?php echo lang('rejected'); ?></b></font></td>
 			<td><?php echo lang('rejected_explanation'); ?></td>
 		<tr>
-			<td><FONT color="blue"><?php echo lang('submitted_for_approval'); ?></FONT></td>
+			<td><font color="blue"><?php echo lang('submitted_for_approval'); ?></font></td>
 			<td><?php echo lang('submitted_for_approval_explanation'); ?></td>
 		<tr>
-			<td><FONT color="green"><?php echo lang('approved'); ?></FONT></td>
+			<td><font color="green"><?php echo lang('approved'); ?></font></td>
 			<td><?php echo lang('approved_explanation'); ?></td>
 		</tr></table>
 		

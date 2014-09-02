@@ -1,3 +1,9 @@
+<?php
+header('HTTP/1.1 500 Internal Server Error');
+header('Expires: '.gmdate("D, d M Y H:i:s", mktime(0,0,0,1,1,1975)).' GMT');
+header('Cache-Control: no-store');
+
+if (!defined("HIDEDBERROR")) {?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -40,3 +46,4 @@
 </table>
 </body>
 </html>
+<?php } ?>

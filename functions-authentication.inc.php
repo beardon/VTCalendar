@@ -9,7 +9,7 @@ function checknewpassword(&$user) {
 
 /* Verify the  user's old password in the database */
 function checkoldpassword(&$user, $userid) {
-	$result =& DBQuery("SELECT * FROM vtcal_user WHERE id='".sqlescape($userid)."'" );
+	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_user WHERE id='".sqlescape($userid)."'" );
 	$data =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	return ($data['password'] != crypt($user['oldpassword'], $data['password']));
 }
@@ -17,44 +17,47 @@ function checkoldpassword(&$user, $userid) {
 // display login screen and errormsg (if exists)
 function displaylogin($errormsg="") {
 	global $lang, $eventid, $httpreferer, $authsponsorid;
+	
+	// Do not show the login if asked not to.
+	if (defined("HIDELOGIN")) return;
 
 	pageheader(lang('update_page_header'), "Update");
 	contentsection_begin(lang('login'));
 
 	if (!empty($errormsg)) {
-		echo "<BR>\n";
+		echo "<br>\n";
 		feedback($errormsg,1);
 	}
 	?>
-	<DIV>
+	<div>
 	<?php @(readfile('static-includes/loginform-pre.txt')); ?>
-	<FORM method="post" action="<?php echo SECUREBASEURL; ?>update.php" name="loginform">
+	<form method="post" action="<?php echo SECUREBASEURL . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']; ?>" name="loginform">
 	<?php
 	if (isset($eventid)) { echo "<input type=\"hidden\" name=\"eventid\" value=\"",htmlentities($eventid),"\">\n"; }
 	if (isset($httpreferer)) {  echo "<input type=\"hidden\" name=\"httpreferer\" value=\"",htmlentities($httpreferer),"\">\n"; }
 	if (isset($authsponsorid)) { echo "<input type=\"hidden\" name=\"authsponsorid\" value=\"",htmlentities($authsponsorid),"\">\n"; }
 	?>
-		<TABLE border="0" cellspacing="1" cellpadding="3">
-			<TR>
-				<TD class="inputbox" align="right" nowrap><b><?php echo lang('user_id'); ?>:</b></TD>
-				<TD align="left"><INPUT type="text" name="login_userid" value=""></TD>
-			</TR>
-			<TR>
-				<TD class="inputbox" align="right"><b><?php echo lang('password'); ?></b></TD>
-				<TD align="left"><INPUT type="password" name="login_password" value="" maxlength="<?php echo constPasswordMaxLength; ?>"></TD>
-			</TR>
-			<TR>
-				<TD class="inputbox">&nbsp;</TD>
-				<TD align="left"><INPUT type="submit" name="login" value="&nbsp;&nbsp;&nbsp;<?php echo lang('login'); ?>&nbsp;&nbsp;&nbsp;"></TD>
-			</TR>
-		</TABLE>
+		<table border="0" cellspacing="1" cellpadding="3">
+			<tr>
+				<td class="inputbox" align="right" nowrap><b><?php echo lang('user_id'); ?>:</b></td>
+				<td align="left"><input type="text" name="login_userid" value=""></td>
+			</tr>
+			<tr>
+				<td class="inputbox" align="right"><b><?php echo lang('password'); ?></b></td>
+				<td align="left"><input type="password" name="login_password" value="" maxlength="<?php echo MAXLENGTH_PASSWORD; ?>"></td>
+			</tr>
+			<tr>
+				<td class="inputbox">&nbsp;</td>
+				<td align="left"><input type="submit" name="login" value="&nbsp;&nbsp;&nbsp;<?php echo lang('login'); ?>&nbsp;&nbsp;&nbsp;"></td>
+			</tr>
+		</table>
 		<p><a href="helpsignup.php" target="newWindow" onclick="new_window(this.href); return false"><b><?php echo lang('new_user'); ?></b></a></p>
-	</FORM>
+	</form>
 	<script language="JavaScript1.2"><!--
 		document.loginform.login_userid.focus();
 	//--></script>
-	<?php @(readfile('static-includes/xloginform-post.txt')); ?>
-	</DIV>
+	<?php @(readfile('static-includes/loginform-post.txt')); ?>
+	</div>
 	<?php
 	contentsection_end();
 
@@ -66,6 +69,9 @@ function displaylogin($errormsg="") {
 function displaymultiplelogin($errorMessage="") {
 	global $lang, $eventid, $httpreferer, $authsponsorid;
 	
+	// Do not show the login if asked not to.
+	if (defined("HIDELOGIN")) return;
+
 	pageheader(lang('login'), "Update");
 	
 	contentsection_begin(lang('choose_sponsor_role'));
@@ -78,11 +84,11 @@ function displaymultiplelogin($errorMessage="") {
 	
 	// Allow a main admin to become any sponsor.
 	if (isset($_SESSION['AUTH_ISMAINADMIN']) && $_SESSION['AUTH_ISMAINADMIN']) {
-		$query = "SELECT id, name, admin FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY admin DESC, name";
+		$query = "SELECT id, name, admin FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY admin DESC, name";
 	}
 	// Otherwise, check which sponsors the user can become.
 	else {
-		$query = "SELECT a.sponsorid as id, s.name, s.admin FROM vtcal_auth a LEFT JOIN vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."'  ORDER BY s.admin DESC, s.name";
+		$query = "SELECT a.sponsorid as id, s.name, s.admin FROM vtcal_auth a LEFT JOIN ".TABLEPREFIX."vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."'  ORDER BY s.admin DESC, s.name";
 	}
 	
 	$result =& DBQuery($query);
@@ -116,7 +122,7 @@ function displaymultiplelogin($errorMessage="") {
 		echo "</ul>";
 		
 		if ($adminfound) {
-			?><p>Note: The sponsor marked with a ** is the administrative sponsor of this calendar..</p><?php
+			echo '<p>' . lang('sponsor_twin_asterisk_note') . '</p>';
 		}
 		
 		$result->free();
@@ -128,13 +134,16 @@ function displaymultiplelogin($errorMessage="") {
 } // end: function displaymultiplelogin
 
 function displaynotauthorized() {
+	// Do not show the login if asked not to.
+	if (defined("HIDELOGIN")) return;
+
 	pageheader(lang('login'), "Update");
 	contentsection_begin(lang('error_not_authorized'));
 	
 	echo lang('error_not_authorized_message'); ?><br>
 	<br>
 			<a href="helpsignup.php" target="newWindow"	onclick="new_window(this.href); return false"><?php echo lang('help_signup_link'); ?></a><br>
-	<BR><?php
+	<br><?php
 	contentsection_end();
 
 	pagefooter();
@@ -156,7 +165,7 @@ function userauthenticated($userid, $password) {
 
 	// Check against the DB if it is allowed.
 	if (AUTH_DB) {
-		$result =& DBQuery("SELECT password FROM vtcal_user WHERE id='".sqlescape($userid)."'"); 
+		$result =& DBQuery("SELECT password FROM ".TABLEPREFIX."vtcal_user WHERE id='".sqlescape($userid)."'"); 
 		if (is_string($result)) {
 			$returnValue = lang('dberror_generic') . ": " . $result;
 		}
@@ -254,14 +263,14 @@ function userauthenticated($userid, $password) {
 				
 				if (AUTH_HTTP_CACHE) {
 					$passhash = crypt($password);
-					DBQuery( "INSERT INTO vtcal_auth_httpcache (ID, PassHash, CacheDate) VALUES ('".sqlescape($userid)."', '".sqlescape($passhash)."', Now()) ON DUPLICATE KEY UPDATE PassHash='".sqlescape($passhash)."', CacheDate=Now()" );
+					DBQuery( "INSERT INTO vtcal_auth_httpcache (id, passhash, cachedate) VALUES ('".sqlescape($userid)."', '".sqlescape($passhash)."', Now()) ON DUPLICATE KEY UPDATE passhash='".sqlescape($passhash)."', cachedate=Now()" );
 				}
 				
 				$returnValue = true;
 			}
 			else {
 				if (AUTH_HTTP_CACHE) {
-					$result =& DBQuery( "SELECT PassHash FROM vtcal_auth_httpcache WHERE ID = '".sqlescape($userid)."' AND DateDiff(CacheDate, Now()) > -".AUTH_HTTP_CACHE_EXPIRATIONDAYS);
+					$result =& DBQuery( "SELECT passhash FROM vtcal_auth_httpcache WHERE id = '".sqlescape($userid)."' AND DateDiff(cachedate, Now()) > -".AUTH_HTTP_CACHE_EXPIRATIONDAYS);
 					
 					if (is_string($result)) {
 						$returnValue = lang('dberror_generic') . ": " . $result;
@@ -293,7 +302,7 @@ function logUserIn() {
 	
 	// Get username/password POST values.
 	if (isset($_POST['login_userid']) && isset($_POST['login_password'])) {
-		setVar($userid, strtolower($_POST['login_userid']), 'userid');
+		if (!setVar($userid, strtolower($_POST['login_userid']), 'userid')) unset($userid);
 		$password = $_POST['login_password'];
 	}
 	else {
@@ -327,7 +336,7 @@ function logUserIn() {
 			$_SESSION["AUTH_USERID"] = $userid;
 
 			// Determine if the user is an main admin
-			$result =& DBQuery("SELECT id FROM vtcal_adminuser WHERE id='".sqlescape($_SESSION["AUTH_USERID"])."'" );
+			$result =& DBQuery("SELECT id FROM ".TABLEPREFIX."vtcal_adminuser WHERE id='".sqlescape($_SESSION["AUTH_USERID"])."'" );
 			
 			// Return an error message if the query failed.
 			if (is_string($result)) {
@@ -356,7 +365,6 @@ function authorized() {
 	// Get sponsor related URL values
 	if (isset($_GET['authsponsorid'])) {
 		setVar($authsponsorid, $_GET['authsponsorid'], 'sponsorid');
-		if ($authsponsorid === NULL) unset($authsponsorid);
 		unset($_SESSION["AUTH_SPONSORNAME"]);
 		unset($_SESSION["AUTH_SPONSORID"]);
 	}
@@ -377,11 +385,11 @@ function authorized() {
 			
 			// Just verify that the sponsor does exist for main admins.
 			if ($_SESSION['AUTH_ISMAINADMIN']) {
-				$query = "SELECT admin, name FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($authsponsorid)."'";
+				$query = "SELECT admin, name FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($authsponsorid)."'";
 			}
 			// Otherwise, verify that the user belongs to that sponsor group.
 			else {
-				$query = "SELECT a.sponsorid, s.name, s.admin FROM vtcal_auth a LEFT JOIN vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."' AND a.sponsorid='".sqlescape($authsponsorid)."'";
+				$query = "SELECT a.sponsorid, s.name, s.admin FROM vtcal_auth a LEFT JOIN ".TABLEPREFIX."vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."' AND a.sponsorid='".sqlescape($authsponsorid)."'";
 			}
 			
 			$result =& DBQuery($query);
@@ -399,7 +407,7 @@ function authorized() {
 					$record = $result->fetchRow(DB_FETCHMODE_ASSOC, 0);
 					$_SESSION["AUTH_SPONSORID"]= $authsponsorid;
 		 			$_SESSION["AUTH_SPONSORNAME"] = $record['name'];
-					$_SESSION['AUTH_ISCALENDARADMIN'] = $record["admin"] == 1;
+					$_SESSION['AUTH_ISCALENDARADMIN'] = $record['admin'] == 1;
 				}
 				$result->free();
 			}
@@ -410,11 +418,11 @@ function authorized() {
 			
 			// Allow a main admin to become any sponsor.
 			if (isset($_SESSION['AUTH_ISMAINADMIN']) && $_SESSION['AUTH_ISMAINADMIN']) {
-				$query = "SELECT id, name, admin FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
+				$query = "SELECT id, name, admin FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
 			}
 			// Otherwise, check which sponsors the user can become.
 			else {
-				$query = "SELECT s.id, a.sponsorid, s.name, s.admin FROM vtcal_auth a LEFT JOIN vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."'";
+				$query = "SELECT s.id, a.sponsorid, s.name, s.admin FROM vtcal_auth a LEFT JOIN ".TABLEPREFIX."vtcal_sponsor s ON a.calendarid = s.calendarid AND a.sponsorid = s.id WHERE a.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND a.userid='".sqlescape($_SESSION["AUTH_USERID"])."'";
 			}
 			
 			$result =& DBQuery($query);
@@ -442,7 +450,7 @@ function authorized() {
 					$_SESSION["AUTH_SPONSORID"]= $authorization['id'];
 		 			$_SESSION["AUTH_SPONSORNAME"] = $authorization['name'];
 		 			$_SESSION["AUTH_SPONSORCOUNT"] = 1;
-		 			$_SESSION['AUTH_ISCALENDARADMIN'] = $authorization["admin"] == 1;
+		 			$_SESSION['AUTH_ISCALENDARADMIN'] = $authorization['admin'] == 1;
 				}
 				
 				// If the user belongs to more than one sponsor, then display the form to select a sponsor.
@@ -461,55 +469,61 @@ function authorized() {
 } // end: Function authorized()
 
 /**
- * Checks if a user is allowed to view the main calendar (main.php) or export data (export.php, icalendar.php).
- * 
- * TODO: Update this.
- * This is how the viewauthorized function executes:
- * 	1. If the userid and password are in the _POST, then set them (local scope only).
- * 	2a. If the calendar does not require authentication to view, then set that the user is allowed to view.
- * 	2b. If the userid and password is set...
- * 		A. If the username and password combo is valid then verify that the user has access to the calendar.
- * 		B. If the combo was bad or the user does not have access then output a message and set that the user is not allowed to view.
- * 	2c. If the user is already logged in then they should have access, so set that the user is allowed to view.
- * 	2d. Otherwise...
- * 		A. If the user is not using SSL, redirect them.
- * 		B. Show the login page.
+ * Checks if a user is allowed to view the main calendar (main.php) or export data (export/export.php).
+ * @return boolean true if the user is authorized; otherwise, false.
  */
 function viewauthorized() {
 	// Return true if the calendar does not require authorization.
-	if ( $_SESSION['CALENDAR_VIEWAUTHREQUIRED'] == 0 ) return true;
+	if ($_SESSION['CALENDAR_VIEWAUTHREQUIRED'] == 0) return true;
 
 	// Default that the user does not have access.
 	$returnValue = false;
 	
 	// Make sure the user is logged in.
-	if ( ($authresult = logUserIn()) !== true ) {
+	if (($authresult = logUserIn()) !== true) {
 		displaylogin( is_string($authresult) ? $authresult : "" );
 	}
 	
-	// Allow the user to view the calendar if they are already marked as having access.
-	elseif ($_SESSION['AUTH_ISMAINADMIN'] || (isset($_SESSION["CALENDAR_LOGIN"]) && $_SESSION["CALENDAR_LOGIN"] == $_SESSION['CALENDAR_ID'])) {
+	// Allow the user to view the calendar if they are already marked as having access or if any user is allowed view access.
+	elseif ($_SESSION['AUTH_ISMAINADMIN'] || (isset($_SESSION["CALENDAR_LOGIN"]) && $_SESSION["CALENDAR_LOGIN"] == $_SESSION['CALENDAR_ID']) || $_SESSION['CALENDAR_VIEWAUTHREQUIRED'] == 2) {
 		$returnValue = true;
 	}
 	
 	// Check if the user should be able to view the calendar.
 	else {
-			// checking authorization
-			$result =& DBQuery("SELECT * FROM vtcal_calendarviewauth WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "' AND userid='" . sqlescape($_SESSION["AUTH_USERID"]) . "'");
+		// Check if user is assigned to one of this calendar's sponsors.
+		$result =& DBQuery("SELECT * FROM vtcal_auth v WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "' AND userid='" . sqlescape($_SESSION["AUTH_USERID"]) . "'");
+		
+		if (is_string($result)) {
+			displaylogin(lang('login_failed') . "<br>Reason: A database error was encountered: " . $result);
+		}
+		else {
+			$sponsorCount = $result->numRows();
+			$result->free();
 			
-			if (is_string($result)) {
-				displaylogin(lang('login_failed') . "<br>Reason: A database error was encountered: " . $result);
+			if ($sponsorCount > 0) {
+				$_SESSION["CALENDAR_LOGIN"] = $_SESSION['CALENDAR_ID'];
+				$returnValue = true;
 			}
 			else {
-				if ($result->numRows() > 0) {
-					$_SESSION["CALENDAR_LOGIN"] = $_SESSION['CALENDAR_ID'];
-					$returnValue = true;
+				// Check if the user is marked as having view authorization.
+				$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_calendarviewauth WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "' AND userid='" . sqlescape($_SESSION["AUTH_USERID"]) . "'");
+				
+				if (is_string($result)) {
+					displaylogin(lang('login_failed') . "<br>Reason: A database error was encountered: " . $result);
 				}
 				else {
-					displaylogin(lang('login_failed'));
+					if ($result->numRows() > 0) {
+						$_SESSION["CALENDAR_LOGIN"] = $_SESSION['CALENDAR_ID'];
+						$returnValue = true;
+					}
+					else {
+						displaylogin(lang('login_failed'));
+					}
+					$result->free();
 				}
-				$result->free();
 			}
+		}
 	}
 	
 	return $returnValue;

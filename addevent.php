@@ -3,11 +3,11 @@ require_once('application.inc.php');
 
 if (!authorized()) { exit; }
 
-if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-if (isset($_POST['httpreferer'])) { setVar($httpreferer,$_POST['httpreferer'],'httpreferer'); } else { unset($httpreferer); }
-if (isset($_GET['timebegin_year'])) { setVar($timebegin_year,$_GET['timebegin_year'],'timebegin_year'); } else { unset($timebegin_year); }
-if (isset($_GET['timebegin_month'])) { setVar($timebegin_month,$_GET['timebegin_month'],'timebegin_month'); } else { unset($timebegin_month); }
-if (isset($_GET['timebegin_day'])) { setVar($timebegin_day,$_GET['timebegin_day'],'timebegin_day'); } else { unset($timebegin_day); }
+if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+if (!isset($_POST['httpreferer']) || !setVar($httpreferer,$_POST['httpreferer'],'httpreferer')) unset($httpreferer);
+if (!isset($_GET['timebegin_year']) || !setVar($timebegin_year,$_GET['timebegin_year'],'timebegin_year')) unset($timebegin_year);
+if (!isset($_GET['timebegin_month']) || !setVar($timebegin_month,$_GET['timebegin_month'],'timebegin_month')) unset($timebegin_month);
+if (!isset($_GET['timebegin_day']) || !setVar($timebegin_day,$_GET['timebegin_day'],'timebegin_day')) unset($timebegin_day);
 
 if (isset($_POST['cancel'])) {
 	redirect2URL("update.php");
@@ -17,7 +17,7 @@ if (isset($_POST['cancel'])) {
 if (!isset($httpreferer)) { $httpreferer = $_SERVER["HTTP_REFERER"]; }
 
 // read sponsor name from DB
-$result =& DBQuery("SELECT name,url FROM vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
+$result =& DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
 
 // Output an error message if the query failed.
 if (is_string($result)) {
@@ -33,7 +33,7 @@ if (is_string($result)) {
 $sponsor =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 // test if any template exists already
-$result =& DBQuery("SELECT * FROM vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
 
 // Output an error message if the query failed.
 if (is_string($result)) {
@@ -62,7 +62,7 @@ if ($result->numRows() == 0) {
 pageheader(lang('choose_template'), "");
 contentsection_begin(lang('choose_template'));
 
-$result =& DBQuery("SELECT * FROM vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 
 // Output an error message if $result is a string.
 if (is_string($result)) {
@@ -72,32 +72,32 @@ if (is_string($result)) {
 // Otherwise, the query was successful.
 else {
 	?>
-	<BR>
-	<FORM method="post" action="changeeinfo.php">
+	<br>
+	<form method="post" action="changeeinfo.php">
 		<?php
-		echo '<INPUT type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
+		echo '<input type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
 		?>
-		<SELECT name="templateid" size="6">
-			<OPTION selected value="0">----- <?php echo lang('blank'); ?> -----</OPTION>
+		<select name="templateid" size="6">
+			<option selected value="0">----- <?php echo lang('blank'); ?> -----</option>
 		<?php
 		for ($i=0; $i<$result->numRows(); $i++) {
 			$template =& $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
-			echo "<OPTION value=\"",htmlentities($template['id']),"\">",htmlentities($template['name']),"</OPTION>\n";
+			echo "<option value=\"",htmlentities($template['id']),"\">",htmlentities($template['name']),"</option>\n";
 		}
 		?>
-		</SELECT>
-		<BR>
-		<BR>
-		<INPUT type="submit" name="choosetemplate" value="<?php echo lang('ok_button_text'); ?>">
-		<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+		</select>
+		<br>
+		<br>
+		<input type="submit" name="choosetemplate" value="<?php echo lang('ok_button_text'); ?>">
+		<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 		<?php
 		// forward date info, if the page was called with date info appended
 		// can later be done with PHP session management
-		if (isset($timebegin_year)) { echo "<INPUT type=\"hidden\" name=\"timebegin_year\" value=\"",$timebegin_year,"\">"; }
-		if (isset($timebegin_month)) { echo "<INPUT type=\"hidden\" name=\"timebegin_month\" value=\"",$timebegin_month,"\">"; }
-		if (isset($timebegin_day)) { echo "<INPUT type=\"hidden\" name=\"timebegin_day\" value=\"",$timebegin_day,"\">"; }
+		if (isset($timebegin_year)) { echo "<input type=\"hidden\" name=\"timebegin_year\" value=\"",$timebegin_year,"\">"; }
+		if (isset($timebegin_month)) { echo "<input type=\"hidden\" name=\"timebegin_month\" value=\"",$timebegin_month,"\">"; }
+		if (isset($timebegin_day)) { echo "<input type=\"hidden\" name=\"timebegin_day\" value=\"",$timebegin_day,"\">"; }
 		?>
-	</FORM>
+	</form>
 	<?php
 }
 contentsection_end();

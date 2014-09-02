@@ -7,35 +7,44 @@ echo "<p>" . lang('subscribe_message') . "</p>";
 $color = $_SESSION['COLOR_BG'];
 $iCalDirName = 'calendars/';
 
+?>
+<b><?php echo lang('whole_calendar'); ?>:</b><br/><?php echo $_SESSION['CALENDAR_NAME']; ?>&nbsp; 
+<a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION['CALENDAR_ID']; ?>&type=ical&sponsortype=all&timebegin=today"><?php echo lang('subscribe'); ?></a> &nbsp; 
+<a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today"><?php echo lang('download'); ?></a>
+<?php
+
+echo '<p><b>...or by category:</b></p><blockquote><table border="0" cellspacing="0" cellpadding="4">';
+
+// The number of ICS files found.
+$fileCount = 0;
+	
 // Output a list of static ICS files if they exist.
 if (is_dir($iCalDirName) && $iCalDir = opendir($iCalDirName)) {
-	echo '<table border="0" cellspacing="0" cellpadding="4">';
-
 	/* This is the correct way to loop over the directory. */
 	while ( ($file = readdir($iCalDir)) != false) {
 		if (strlen($file)>4 && substr($file,strlen($file)-4,4)==".ics") {
 			if ( $color == $_SESSION['COLOR_LIGHT_CELL_BG'] ) { $color = $_SESSION['COLOR_BG']; } else { $color = $_SESSION['COLOR_LIGHT_CELL_BG']; }
 			?>	
 			<tr bgcolor="<?php echo $color; ?>">
-				<td bgcolor="<?php echo $color; ?>"><?php echo substr($file,0,strlen($file)-4); ?></td>
-				<td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7).$iCalDirName.$file; ?>"><?php echo lang('subscribe'); ?></a> &nbsp; 
-			<a href="<?php echo BASEURL.$iCalDirName.$file; ?>"><?php echo lang('download'); ?></a></td>
+				<td bgcolor="<?php echo $color; ?>"><?php echo htmlentities(substr($file,0,strlen($file)-4)); ?></td>
+				<td bgcolor="<?php echo $color; ?>"><a href="webcal://<?php echo substr(BASEURL,7).$iCalDirName.htmlentities($file); ?>"><?php echo lang('subscribe'); ?></a> &nbsp; 
+			<a href="<?php echo BASEURL.$iCalDirName.htmlentities($file); ?>"><?php echo lang('download'); ?></a></td>
 			</tr>
 			<?php
+			$fileCount++;
 		}
-	} 
-	echo '</table>';
+	}
+	
 	closedir($iCalDir);
 }
 
-// Otherwise, output links to generate ICS files dynamically.
-else { 
-	$result =& DBQuery("SELECT * FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
+// Get the categories from the DB if no files were found (or if we never searched for files anyway).
+if ($fileCount == 0) {
+	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
 	if (is_string($result)) {
 		DBErrorBox($result); 
 	}
 	else {
-		echo '<table border="0" cellspacing="0" cellpadding="4">';
 		for ($i=0; $i<$result->numRows(); $i++) {
 			$category =& $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
 			if ( $color == $_SESSION['COLOR_LIGHT_CELL_BG'] ) { $color = $_SESSION['COLOR_BG']; } else { $color = $_SESSION['COLOR_LIGHT_CELL_BG']; }
@@ -47,14 +56,10 @@ else {
 			</tr>
 			<?php
 		}
-		echo '</table>';
 	}
 }
 
-?>
-<br>
-&nbsp;<?php echo $_SESSION['CALENDAR_NAME']; ?> (<?php echo lang('whole_calendar'); ?>)&nbsp; 
-<a href="webcal://<?php echo substr(BASEURL,7); ?>export.php?calendar=<?php echo $_SESSION['CALENDAR_ID']; ?>&type=ical&sponsortype=all&timebegin=today"><?php echo lang('subscribe'); ?></a> &nbsp; 
-<a href="<?php echo BASEURL; ?>export.php?type=ical&sponsortype=all&timebegin=today"><?php echo lang('download'); ?></a>
+echo '</blockquote></table>';
 
+?>
 </td></tr></table>

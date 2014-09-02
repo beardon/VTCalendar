@@ -3,7 +3,7 @@
 // Add a username as a main admin.
 function AddMainAdmin($username) {
 	// Check that the account does not already exist
-	$result =& DBQuery("SELECT count(*) as idcount FROM vtcal_adminuser WHERE (id='".sqlescape($username)."')");
+	$result =& DBQuery("SELECT count(*) as idcount FROM ".TABLEPREFIX."vtcal_adminuser WHERE (id='".sqlescape($username)."')");
 	
 	// Return the error message if the SELECT failed.
 	if (is_string($result)) return $result;
@@ -17,7 +17,7 @@ function AddMainAdmin($username) {
 	$result->free();
 	
 	// Insert the account if it does not exist.
-	$result =& DBQuery("INSERT INTO vtcal_adminuser (id) VALUES ('".sqlescape($username)."')");
+	$result =& DBQuery("INSERT INTO ".TABLEPREFIX."vtcal_adminuser (id) VALUES ('".sqlescape($username)."')");
 	
 	// Return the error message if the INSERT failed.
 	if (is_string($result)) return $result;
@@ -30,7 +30,7 @@ function AddMainAdmin($username) {
 function AddUser($username, $password, $email = "") {
 	
 	// Check that the account does not already exist
-	$result =& DBQuery("SELECT count(*) as idcount FROM vtcal_user WHERE (id='".sqlescape($username)."')");
+	$result =& DBQuery("SELECT count(*) as idcount FROM ".TABLEPREFIX."vtcal_user WHERE (id='".sqlescape($username)."')");
 	
 	// Return the error message if the SELECT failed.
 	if (is_string($result)) return $result;
@@ -44,7 +44,7 @@ function AddUser($username, $password, $email = "") {
 	$result->free();
 	
 	// Insert the account if it does not exist.
-	$result =& DBQuery("INSERT INTO vtcal_user (id, password, email) VALUES ('".sqlescape($username)."','".sqlescape(crypt($password))."','')");
+	$result =& DBQuery("INSERT INTO ".TABLEPREFIX."vtcal_user (id, password, email) VALUES ('".sqlescape($username)."','".sqlescape(crypt($password))."','')");
 	
 	// Return the error message if the INSERT failed.
 	if (is_string($result)) return $result;

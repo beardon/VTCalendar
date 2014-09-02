@@ -27,7 +27,7 @@
 		?></select></td>
 		<td><select name="timebegin_year"><?php
 		$currentyear = date("Y", NOW);
-		for ($iYear = 1990; $iYear <= $currentyear+10; $iYear++) {
+		for ($iYear = 1990; $iYear <= $currentyear+ALLOWED_YEARS_AHEAD; $iYear++) {
 			echo '<option';
 			if ($iYear == $month['year']) { echo ' SELECTED'; }
 			echo '>'.$iYear.'</option>';

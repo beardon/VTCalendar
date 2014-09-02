@@ -45,8 +45,8 @@ function validate ( myForm, id ) {
 	return true;
 }
 //--></script>
+	<form method="get" action="main.php" name="categorylist">
 	<table border="0" cellpadding="0" cellspacing="10">
-		<form method="get" action="main.php" name="categorylist">
 			<tr align="left" valign="top">
 			<td colspan="4" valign="top">
 				<strong><?php echo lang('select_categories'); ?></strong>
@@ -104,5 +104,5 @@ function validate ( myForm, id ) {
 			
 			?>">
 			<input type="hidden" name="calendar" value="<?php echo htmlentities($_SESSION['CALENDAR_ID']); ?>">
-		</form>
 		</table>
+		</form>

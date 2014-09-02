@@ -20,11 +20,12 @@ function CheckVTCalendarVersion(InstalledVersion, LatestVersion) {
 			var splitInstalledVersion = InstalledVersion.split(".");
 			var splitLatestVersion = LatestVersion.split(".");
 			
-			// Cannot continue if the versions do not have the same number of parts.
-			if (splitInstalledVersion.length != splitLatestVersion.length) return "ERROR";
-			
 			// Check each part of the versions
 			for (i = 0; i < splitInstalledVersion.length; i++) {
+				if (splitLatestVersion.length <= i) {
+					return "NEWER";
+				}
+				
 				var installedNum = parseInt(splitInstalledVersion[i]);
 				var latestNum = parseInt(splitLatestVersion[i]);
 				
@@ -34,6 +35,10 @@ function CheckVTCalendarVersion(InstalledVersion, LatestVersion) {
 				else if (installedNum > latestNum) {
 					return "NEWER";
 				}
+			}
+			
+			if (splitInstalledVersion.length < splitLatestVersion.length) {
+				return "OLDER";
 			}
 			
 			// If all parts are numerically equal, then return EQUAL.

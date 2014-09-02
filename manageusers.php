@@ -4,9 +4,9 @@ require_once('application.inc.php');
 if (!authorized()) { exit; }
 if (!$_SESSION['AUTH_ISMAINADMIN'] ) { exit; } // additional security
 
-if (isset($_POST['edit'])) { setVar($edit,$_POST['edit'],'edit'); } else { unset($edit); }
-if (isset($_POST['delete'])) { setVar($delete,$_POST['delete'],'delete'); } else { unset($delete); }
-if (isset($_POST['userid'])) { setVar($userid,$_POST['userid'],'userid'); } else { unset($userid); }
+if (!isset($_POST['edit']) || !setVar($edit,$_POST['edit'],'edit')) unset($edit);
+if (!isset($_POST['delete']) || !setVar($delete,$_POST['delete'],'delete')) unset($delete);
+if (!isset($_POST['userid']) || !setVar($userid,$_POST['userid'],'userid')) unset($userid);
 
 
 if ( isset($edit) ) {
@@ -29,7 +29,7 @@ contentsection_begin(lang('manage_users'),true);
 <select name="userid" size="<?php echo $numLines; ?>" style="width:200px">
 <?php
 
-$result =& DBQuery("SELECT * FROM vtcal_user ORDER BY id" ); 
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_user ORDER BY id" ); 
 if (is_string($result)) {
 	DBErrorBox($result);
 }

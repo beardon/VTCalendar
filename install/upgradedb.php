@@ -102,7 +102,7 @@ elseif ($Submit_Preview && defined("DATABASE")) {
 				// Check if the default calendar records exist
 				$result =& DBQuery("SELECT id FROM vtcal_calendar WHERE id='default'");
 				if (is_string($result)) {
-					echo "<div class='Error'><b>Error:</b> Could not SELECT from vtcal_calendat to determine if default calendar exists: " . $result . "</div>";
+					echo "<div class='Error'><b>Error:</b> Could not SELECT from vtcal_calendar to determine if default calendar exists: " . $result . "</div>";
 				}
 				else {
 					if ($result->numRows() == 0) {

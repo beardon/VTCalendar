@@ -8,8 +8,8 @@ $lang['reset_to_default_color'] = "Reset to the Default Calendar Color";
 if (!authorized()) { exit; }
 if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 
-if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
+if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+if (!isset($_POST['save']) || !setVar($save,$_POST['save'],'save')) unset($save);
 
 if (isset($cancel)) {
 	redirect2URL("update.php");
@@ -21,15 +21,24 @@ $VariableErrors = array();
 LoadVariables();
 
 if (isset($save) && count($VariableErrors) == 0) {
-	$updateSQL = MakeColorUpdateSQL($_SESSION['CALENDAR_ID']);
-	$result =& DBQuery($updateSQL);
+	$result =& DBQuery("SELECT count(*) as reccount FROM ".TABLEPREFIX."vtcal_colors WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "'");
+	if (is_string($result)) { DBErrorBox($result); exit; }
 	
+	$count =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
+	if ($count['reccount'] == 0) {
+		$sql = MakeColorUpdateSQL($_SESSION['CALENDAR_ID'], 'insert');
+	}
+	else {
+		$sql = MakeColorUpdateSQL($_SESSION['CALENDAR_ID'], 'update');
+	}
+	
+	$result =& DBQuery($sql);
 	if (is_string($result)) { DBErrorBox($result); exit; }
 	
 	setCalendarPreferences();
 	
-	//redirect2URL("update.php");
-	//exit;
+	redirect2URL("update.php");
+	exit;
 }
 
 pageheader(lang('change_colors'), "Update");

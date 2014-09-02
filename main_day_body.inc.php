@@ -4,7 +4,7 @@ if (!defined("ALLOWINCLUDES")) { exit; } // prohibits direct calling of include 
 $ievent = 0;
 
 // read all events for this week from the DB
-$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM vtcal_event_public e, vtcal_category c ";
+$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.wholedayevent,e.categoryid,c.id,c.name AS category_name FROM ".TABLEPREFIX."vtcal_event_public e, ".TABLEPREFIX."vtcal_category c ";
 $query.= "WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.timebegin >= '".sqlescape($showdate['timestamp_daybegin'])."' AND e.timeend <= '".sqlescape($showdate['timestamp_dayend'])."'";
 
 // Filter by sponsor ID if one was specified.
@@ -88,7 +88,7 @@ else {
 		// Time of the Event
 		if ($event['wholedayevent']==0) {
 			echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
-			if ( ! ($event['timeend_hour']==$day_end_h && $event['timeend_min']==59) ) {
+			if ( ! ($event['timeend_hour']==DAY_END_H && $event['timeend_min']==59) ) {
 				echo "<br><i>";
 				echo timenumber2timelabel($event_timeend_num - $event_timebegin_num);
 				echo "</i>";

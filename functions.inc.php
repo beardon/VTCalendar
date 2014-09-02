@@ -16,14 +16,14 @@ function checkemail($email)
 function setVar(&$var,$value,$type)
 function lang($sTextKey)
 function escapeJavaScriptString($string) */
-require_once("functions-misc.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['misc'])) require_once("functions-misc.inc.php");
 
 
 /* IO functions:
 ----------------------------------------------------
 function file_get_contents($filename, $flags = false, $resource_context = null, $offset = 0, $maxlen = 0)
 function file_put_contents($filename, $content, $flags = null, $resource_context = null) */
-require_once("functions-io.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['io'])) require_once("functions-io.inc.php");
 
 
 /* Generic database functions:
@@ -31,7 +31,7 @@ require_once("functions-io.inc.php");
 function DBopen()
 function DBclose()
 function DBQuery($query) */
-require_once("functions-db-generic.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['db-generic'])) require_once("functions-db-generic.inc.php");
 
 
 /* Functions that handle authentication:
@@ -45,7 +45,7 @@ function userauthenticated($userid,$password)
 function authorized()
 function viewauthorized()
 function logout() */
-require_once("functions-authentication.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['authentication'])) require_once("functions-authentication.inc.php");
 
 
 /* Get various information from the database:
@@ -62,14 +62,14 @@ function getSponsorURL($sponsorid)
 function num_unapprovedevents($repeatid)
 function userExistsInDB($userid)
 function isValidUser($userid) */
-require_once("functions-db-gets.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['db-gets'])) require_once("functions-db-gets.inc.php");
 
 
 /* Set various information to the database:
 ----------------------------------------------------
 function AddMainAdmin($username)
 function AddUser($username, $password) */
-require_once("functions-db-sets.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['db-sets'])) require_once("functions-db-sets.inc.php");
 
 
 /* VTCalendar specific date/time conversions and formatting:
@@ -89,7 +89,7 @@ function settimeenddate2timebegindate(&$event)
 function assemble_timestamp(&$event)
 function timestring($hour,$min,$ampm)
 function endingtime_specified(&$event) */
-require_once("functions-dates.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['dates'])) require_once("functions-dates.inc.php");
 
 
 /* Functions for generic date encoding/decoding, and formatting:
@@ -108,14 +108,14 @@ Function Day_of_Week_to_Text($dow)
 function isDST($timestamp)
 function EST2UTC($year, $month, $day, $hour, $min, $ampm)
 function Timezone2UTC($offset, $year, $month, $day, $hour, $min, $ampm) */
-require_once("functions-dates-generic.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['dates-generic'])) require_once("functions-dates-generic.inc.php");
 
 
 /* Functions that output the HTML for events:
 ----------------------------------------------------
 function print_event($event, $linkfeatures=true)
 function adminButtons($eventORshowdate, $buttons, $size, $orientation) */
-require_once("functions-event-content.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['event-content'])) require_once("functions-event-content.inc.php");
 
 
 /* Functions that modify events in the DB:
@@ -136,7 +136,7 @@ function insertintorepeat($repeatid,&$event,&$repeat)
 function updaterepeat($repeatid,&$event,&$repeat)
 function publicizeevent($eventid,&$event)
 function repeatpublicizeevent($eventid,&$event) */
-require_once("functions-event-dates.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['event-dates'])) require_once("functions-event-dates.inc.php");
 
 
 /* Functions that deal with event-specific date processing/handling:
@@ -151,7 +151,7 @@ function repeatdefdisassembled2repeatlist($startyear,$startmonth,$startday,$freq
 function producerepeatlist(&$event,&$repeat)
 function printrecurrencedetails(&$repeatlist)
 function repeatdef2repeatinput($repeatdef,&$event,&$repeat) */
-require_once("functions-event-db.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['event-db'])) require_once("functions-event-db.inc.php");
 
 
 /* Functions that output HTML for header/footer/sections:
@@ -161,14 +161,14 @@ function contentsection_begin($headertext="", $showBackToMenuButton=false)
 function contentsection_end()
 function helpwindow_header()
 function helpwindow_footer() */
-require_once("functions-content.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['content'])) require_once("functions-content.inc.php");
 
 
 /* Functions to verify and send e-mail:
 ----------------------------------------------------
 function emailaddressok($email)
 function sendemail($toName,$toAddress,$fromName,$fromAddress,$subject,$body) */
-require_once("functions-email.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['email'])) require_once("functions-email.inc.php");
 
 
 /* Functions for validating input:
@@ -176,7 +176,7 @@ require_once("functions-email.inc.php");
 function isValidInput($value, $type)
 function isDate($value)
 function isTime($value) */
-require_once("functions-inputvalidation.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['inputvalidation'])) require_once("functions-inputvalidation.inc.php");
 
 
 /* Functions used to output the event input form and process data related to it.
@@ -189,13 +189,13 @@ function checkeventtime(&$event)
 function checkevent(&$event,&$repeat)
 function inputrecurrences(&$event,&$repeat,$check)
 function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetime,&$repeat,$copy) */
-require("functions-inputdata-event.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['inputdata-event'])) require_once("functions-inputdata-event.inc.php");
 
 
 /* Functions used to output the event template form and process data related to it.
 ----------------------------------------------------
 function inputtemplatedata(&$event,$sponsorid,$check,$template_name) */
-require("functions-inputdata-template.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['inputdata-template'])) require_once("functions-inputdata-template.inc.php");
 
 
 /* Functions used to process XML
@@ -204,5 +204,14 @@ function parsexml($xmlfile, $xmlstartelementhandler, $xmlendelementhandler, $xml
 function xmlerror($xml_parser)
 function xmlstartelement($parser, $element, $attrs)
 function xmlendelement($parser, $element) */
-require("functions-xml.inc.php");
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['xml'])) require_once("functions-xml.inc.php");
+
+/* Functions export data into various formats
+----------------------------------------------------
+function GenerateRSS(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
+function GenerateRSS1_0(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
+function GenerateXML(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
+function GenerateICal(&$result, $calendarID, $calendarName, $calendarurl, $timebegin)
+function GenerateVXML(&$result) */
+if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['export'])) require_once("functions-export.inc.php");
 ?>

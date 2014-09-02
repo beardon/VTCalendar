@@ -7,7 +7,7 @@ if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 pageheader(lang('manage_featured_search_keywords'), "Update");
 contentsection_begin(lang('manage_featured_search_keywords'),true);
 
-$result =& DBQuery("SELECT * FROM vtcal_searchfeatured WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY keyword" ); 
+$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_searchfeatured WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY keyword" ); 
 
 if (is_string($result)) {
 	DBErrorBox($result); 

@@ -4,12 +4,14 @@ require_once('application.inc.php');
 if (!authorized()) { exit; }
 if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 
-if (isset($_POST['cancel'])) { setVar($cancel,$_POST['cancel'],'cancel'); } else { unset($cancel); }
-if (isset($_POST['save'])) { setVar($save,$_POST['save'],'save'); } else { unset($save); }
-if (isset($_POST['check'])) { setVar($check,$_POST['check'],'check'); } else { unset($check); }
+if (!isset($_POST['cancel']) || !setVar($cancel,$_POST['cancel'],'cancel')) unset($cancel);
+if (!isset($_POST['save']) || !setVar($save,$_POST['save'],'save')) unset($save);
+if (!isset($_POST['check']) || !setVar($check,$_POST['check'],'check')) unset($check);
 if (isset($_POST['category'])) { 
-	if (isset($_POST['category']['name'])) { setVar($category['name'],$_POST['category']['name'],'category_name'); } 
-else { unset($category['name']); }
+	if (!isset($_POST['category']['name']) || !setVar($category['name'],$_POST['category']['name'],'category_name')) unset($category['name']);
+}
+else {
+	unset($category);
 }
 
 if (isset($cancel)) {
@@ -20,7 +22,7 @@ if (isset($cancel)) {
 // check if name already exists
 $namealreadyexists = false;
 if (!empty($category['name'])) {
-	$result =& DBQuery("SELECT * FROM vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($category['name'])."'" );
+	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($category['name'])."'" );
 	if (is_string($result)) {
 		DBErrorBox($result); exit;
 	}
@@ -30,7 +32,7 @@ if (!empty($category['name'])) {
 }
 
 if (isset($save) && !$namealreadyexists && !empty($category['name']) ) {
-	$result =& DBQuery("INSERTX INTO vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
+	$result =& DBQuery("INSERTX INTO ".TABLEPREFIX."vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
 	if (is_string($result)) {
 			DBErrorBox($result); exit;
 	}
@@ -58,16 +60,16 @@ contentsection_begin(lang('add_new_event_category'));
 	}
 ?>
 	<b><?php echo lang('category_name'); ?>:&nbsp;</b>
-	<input type="text" name="category[name]" maxlength="<?php echo constCategory_nameMaxLength; ?>" size="25" value="<?php 
+	<input type="text" name="category[name]" maxlength="<?php echo MAXLENGTH_CATEGORY_NAME; ?>" size="25" value="<?php 
 	if (!empty($category['name'])) {
 		echo HTMLSpecialChars($category['name']); 
 	}
 	?>">
 	<input type="hidden" name="check" value="1">
-	<BR>
-	<BR>
-	<INPUT type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
-	<INPUT type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<br>
+	<br>
+	<input type="submit" name="save" value="<?php echo lang('ok_button_text'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
 </form>
 <?php
 	contentsection_end();
