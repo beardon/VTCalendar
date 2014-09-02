@@ -15,10 +15,10 @@ if ($repeat['mode']>=1 && $repeat['mode']<=2) { $repeatlist = producerepeatlist(
 // Update an existing event (not a copy)
 if (isset($eventid) && (!isset($copy) || $copy != 1)) {
 
-	// Before the event was non-reocurring
+	// Before the event was non-reoccurring
 	if (empty($event['repeatid'])) {
 	
-		// If the event is now reocurring
+		// If the event is now reoccurring
 		if (isset($repeatlist) && sizeof($repeatlist) > 0) {
 			
 			// Delete the old single event
@@ -30,7 +30,7 @@ if (isset($eventid) && (!isset($copy) || $copy != 1)) {
 			insertrecurrences($event['repeatid'],$event,$repeatlist);
 		}
 		
-		// Otherwise, the event is still non-reocurring.
+		// Otherwise, the event is still non-reoccurring.
 		else {
 		
 			// Delete the event if is a recurring event but has no real recurrences
@@ -46,7 +46,7 @@ if (isset($eventid) && (!isset($copy) || $copy != 1)) {
 		}
 	}
 	
-	// Before the event was reocurring
+	// Before the event was reoccurring
 	else {
 		
 		// The event still has recurrences
@@ -60,7 +60,7 @@ if (isset($eventid) && (!isset($copy) || $copy != 1)) {
 			insertrecurrences($event['repeatid'],$event,$repeatlist);
 		}
 		
-		// The event is now non-reocurring.
+		// The event is now non-reoccurring.
 		else {
 		
 			// Delete the event if it is a recurring event but has no real recurrences
@@ -70,7 +70,7 @@ if (isset($eventid) && (!isset($copy) || $copy != 1)) {
 				deletefromrepeat($event['repeatid']);
 	 	  }
 	 	  
-			// Change the event to a non-reocurring event.
+			// Change the event to a non-reoccurring event.
 			else {
 				deletefromrepeat($event['repeatid']);
 	 	    $oldrepeatid=$event['repeatid'];

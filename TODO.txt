@@ -3,6 +3,9 @@ TODO for Version 2.x:
 
 High:
 - Fix problems with the drop-down and event listing (pertaining to repeating events) in manageevents.php.
+- A toggle for RSS exporting that puts the date/time in the pubDate element rather than in the description.
+  A default setting will need to be included in config.inc.php as well as an override in the RSS export form.
+  This may also need an include/exclude list (in config.inc.php) to handle this differently depending on the user agent string (but will this mess up caching?).
 
 Low:
 - Give final warning about truncating records in "Upgrade Database" section in upgradedb.php

@@ -23,17 +23,27 @@ $ievent = 0;
 $today = Decode_Date_US(date("m/d/Y", NOW));
 $today['timestamp_daybegin']=datetime2timestamp($today['year'],$today['month'],$today['day'],12,0,"am");
 
-// Output list with events
+// Event list with one-time events
 $query =
-	"SELECT calendarid = '".sqlescape($_SESSION['CALENDAR_ID'])."' as isdefaultcal, calendarid as calendarid, id AS id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email"
+	"SELECT *, calendarid = 'default' as isdefaultcal"
 	." FROM ".SCHEMANAME."vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'"
-	." AND timebegin >= '".sqlescape($startTimestamp)."' AND timeend < '".sqlescape($endTimestamp)."'"
-	." ORDER BY timebegin DESC, wholedayevent DESC, id, isdefaultcal";
+	." AND timebegin >= '".sqlescape($startTimestamp)."' AND timeend < '".sqlescape($endTimestamp)."' AND repeatid = ''"
+	." ORDER BY timebegin, wholedayevent DESC, id, isdefaultcal";
+$singleresult =& DBQuery($query);
 
-$result =& DBQuery($query);
+// Event list with repeating events
+$query =
+	"SELECT e.*, e.calendarid = 'default' as isdefaultcal, r.repeatdef, r.startdate, r.enddate"
+	." FROM ".SCHEMANAME."vtcal_event e JOIN ".SCHEMANAME."vtcal_event_repeat r ON e.repeatid = r.id"
+	." WHERE e.sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' AND e.timebegin >= '".sqlescape($startTimestamp)."' AND e.timeend < '".sqlescape($endTimestamp)."' AND e.repeatid != ''"
+	." ORDER BY e.repeatid, isdefaultcal, e.timebegin, e.wholedayevent DESC, e.id";
+$repeatresult =& DBQuery($query);
 
-if (is_string($result)) {
-	DBErrorBox($result);
+if (is_string($singleresult)) {
+	DBErrorBox($singleresult);
+}
+elseif (is_string($repeatresult)) {
+	DBErrorBox($repeatresult);
 }
 else {
 	?>
@@ -43,7 +53,7 @@ else {
 					<td><?php echo lang('show_events_for'); ?>:</td>
 					
 					<?php
-					$dateresults =& DBQuery("SELECT substr(timebegin,1,7) as yearmonth, count(*) as eventcount FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' GROUP BY 1 ORDER BY 1 DESC");
+					$dateresults =& DBQuery("SELECT substr(timebegin,1,7) as yearmonth, count(*) as eventcount FROM ".SCHEMANAME."vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' GROUP BY 1 ORDER BY 1 DESC");
 					if (is_string($dateresults)) {
 						?>
 							<td><select name="month">
@@ -108,16 +118,43 @@ else {
 					
 					<td><input type="submit" value="Show"></td>
 		 		</tr>
-				</table>
+		</table>
 	</form>
 	
-	<p><a href="addevent.php"><?php echo lang('add_new_event'); ?></a> <?php if ($result->numRows() > 0) echo lang('or_manage_existing_events'); ?></p><?php
+	<p><a href="addevent.php"><?php echo lang('add_new_event'); ?></a> <?php if ($singleresult->numRows() > 0 || $repeatresult->numRows() > 0) echo lang('or_manage_existing_events'); ?></p><?php
+	
+	$defaultcalendarname = getCalendarName('default');
+	
+	?><h2 style="padding-bottom: 12px;"><?php echo lang('one_time_events'); ?>:&nbsp;</h2><?php
+	
+	OutputManagedEvents("single", $singleresult, $defaultcalendarname, $month, $year);
+	
+	?><h2 style="padding-top: 12px; padding-bottom: 12px;"><?php echo lang('reoccurring_events'); ?>:&nbsp;</h2><?php
+	
+	OutputManagedEvents("repeat", $repeatresult, $defaultcalendarname, $month, $year);
+		
+	?>
+	<br><b><?php echo lang('status_info_message'); ?></b><br>
+	<table border="0" cellspacing="0" cellpadding="3">
+	<tr>
+		<td><font color="red"><b><?php echo lang('rejected'); ?></b></font></td>
+		<td><?php echo lang('rejected_explanation'); ?></td>
+	<tr>
+		<td><font color="blue"><?php echo lang('submitted_for_approval'); ?></font></td>
+		<td><?php echo lang('submitted_for_approval_explanation'); ?></td>
+	<tr>
+		<td><font color="green"><?php echo lang('approved'); ?></font></td>
+		<td><?php echo lang('approved_explanation'); ?></td>
+	</tr></table>
+	<?php
+}
+
+function OutputManagedEvents($mode, &$result, $defaultcalendarname, $month, $year) {
 	
 	if ($result->numRows() == 0) {
 		echo '<p>' . lang('no_managed_events') . date("F, Y", mktime(0, 0, 0, $month, 15, $year)) . '.</p>';
 	}
 	else {
-		$defaultcalendarname = getCalendarName('default');
 		?>
 		<table border="0" cellspacing="0" cellpadding="4">
 			<tr class="TableHeaderBG">
@@ -136,43 +173,92 @@ else {
 				if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1 && (!isset($PreviousEvent) || $event['id'] != $PreviousEvent['id'] || $PreviousEvent['approved'] == 0)) {
 					continue;
 				}
-		
-				// keep track of repeat id and print recurring events only once
-				if (!empty($event['repeatid'])) { 
-					if ( isset($recurring_exists) && array_key_exists ($event['repeatid'].$event['calendarid'],$recurring_exists) ) { continue; }
-					else { 
-						// remember this recurring event
-						$recurring_exists[$event['repeatid'].$event['calendarid']] = $event['repeatid'].$event['calendarid']; 
-					}
+				
+				if ($event['approved'] == -1) {
+					$status = '<font color="red"><b>'.lang('rejected').'</b></font>';
+					if (!empty($event['rejectreason'])) { $status .= "<br><b>".lang('rejected_reason').":</b> ".htmlentities($event['rejectreason']); }
+				}
+				elseif ($event['approved'] == 0) {
+					$status = '<font color="blue">'.lang('submitted_for_approval').'</font><br>';
+				}
+				elseif ($event['approved'] == 1) {
+					$status = '<font color="green">'.lang('approved').'</font><br>';
 				}
 				
-				if ($_SESSION['CALENDAR_ID'] == "default" || $event['isdefaultcal'] == 0)
+				if ($event['repeatid'] != '') {
+					
+					if (!isset($PreviousEvent) || $event['repeatid'] != $PreviousEvent['repeatid']) {
+						if ( $color == $_SESSION['COLOR_LIGHT_CELL_BG'] )
+							{ $color = $_SESSION['COLOR_BG']; }
+						else
+							{ $color = $_SESSION['COLOR_LIGHT_CELL_BG']; }
+						
+						?>	
+						<tr>
+							<td bgcolor="<?php echo $color; ?>"><?php
+							echo '<b>'.htmlentities($event['title']).'</b><br>';
+							
+							// Output repeating event details.
+							echo '<span class="NotificationText">';
+							
+							repeatdef2repeatinput($event['repeatdef'],$event,$repeat);
+							$startdate = timestamp2datetime($event['startdate']);
+							printrecurrence($startdate['year'],
+								$startdate['month'],
+								$startdate['month'],
+								$event['repeatdef']);
+							echo '</span>';
+							?></td>
+							<td bgcolor="<?php echo $color; ?>"><?php echo $status; ?></td>
+							<td bgcolor="<?php echo $color; ?>"><?php
+								adminButtons($event, array('update','copy','delete'), "small", "horizontal");
+							?></td>
+						</tr>
+						<?php
+					}
+				}
+				elseif ($_SESSION['CALENDAR_ID'] == "default" || $event['isdefaultcal'] == 0)
 				{
 					if ( $color == $_SESSION['COLOR_LIGHT_CELL_BG'] )
 						{ $color = $_SESSION['COLOR_BG']; }
 					else
 						{ $color = $_SESSION['COLOR_LIGHT_CELL_BG']; }
 				}
+				
 				?>	
 				<tr bgcolor="<?php echo $color; ?>">
 					<td <?php if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) { echo 'style="padding-top: 0; padding-bottom: 7px;" class="DefaultCalendarEvent"'; } ?> bgcolor="<?php echo $color; ?>" valign="top">
 						<div>
 						<?php
+						
+						// Output a simple message notifying the user that their event was submitted to the default calendar.
 						if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) {
-							echo "This event was submitted to the &quot;".$defaultcalendarname."&quot; calendar";
+							echo str_replace('%DEFAULTCALNAME%', $defaultcalendarname, lang('submitted_to_default_calendar'));
 							
 							if (isset($PreviousEvent) && $PreviousEvent['title'] != $event['title']) {
-								echo ',<br>but was renamed to: &quot;'.htmlentities($event['title']).'&quot;';
+								echo str_replace('%TITLE%', htmlentities($event['title']), lang('submitted_to_default_calendar_but_renamed'));
 							}
+							
 							echo ".";
+							
+							// Unset PreviousEvent to avoid this message appearing multiple times.
+							unset($PreviousEvent);
 						}
+						
+						// Output the details for an event that is part of this calendar.
 						else {
-							echo '<b>'.htmlentities($event['title']).'</b><br>';
+							
+							if ($event['repeatid'] == '') {
+								echo '<b>'.htmlentities($event['title']).'</b><br>';
+							}
+							
 							// output date
 							echo Day_of_Week_Abbreviation(Day_of_Week($event['timebegin_month'],$event['timebegin_day'],$event['timebegin_year']));
 							echo ", ";
 							echo substr(Month_to_Text($event['timebegin_month']),0,3)," ",$event['timebegin_day'],", ",$event['timebegin_year'];
 							echo " -- ";
+							
+							// output time
 							if ($event['wholedayevent']==0) {
 								echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
 								if (endingtime_specified($event)) { // event has an explicit ending time
@@ -182,38 +268,18 @@ else {
 							else {
 								echo lang('all_day');
 							}
-						
-							if (!empty($event['repeatid'])) {
-								echo "<br>\n";
-								echo '<span class="NotificationText">';
-								readinrepeat($event['repeatid'],$event,$repeat);
-								$repeatdef = repeatinput2repeatdef($event,$repeat);
-								printrecurrence($event['timebegin_year'],
-									$event['timebegin_month'],
-									$event['timebegin_day'],
-									$repeatdef);
-								echo '</span>';
-							}
 						}
 						?></div></td>
-					<td <?php if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) { echo 'style="padding-top: 0; padding-bottom: 7px;" colspan="2"'; } ?> bgcolor="<?php echo $color; ?>" valign="top">
-						<?php
-						if ($event['approved'] == -1) {
-							echo '<font color="red"><b>rejected</b></font>';
-							if (!empty($event['rejectreason'])) { echo "<br><b>Reason:</b> ",htmlentities($event['rejectreason']); }
-						}
-						elseif ($event['approved'] == 0) {
-							echo '<font color="blue">',lang('submitted_for_approval'),'</font><br>';
-						}
-						elseif ($event['approved'] == 1) {
-							echo '<font color="green">',lang('approved'),'</font><br>';
-						}
-						?></td>
+					
+					<td <?php if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) { echo 'style="padding-top: 0; padding-bottom: 7px;" colspan="2"'; } ?>
+						bgcolor="<?php echo $color; ?>"
+						valign="top"><?php echo ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1 || $event['repeatid'] == '') ? $status : "&nbsp;"; ?></td>
+					
 					<?php
 					if ($_SESSION['CALENDAR_ID'] == "default" || $event['isdefaultcal'] == 0) {
 						?>
 						<td <?php if ($_SESSION['CALENDAR_ID'] != "default" && $event['isdefaultcal'] == 1) { echo 'style="padding-top: 0; padding-bottom: 7px;"'; } ?> bgcolor="<?php echo $color; ?>" valign="top"><?php
-								adminButtons($event, array('update','copy','delete'), "small", "horizontal");
+								adminButtons($event, ($event['repeatid'] != '') ? array('delete') : array('update','copy','delete'), "small", "horizontal");
 							 ?></td>
 						<?php
 					}
@@ -223,25 +289,13 @@ else {
 				$PreviousEvent['id'] = $event['id'];
 				$PreviousEvent['title'] = $event['title'];
 				$PreviousEvent['approved'] = $event['approved'];
-			} // end: for ($i=0; $i<$result->numRows(); $i++)
-		?>	
+				$PreviousEvent['repeatid'] = $event['repeatid'];
+				$PreviousEvent['isdefaultcal'] = $event['isdefaultcal'];
+			}
+		?>
 		</table>
-	
-		<br><b><?php echo lang('status_info_message'); ?></b><br>
-		<table border="0" cellspacing="0" cellpadding="3">
-		<tr>
-			<td><font color="red"><b><?php echo lang('rejected'); ?></b></font></td>
-			<td><?php echo lang('rejected_explanation'); ?></td>
-		<tr>
-			<td><font color="blue"><?php echo lang('submitted_for_approval'); ?></font></td>
-			<td><?php echo lang('submitted_for_approval_explanation'); ?></td>
-		<tr>
-			<td><font color="green"><?php echo lang('approved'); ?></font></td>
-			<td><?php echo lang('approved_explanation'); ?></td>
-		</tr></table>
-		
 		<?php
-	} // end: if ($result->numRows() > 0 )
+	}
 }
 
 contentsection_end();
