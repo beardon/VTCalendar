@@ -6,7 +6,6 @@ $lang['day'] = 'Tag';
 $lang['week'] = 'Woche';
 $lang['month'] = 'Monat';
 $lang['search'] = 'Suche';
-$lang['update'] = 'Administration';
 $lang['lit_cal_sun'] = 'S';
 $lang['lit_cal_mon'] = 'M';
 $lang['lit_cal_tue'] = 'D';

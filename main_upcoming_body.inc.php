@@ -9,7 +9,7 @@ if (SHOW_UPCOMING_TAB) {
 	
 	// read all events for this week from the DB
 	// TODO: Should only show next 365 days worth of events.
-	$query = "SELECT e.id AS eventid, e.timebegin, e.timeend, e.sponsorid, e.title, e.location, e.description, e.wholedayevent, e.categoryid, c.id, c.name AS category_name FROM ".TABLEPREFIX."vtcal_event_public e, ".TABLEPREFIX."vtcal_category c ";
+	$query = "SELECT e.id AS eventid, e.timebegin, e.timeend, e.sponsorid, e.title, e.location, e.description, e.wholedayevent, e.categoryid, c.id, c.name AS category_name FROM ".SCHEMANAME."vtcal_event_public e, ".SCHEMANAME."vtcal_category c ";
 	$query.= "WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.timeend > '".sqlescape($todayTimeStamp)."'";
 	
 	// Filter by sponsor ID if one was specified.

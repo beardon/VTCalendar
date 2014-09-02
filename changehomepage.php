@@ -13,14 +13,14 @@ require_once('application.inc.php');
 	}
 
 	// read sponsor name from DB
-	$result = DBQuery("SELECT name FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+	$result = DBQuery("SELECT name FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 	$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 	if (isset($save)) {
 		$sponsor['url']=$sponsor_url;
 		if (checkURL($sponsor['url'])) { // url is valid
 			// save url to DB
-			$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_sponsor SET url='".sqlescape($sponsor_url)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+			$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_sponsor SET url='".sqlescape($sponsor_url)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 
 			// reroute to sponsormenu page
 			redirect2URL("update.php?fbid=urlchangesuccess&fbparam=".urlencode(stripslashes($sponsor_url)));
@@ -29,7 +29,7 @@ require_once('application.inc.php');
 	}
 	else
 	{ // read the sponsor's url from the DB
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 		$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	} // end else: if (isset($save))
 	

@@ -211,7 +211,7 @@ if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['xml'])) require_once("functions-
 function GenerateRSS(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
 function GenerateRSS1_0(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
 function GenerateXML(&$result, $calendarID, $calendarTitle, $calendarurl, $timebegin)
-function GenerateICal(&$result, $calendarID, $calendarName, $calendarurl, $timebegin)
+function GenerateICal(&$result, $calendarID, $calendarName, $calendarurl)
 function GenerateVXML(&$result) */
 if (!isset($FUNCINCLUDE) || isset($FUNCINCLUDE['export'])) require_once("functions-export.inc.php");
 ?>

@@ -25,7 +25,7 @@ if (!isset($check)) {
 // Load template if necessary
 if (isset($templateid)) {
 	if ($templateid > 0) {
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($templateid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($templateid)."'" ); 
 		$event = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	}
 }
@@ -37,7 +37,7 @@ if (isset($timebegin_day)) { $event['timebegin_day']=$timebegin_day; }
 
 // Load event to update information if it's the first time the form is viewed.
 if (isset($eventid) && (!isset($check) || $check != 1)) {
-	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+	$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 	
 	// Event exists in "vtcal_event".
 	if ($result->numRows() > 0) {
@@ -46,7 +46,7 @@ if (isset($eventid) && (!isset($check) || $check != 1)) {
 	// For some reason the event is not in "vtcal_event" (even though it should be).
 	// Try to load it from "event_public".
 	else {
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 
 		// Event exists in "event_public".
 		// Insert into "vtcal_event" since it is missing.

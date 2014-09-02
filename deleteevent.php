@@ -25,13 +25,13 @@ require_once('application.inc.php');
 	}
 
 	// check that the event exists.
-	$query = "SELECT sponsorid FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+	$query = "SELECT sponsorid FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 	$result = DBQuery($query );
 	if ($result->numRows() > 0) { 
 			$e = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	}
 	else {
-		$query = "SELECT * FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+		$query = "SELECT * FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 		$result = DBQuery($query ); 
 		
 		// If the event exists in "event_public", then insert it into "event" since it is missing...
@@ -64,7 +64,7 @@ require_once('application.inc.php');
 	
 	if (isset($deleteconfirmed)) {
 		// get the event title from the database
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 		if ($result->numRows() > 0) { $event  = $result->fetchRow(DB_FETCHMODE_ASSOC,0); }
 		else { $event['title']=""; }
 
@@ -73,7 +73,7 @@ require_once('application.inc.php');
 		
 		// also delete the copies of an event that have been forwarded to the default calendar
 		if ( $_SESSION['CALENDAR_ID'] != "default" ) {
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
 			$result = DBQuery($query ); 
 		} // end: if ( $_SESSION['CALENDAR_ID'] != "default" )
 		
@@ -85,7 +85,7 @@ require_once('application.inc.php');
 			// also delete the copies of an event that have been forwarded to the default calendar
 			if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 				if (!empty($event['repeatid'])) {
-					$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($event['repeatid'])."'";
+					$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($event['repeatid'])."'";
 					$result = DBQuery($query ); 
 				}
 			} // end: if ( $_SESSION['CALENDAR_ID'] != "default" )
@@ -102,7 +102,7 @@ require_once('application.inc.php');
 	}
 
 	// read sponsor name from DB
-	$result = DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+	$result = DBQuery("SELECT name,url FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 	$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 	pageheader(lang('delete_event'), "Update");
@@ -113,7 +113,7 @@ require_once('application.inc.php');
 		echo '<input type="hidden" name="httpreferer" value="',$httpreferer,'">',"\n";
 
 		if (isset($check)) { // ask for delete confirmation
-			$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.contact_name,e.contact_email,e.contact_phone,e.price,e.displayedsponsor,e.displayedsponsorurl,e.wholedayevent,e.repeatid,e.categoryid,c.id,c.name AS category_name FROM ".TABLEPREFIX."vtcal_event e, ".TABLEPREFIX."vtcal_category c WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.id='".sqlescape($eventid)."'";
+			$query = "SELECT e.id AS eventid,e.timebegin,e.timeend,e.sponsorid,e.title,e.location,e.description,e.contact_name,e.contact_email,e.contact_phone,e.price,e.displayedsponsor,e.displayedsponsorurl,e.wholedayevent,e.repeatid,e.categoryid,c.id,c.name AS category_name FROM ".SCHEMANAME."vtcal_event e, ".SCHEMANAME."vtcal_category c WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid = c.id AND e.id='".sqlescape($eventid)."'";
 			$result = DBQuery($query );
 
 			if ($result->numRows() > 0) { // display the preview only if there is a corresponding entry in "event"

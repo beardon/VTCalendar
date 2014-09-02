@@ -6,11 +6,14 @@ if (!authorized()) { exit; }
 pageheader(lang('manage_templates'), "Update");
 contentsection_begin(lang('manage_templates'), true);
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' ORDER BY name" ); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."' ORDER BY name" ); 
 if (is_string($result)) {
 	DBErrorBox($result);
 }
 else {
+
+?><p>Event templates are a time-saving tool that allows you to quickly create events that have the same basic information.</p><?php
+
 	?><p><a href="addtemplate.php"><?php echo lang('add_new_template'); ?></a><?php
 	
 	if ($result->numRows() > 0 ) {

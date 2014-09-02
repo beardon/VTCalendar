@@ -22,7 +22,7 @@ if (isset($cancel)) {
 // check if name already exists
 $namealreadyexists = false;
 if (!empty($category['name'])) {
-	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($category['name'])."'" );
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($category['name'])."'" );
 	if (is_string($result)) {
 		DBErrorBox($result); exit;
 	}
@@ -32,7 +32,7 @@ if (!empty($category['name'])) {
 }
 
 if (isset($save) && !$namealreadyexists && !empty($category['name']) ) {
-	$result =& DBQuery("INSERTX INTO ".TABLEPREFIX."vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
+	$result =& DBQuery("INSERTX INTO ".SCHEMANAME."vtcal_category (calendarid,name) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($category['name'])."')" );
 	if (is_string($result)) {
 			DBErrorBox($result); exit;
 	}

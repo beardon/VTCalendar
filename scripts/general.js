@@ -8,3 +8,13 @@ function new_window(freshurl) {
 	if (SmallWin.opener == null) SmallWin.opener = window;
 	SmallWin.opener.name = "Main";
 }
+
+function ValidateJumpToDateSelectorForm() {
+	if (document.getElementById) {
+		var combined = document.getElementById("JumpToDateSelectorCombined");
+		if (combined && combined.value == '') {
+			return false;
+		}
+	}
+	return true;
+}

@@ -14,7 +14,7 @@ function checkuser(&$user) {
 }
 
 function mainAdminExistsInDB($mainuserid) {
-	$query = "SELECT count(id) FROM ".TABLEPREFIX."vtcal_adminuser WHERE id='".sqlescape($mainuserid)."'";
+	$query = "SELECT count(id) FROM ".SCHEMANAME."vtcal_adminuser WHERE id='".sqlescape($mainuserid)."'";
 	$result =& DBQuery($query ); 
 	
 	// To avoid duplicate records, always return true if a DB error occurred.
@@ -33,7 +33,7 @@ if (isset($cancel)) {
 
 if (!empty($mainuserid)) { $user['id'] = $mainuserid; } else { $user['id'] = ""; }
 if (isset($save) && checkuser($user) && !mainAdminExistsInDB($user['id']) && isValidUser($user['id']) ) { // save user into DB
-	$query = "INSERT INTO ".TABLEPREFIX."vtcal_adminuser (id) VALUES ('".sqlescape($user['id'])."')";
+	$query = "INSERT INTO ".SCHEMANAME."vtcal_adminuser (id) VALUES ('".sqlescape($user['id'])."')";
 	$result =& DBQuery($query );
 	
 	if (is_string($result)) {
@@ -68,7 +68,7 @@ else {
 
 // load user to update information if it's the first time the form is viewed
 if (isset($user['id']) && (!isset($check) || $check != 1)) {
-	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_user WHERE id='".sqlescape($user['id'])."'" ); 
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_user WHERE id='".sqlescape($user['id'])."'" ); 
 	
 	if (is_string($result)) {
 		DBErrorBox("Could not retrieve the user's profile from the DB: ".$result);
@@ -81,10 +81,10 @@ if (isset($user['id']) && (!isset($check) || $check != 1)) {
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" name="mainform">
 <table border="0" cellpadding="2" cellspacing="0">
 	<tr>
-		<td class="bodytext" valign="baseline">
+		<td valign="baseline">
 			<b><?php echo lang('user_id'); ?>:</b>
 		</td>
-		<td class="bodytext" valign="baseline">
+		<td valign="baseline">
 <?php
 		if (isset($check) && $check && (empty($mainuserid))) {
 			feedback(lang('choose_user_id'),FEEDBACKNEG);

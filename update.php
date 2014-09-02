@@ -38,39 +38,6 @@ if ( isset($fbid) ) {
 	}
 }
 
-$lang['event_options_header'] = 'Event Options';
-$lang['add_event_description'] = 'Add a new event to the calendar.';
-$lang['manage_event_description'] = 'View events that have been submitted, and see if they have been approved.';
-$lang['manage_template_description'] = 'Create templates to easily add new events with similar information.';
-
-$lang['backup_header'] = 'Backup &amp; Restore';
-$lang['export_events_description'] = 'Export events to a file you can save on your computer as a backup, or to transfer to another calendar.';
-$lang['import_events_description'] = 'Import an XML file that contains events as a batch.';
-$lang['change_homepage_description'] = 'Change the default homepage address that appears when adding new events.';
-$lang['change_email_description'] = 'Change the default e-mail that appears when adding new events.';
-$lang['options_for'] = 'Options for';
-$lang['change_password_of_user_description'] = 'Change the password you use when logging in to the calendar.';
-
-$lang['calendar_options'] = 'Calendar Options';
-$lang['approve_reject_event_updates_description'] = 'Approve, edit or deny events that have been submitted by sponsors for this calendar.';
-$lang['manage_sponsors_description'] = 'Sponsors are groups of users who submit under a common name, such as &quot;Chess Club&quot;.';
-$lang['delete_inactive_sponsors_description'] = 'Automatically remove sponsors who have not submitted events in a specific amount of time.';
-$lang['change_header_footer_auth_description'] = 'Change the header and footer HTML, as well as basic colors in the calendar. You can also change whether or not the calendar requires authentication for viewing the events.';
-$lang['change_colors_description'] = 'Change the calendar colors to match your web site\'s design.';
-$lang['manage_event_categories_description'] = 'Categories are used when a person wants to filter events on the calendar. All events must be assigned to one category.';
-$lang['manage_search_keywords_description'] = 'Add, edit and remove keyword synonyms.';
-$lang['manage_featured_search_keywords_description'] = 'When a &quot;Featured keyword&quot; is used in a search, a message automatically appears at the top of the search results.';
-$lang['view_search_log_description'] = 'You can view a log of all the keywords searched here, which can be useful when you want to create keyword synonyms or featured keywords.';
-$lang['manage_users_description'] = 'Add, edit and remove user accounts from the database.';
-$lang['manage_calendars_description'] = 'Add, edit and remove calendars as well as set who has \'administrative\' access to the calendar.';
-$lang['manage_main_admins_description'] = 'Add, edit and remove users who have full access to the entire calendar system.';
-$lang['external_resources'] = 'The following are external links to various VTCalendar resources';
-$lang['external_resources_docs'] = 'Documentation';
-$lang['external_resources_announce'] = 'New Release Mailing List';
-$lang['external_resources_forums'] = 'Forums';
-$lang['external_resources_bugs'] = 'Report Bugs';
-$lang['community'] = 'VTCalendar Community';
-$lang['version_check'] = 'Version Check';
 ?>
 
 <table id="UpdateMainMenu" width="100%" cellspacing="0" cellpadding="10" border="0">

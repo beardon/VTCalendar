@@ -28,20 +28,20 @@
 	<input type="hidden" name="view" value="searchresults">
 	<table border="0" cellpadding="3" cellspacing="2">
 		<tr>
-			<td class="bodytext" valign="baseline">
+			<td valign="baseline">
 				<strong><?php echo lang('keyword'); ?>:&nbsp;&nbsp;&nbsp;</strong>
 			</td>
-			<td class="bodytext" valign="baseline">
+			<td valign="baseline">
 				<input type="text" size="40" name="keyword" value="<?php echo $keyword; ?>" maxlength="<?php echo MAXLENGTH_KEYWORD; ?>"><br>
 				<?php echo lang('case_insensit'); ?><br>
 				<br>
 			</td>
 		</tr>
 		<tr>
-			<td class="bodytext" valign="baseline">
+			<td valign="baseline">
 				<strong><?php echo lang('starting_from'); ?></strong>
 			</td>
-			<td class="bodytext" valign="baseline">
+			<td valign="baseline">
 
 <?php
 inputdate($timebegin_month,"timebegin_month",

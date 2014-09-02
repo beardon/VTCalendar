@@ -34,14 +34,11 @@ require_once('application.inc.php');
 	function emailsponsoraccountchanged(&$sponsor) {
 		$subject = lang('email_account_updated_subject');
 		$body = lang('email_account_updated_body');
-		$body.= "   ".lang('sponsor_name')." ".stripslashes($sponsor['name'])."\n";
-		$body.= "   ".lang('email')." ".stripslashes($sponsor['email'])."\n";
-		$body.= "   ".lang('homepage')." ".stripslashes($sponsor['url'])."\n\n";
-
-			if ( isset($_SERVER["HTTPS"]) ) { $body .= "https"; } else { $body .= "http"; } 
-				$body .= "://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'], "/"))."/update.php?calendarid=".$_SESSION['CALENDAR_ID']."\n\n";
-
-		$body.= lang('email_add_event_instructions');
+		$body .= "   ".lang('sponsor_name')." ".stripslashes($sponsor['name'])."\n";
+		$body .= "   ".lang('email').": ".stripslashes($sponsor['email'])."\n";
+		$body .= "   ".lang('homepage').": ".stripslashes($sponsor['url'])."\n\n";
+		$body .= SECUREBASEURL."update.php?calendarid=".$_SESSION['CALENDAR_ID']."\n\n";
+		$body .= lang('email_add_event_instructions');
 		sendemail2sponsor($sponsor['name'],$sponsor['email'],$subject,$body);
 	} // end: emailsponsoraccountchanged
 
@@ -49,7 +46,7 @@ require_once('application.inc.php');
 	$addPIDError="";
 	$pidsAdded = array();
 	if (isset($save) && checksponsor($sponsor) ) {
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."'" );
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."'" );
 		if ( $result->numRows()>0 ) {
 			if ($result->numRows()>1) {
 				$sponsorexists = true;
@@ -104,7 +101,7 @@ require_once('application.inc.php');
 
 			if (empty($addPIDError)) {    
 				if ( isset ($id) ) { // edit, not new
-					$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_sponsor SET name='".sqlescape($sponsor['name'])."',email='".sqlescape($sponsor['email'])."',url='".sqlescape($sponsor['url'])."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id = '".sqlescape($id)."'" );
+					$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_sponsor SET name='".sqlescape($sponsor['name'])."',email='".sqlescape($sponsor['email'])."',url='".sqlescape($sponsor['url'])."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id = '".sqlescape($id)."'" );
 	
 					// substitute existing auth info with the new one
 					$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
@@ -113,11 +110,11 @@ require_once('application.inc.php');
 					}
 				}
 				else {
-					$query = "INSERT INTO ".TABLEPREFIX."vtcal_sponsor (calendarid,name,email,url) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($sponsor['name'])."','".sqlescape($sponsor['email'])."','".sqlescape($sponsor['url'])."')";
+					$query = "INSERT INTO ".SCHEMANAME."vtcal_sponsor (calendarid,name,email,url) VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($sponsor['name'])."','".sqlescape($sponsor['email'])."','".sqlescape($sponsor['url'])."')";
 					$result = DBQuery($query ); 
 	
 					// determine the automatically generated sponsor-id
-					$result = DBQuery("SELECT id FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."' AND email='".sqlescape($sponsor['email'])."' AND url='".sqlescape($sponsor['url'])."'" ); 
+					$result = DBQuery("SELECT id FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND name='".sqlescape($sponsor['name'])."' AND email='".sqlescape($sponsor['email'])."' AND url='".sqlescape($sponsor['url'])."'" ); 
 					$s = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 					$id = $s['id'];
 					
@@ -139,7 +136,7 @@ require_once('application.inc.php');
 		pageheader(lang('edit_sponsor'), "Update");
 		contentsection_begin(lang('edit_sponsor'));
 		if ( !isset($check) ) {
-			$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+			$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 			$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 		}
 	}
@@ -158,11 +155,11 @@ if (isset($sponsor) && $sponsor['admin']) {
 ?>
 <table border="0" cellpadding="2" cellspacing="0">
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php echo lang('sponsor_name'); ?></strong>
 			<span class="WarningText">*</span>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 <?php
 		if ( isset($check) ) {
 			if (empty($sponsor['name'])) {
@@ -180,11 +177,11 @@ if (isset($sponsor) && $sponsor['admin']) {
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('email'); ?></strong>
+		<td valign="top">
+			<strong><?php echo lang('email'); ?>:</strong>
 			<span class="WarningText">*</span>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 <?php
 	if (isset($check) && (empty($sponsor['email']))) {
 		feedback(lang('choose_email'),FEEDBACKNEG);
@@ -198,10 +195,10 @@ if (isset($sponsor) && $sponsor['admin']) {
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('homepage'); ?></strong>
+		<td valign="top">
+			<strong><?php echo lang('homepage'); ?>:</strong>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 <?php
 	if ( isset($check) && !checkURL($sponsor['url']) ) {
 		feedback(lang('url_invalid'),FEEDBACKNEG);
@@ -215,7 +212,7 @@ if (isset($sponsor) && $sponsor['admin']) {
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php
 				if (isset($sponsor) && $sponsor['admin']) {
 					echo lang('administrative_members');
@@ -224,7 +221,7 @@ if (isset($sponsor) && $sponsor['admin']) {
 				}
 			?></strong>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 <?php
 	if (!empty($addPIDError)) {    
 		feedback($addPIDError,1);

@@ -37,7 +37,7 @@ contentsection_begin(lang('view_search_log'),true);
 </form>
 
 <?php
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_searchlog WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND time >= '" . $rangestartTimestamp . "' AND time <= '" . $rangeendTimestamp . "' ORDER BY time DESC"); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_searchlog WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND time >= '" . $rangestartTimestamp . "' AND time <= '" . $rangeendTimestamp . "' ORDER BY time DESC"); 
 	
 if (is_string($result)) {
 	DBErrorBox($result);

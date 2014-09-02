@@ -19,7 +19,7 @@ require_once('application.inc.php');
 	}
 
 	// make sure the sponsor exists
-	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+	$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 	if ( $result->numRows() != 1 ) {
 		redirect2URL("managesponsors.php");
 		exit;
@@ -30,14 +30,14 @@ require_once('application.inc.php');
 
 	if (isset($save) ) {
 		if ($deleteevents=="1") {
-			$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
-			$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+			$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+			$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 		}
 		else {
-	 		$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_event SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
-	 		$result = DBQuery("UPDATE ".TABLEPREFIX."vtcal_event_public SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+	 		$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_event SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
+	 		$result = DBQuery("UPDATE ".SCHEMANAME."vtcal_event_public SET sponsorid='".sqlescape($newsponsorid)."' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" );
 		}
-		$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
+		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" );
 		$result = DBQuery("DELETE FROM vtcal_auth WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($id)."'" ); 
 		redirect2URL("managesponsors.php");
 		exit;
@@ -53,7 +53,7 @@ require_once('application.inc.php');
 	<?php echo lang('reassign_all_events_to_sponsor'); ?>
 	<select name="newsponsorid" size="1">
 <?php
-	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id!='".sqlescape($id)."' ORDER BY name" ); 
+	$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id!='".sqlescape($id)."' ORDER BY name" ); 
 
 	// print list with categories from the DB
 	for ($i=0; $i<$result->numRows(); $i++) {

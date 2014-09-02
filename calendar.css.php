@@ -3,6 +3,8 @@ require_once('application.inc.php');
 header("Content-Type: text/css");
 ?>
 
+@import "scripts/codebox.css";
+
 /*===================================
         Calendar-Wide Styles
 ===================================*/
@@ -71,6 +73,10 @@ tr.TableHeaderBG td, td.TableHeaderBG {
 
 #CalendarBlock label {
 	cursor: pointer;
+}
+
+#CalendarBlock .LightCellBG {
+	background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;
 }
 
 /*===================================
@@ -209,9 +215,20 @@ a.LittleCal-GrayedOut, a.LittleCal-TodayGrayedOut {
 /* Other Left Column Stuff
 --------------------------*/
 
+div#JumpToDateSelectorLabel {
+	padding-left: 8px;
+	padding-top: 10px;
+	font-weight: bold;
+	padding-bottom: 2px;
+}
 table#JumpToDateSelector td {
-	padding-top: 6px;
 	padding-bottom: 14px;
+}
+table#JumpToDateSelector.Split td {
+	padding-left: 6px;
+}
+table#JumpToDateSelector.Combined {
+	width: 100%;
 }
 input#JumpToDateSelector-Button {
 	background-color: <?php echo $_SESSION['COLOR_GOBTN_BG']; ?>;

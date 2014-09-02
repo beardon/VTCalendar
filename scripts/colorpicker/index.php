@@ -40,7 +40,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</style>
 	<meta http-equiv="imagetoolbar" content="no">
 	<meta http-equiv="imagetoolbar" content="false">
-	<script type="text/javascript" src="refresh_web/prototype.js" ></script>
+	<script type="text/javascript" src="../prototype.js" ></script>
 	<script type="text/javascript" src="refresh_web/colorpicker/colormethods.js" ></script>
 	<script type="text/javascript" src="refresh_web/colorpicker/colorvaluepicker.js" ></script>
 	<script type="text/javascript" src="refresh_web/colorpicker/slider.js" ></script>

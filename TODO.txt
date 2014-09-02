@@ -2,41 +2,53 @@ TODO for Version 2.x:
 ===========================
 
 High:
-- Move all lang files to languages/en.inc.php
-- Update install/upgradedb.php for PostgreSQL.
-- Add a customizable prefix for table names to support multiple sets of vtcalendar tables within one Postgres database:
-  Search: (?<!"\.TABLEPREFIX\.")(?<![."'])(?=vtcal_(adminuser|admin|calendar|calendarviewauth|category|colors|event|searchedkeywords|searchfeatured|searchkeyword|searchlog|sponsor|template|user))
-  Replace: ".TABLEPREFIX."
-- Validate iCalendar export format.
-- Check help text to see if it is still accurate.
-- Change 'Jump To' in column back to being a single drop-down.
-- Allow data currently stored in session to be loaded from the DB or a file.
-- Update search logging/reporting so that it knows keywords can only be up to 255 characters.
-- Improve description on export page.
-- For upgradedb.php make sure 'int(11)' is aliased to 'int'.
-- Change fields to NotNull. Many fields are allowed to be null.
+- None
 
 Low:
+- Give final warning about truncating records in "Upgrade Database" section in upgradedb.php
+- Improve description on export page.
+- After login do a redirect to avoid resubmitting POST when using the back button
+- Allow data currently stored in session to be loaded from the DB or a file.
+- Validate iCalendar export format.
 - Assign DB results by reference. Example: $var =& DBQuery(...) or $results =& $db->query(...)
 - Get row by reference. Example $row =& $results->fetchRow()
 - Free results by using $results->free()
 - Properly handle string returns from functions like DBQuery.
 - Expand AUTH_HTTP_CACHE to LDAP
 - Improve the way AUTH_HTTP checks if the authentication was successful or not successful by also checking the body text.
-- Allow events to be flagged private so that you can only see them if you log in.
 - "Send event to a friend" form.
-- Allow week/month to be viewed as a list of events (like upcoming view).
 - A 'comments' field for sponsors where additional information (e.g. mailing address or phone number) could be stored.
-- Develop tool for assisting with translations.
-- Store IP if logged in and logout if IP changes.
 
 Future:
+- Allow events to be flagged private so that you can only see them if you log in.
+- Rich Text Editor for description (http://developer.yahoo.com/yui/editor/ or http://www.kevinroth.com/rte/)
+- Full text searching
 - A public submit an event form that submits on behalf of a non-admin sponsor (the calendar admin decides which).
   Events submitted this way would also need an e-mail address (and other contact info) for the person submitting the event.
   A confirmation e-mail would be sent to the address with a link the submitted will need to click to act as a spam filter.
   When the event is accepted or rejected, a confirmation e-mail will be sent to the submitter as well.
+- Store IP if logged in and logout if IP changes.
+- Develop tool for assisting with translations.
 
 Finished:
+- Check for the url column in upgradedb.php, and move the URL data to description as part of the upgrade (unless the URL data is empty). The URL column should be emptied as well (Finished 2008-11-07)
+- Change the drop-down on 'my submitted events' page to only show months that actually have events (Finished 2008-11-06)
+- Add RSS text to 'Subscribe & Download' description (Finished 2008-11-06)
+- upgradedb.php failed with an empty database (Finished 2008-11-06)
+- Rename TABLEPREFIX to SCHEMANAME so it is not confused with the 'vtcal_' table prefix (Finished 2008-11-06)
+- Added new calendar setting for header (Finished ~2008-11-04)
+- Improve iCal/RSS caching (Finished 2008-10-30)
+- Check help text to see if it is still accurate (Finished ~2008-10-24)
+- Move all lang files to languages/en.inc.php (Finished 2008-10-22)
+- For upgradedb.php make sure 'int(11)' is aliased to 'int'. (Finished ~2008-10-19)
+- Check existing column max lengths, 'max(length(X))', for fields that are being updated in upgradedb.php. (Finished 2008-10-21)
+- Update install/upgradedb.php for PostgreSQL. (Finished 2008-10-21)
+- Add a customizable prefix for table names to support multiple sets of vtcalendar tables within one Postgres database: (Finished 2008-10-21)
+  Search: (?<!"\.TABLEPREFIX\.")(?<![."'])(?=vtcal_(adminuser|admin|calendar|calendarviewauth|category|colors|event|searchedkeywords|searchfeatured|searchkeyword|searchlog|sponsor|template|user))
+  Replace: ".TABLEPREFIX."
+- Add RSS links to subscribe page. (Finished 2008-10-20)
+- Change fields to NotNull. Many fields are allowed to be null. (Finished 2008-10-20)
+- Change 'Jump To' in column back to being a single drop-down. (Finished 2008-10-20)
 - Include file from static-includes before sub-calendar headers, and after sub-calendar footers.
 - Improve 'Upcoming' print view (Finished 08-10-15)
 - Disable admin buttons/icons in print view (Finished 08-10-15)
@@ -59,12 +71,16 @@ TODO for Version 3.x:
 - Modular DB
 - Modular authentication
 - Approval chain
+- Allow multiple reoccurring definitions with an include/exclude flag. See http://www.imc.org/pdi/vcal-10.txt and http://tools.ietf.org/html/rfc2445
 - Allow any sponsor to be the end of the approval chain, to allow sponsors that can make events public without having access to modify the calendar settings.
 - Allow 'additional categories' for events, which would be used when a user filters the calendar.
 - Allow URLs to built programmatically to allow links like http://localhost/vtcalendar/{calendarid}/{eventid} or http://localhost/vtcalendar/{calendarid}/month/2008-01
 - Allow an instance of an event to be separated from the original repeating event. This would essentially be a copy, followed by adding an exclude to the repeating definition once the copy is posted.
 - Event details appear in small box when hovering over event in month/week/day view.
 - Database connection persistence?
+- Allow any sponsor to accept submissions via a public 'add new event' form.
+- An address field that will link to Google Maps. Maybe preview the map directly in the page?
+- Allow week/month to be viewed as a list of events (like upcoming view).
 
 OLD TODO:
 ===========================

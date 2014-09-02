@@ -47,9 +47,7 @@ function redirect2URL($url) {
 
 // Get the complete URL that points to the current calendar.
 function getFullCalendarURL($calendarid) {
-	if ( isset($_SERVER["HTTPS"]) ) { $calendarurl = "https"; } else { $calendarurl = "http"; } 
-	$calendarurl .= "://".$_SERVER['HTTP_HOST'].substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'], "/"))."/main.php?calendarid=".urlencode($calendarid);
-	return $calendarurl;
+	return BASEURL."main.php?calendarid=" . urlencode($calendarid);
 }
 
 // Sends an email to a sponsor.
@@ -217,6 +215,7 @@ function lang($sTextKey) {
 	global $lang;
 	
 	if (!isset($lang[$sTextKey])) {
+		trigger_error("Lang key '".$sTextKey."' not found", E_USER_WARNING);
 		return "";
 	}
 	else {
@@ -231,7 +230,15 @@ function lang($sTextKey) {
 			}
 		}
 		return $finalstr;*/
-		return $lang[$sTextKey];
+		
+		$text = $lang[$sTextKey];
+		
+		if (strpos($text, '@FILE:') === 0) {
+			return file_get_contents(substr($text, 6));
+		}
+		else {
+			return $text;
+		}
 	}
 }
 

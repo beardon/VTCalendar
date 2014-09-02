@@ -15,7 +15,7 @@ assemble_timestamp($event);
 removeslashes($event);
 
 // determine the name of the category
-$result = DBQuery("SELECT id,name AS category_name FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['categoryid'])."'" ); 
+$result = DBQuery("SELECT id,name AS category_name FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['categoryid'])."'" ); 
 
 if ($result->numRows() > 0) { // error checking, actually there should be always a category
 	$e = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
@@ -52,7 +52,6 @@ if ($event['timeend_hour']==0) {
 	feedback(lang('warning_no_ending_time'),FEEDBACKNEG);
 }
 
-echo '<span class="bodytext">';
 if ($repeat['mode'] > 0) {
 	echo lang('recurring_event'),": ";
 	$repeatdef = repeatinput2repeatdef($event,$repeat);
@@ -79,7 +78,6 @@ if (isset($copy)) { echo "<input type=\"hidden\" name=\"copy\" value=\"",$copy,"
 <p><input type="submit" name="savethis" value="<?php echo lang('save_changes'); ?>">
 <input type="submit" name="edit" value="<?php echo lang('go_back_to_make_changes'); ?>"> &nbsp;&nbsp;&nbsp;
 <input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>" onclick="location.href = '<?php echo $httpreferer; ?>'; return false;"></p>
-</span>
 </form>
 <?php
 contentsection_end();

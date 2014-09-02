@@ -1,6 +1,8 @@
 <?php
 // Make sure this script does not take a long time to execute.
 set_time_limit(10);
+
+// Tell main_export_data.inc.php that we are doing the export.
 define("DOEXPORT", true);
 
 // Tell application.inc.php not to perform DB actions
@@ -123,7 +125,7 @@ switch($FormData['format']) {
 	case "ical":
 		if (!isset($_GET['raw'])) Header("Content-Type: text/calendar; charset=\"utf-8\"; name=\"export.ics\"");
 		if (!isset($_GET['raw'])) Header("Content-disposition: attachment; filename=export.ics");
-		echo GenerateICal($result, $calendardata['name']);
+		echo GenerateICal($result, $calendardata['name'], BASEURL);
 		break;
 	case "vxml":
 		if (!isset($_GET['raw'])) Header("Content-Type: text/xml");

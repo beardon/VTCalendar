@@ -17,7 +17,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">OPTIONAL. Added at the beginning of the &lt;title&gt; tag.</div>
+                     <span class="CommentLine">OPTIONAL. Added at the beginning of the &lt;title&gt; tag.</span>
                   </td>
                </tr>
             </table>
@@ -40,7 +40,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">OPTIONAL. Added at the end of the &lt;title&gt; tag.</div>
+                     <span class="CommentLine">OPTIONAL. Added at the end of the &lt;title&gt; tag.</span>
                   </td>
                </tr>
             </table>
@@ -63,7 +63,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Language used (refers to language file in directory /languages)</div>
+                     <span class="CommentLine">Language used (refers to language file in directory /languages)</span>
                   </td>
                </tr>
             </table>
@@ -83,8 +83,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The number of years into the future that the calendar will allow users to create events for.</div>
-                     <div class="CommentLine">For example, if the current year is 2000 then a value of '3' will allow users to create events up to 2003.</div>
+                     <span class="CommentLine">The number of years into the future that the calendar will allow users to create events for.</span>
+                     <span class="CommentLine">
+                        <br/>For example, if the current year is 2000 then a value of '3' will allow users to create events up to 2003.</span>
                   </td>
                </tr>
             </table>
@@ -112,8 +113,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">This is the database connection string used by the PEAR library.</div>
-                     <div class="CommentLine">It has the format: "mysql://user:password@host/databasename" or "pgsql://user:password@host/databasename"</div>
+                     <span class="CommentLine">This is the database connection string used by the PEAR library.</span>
+                     <span class="CommentLine">
+                        <br/>It has the format: "mysql://user:password@host/databasename" or "pgsql://user:password@host/databasename"</span>
                   </td>
                </tr>
             </table>
@@ -121,13 +123,13 @@
       </tr>
       <tr>
          <td class="VariableName" nowrap="nowrap" valign="top">
-            <b>Table Prefix:</b>
+            <b>Schema Name:</b>
          </td>
          <td class="VariableBody">
             <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
                <tr>
                   <td class="DataField">
-                     <div class="DataFieldInput"><input type="text" id="Input_TABLEPREFIX" name="TABLEPREFIX" value="<?php echo htmlentities($GLOBALS['Form_TABLEPREFIX']); ?>" size="60"/> <span id="DataFieldInputExtra_TABLEPREFIX"> </span>
+                     <div class="DataFieldInput"><input type="text" id="Input_SCHEMANAME" name="SCHEMANAME" value="<?php echo htmlentities($GLOBALS['Form_SCHEMANAME']); ?>" size="60"/> <span id="DataFieldInputExtra_SCHEMANAME"> </span>
                      </div>
                      <div class="Example">
                         <i>Example: public</i>
@@ -136,11 +138,11 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">In some databases (such as PostgreSQL) you may have multiple sets of VTCalendar tables within the same database, but in different schemas.</div>
-                     <div class="CommentLine">If this is the case for you, enter the name of the schema here.</div>
-                     <div class="CommentLine">It will be prefixed to the table name like so: TABLEPREFIX.vtcal_calendars.</div>
-                     <div class="CommentLine">If necessary include quotes. Use a backtick (`) for MySQL or double quotes (") for PostgreSQL.</div>
-                     <div class="CommentLine">Note: If specified, the table prefix MUST end with a period.</div>
+                     <span class="CommentLine">In some databases (such as PostgreSQL) you may have multiple sets of VTCalendar tables within the same database, but in different schemas.</span>
+                     <span class="CommentLine">If this is the case for you, enter the name of the schema here.</span>
+                     <span class="CommentLine">It will be prefixed to the table name like so: SCHEMANAME.vtcal_calendars.</span>
+                     <span class="CommentLine">If necessary quote the schema name using a backtick (`) for MySQL or double quotes (") for PostgreSQL.</span>
+                     <span class="CommentLine">Note: If specified, the table prefix MUST end with a period.</span>
                   </td>
                </tr>
             </table>
@@ -163,9 +165,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">OPTIONAL. Put a name of a (folder and) file where the calendar logs every SQL query to the database.</div>
-                     <div class="CommentLine">This is good for debugging but make sure you write into a file that's not readable by the webserver or else you may expose private information.</div>
-                     <div class="CommentLine">If left blank ("") no log will be kept. That's the default.</div>
+                     <span class="CommentLine">OPTIONAL. Put a name of a (folder and) file where the calendar logs every SQL query to the database.</span>
+                     <span class="CommentLine">This is good for debugging but make sure you write into a file that's not readable by the webserver or else you may expose private information.</span>
+                     <span class="CommentLine">If left blank ("") no log will be kept. That's the default.</span>
                   </td>
                </tr>
             </table>
@@ -190,7 +192,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">This regular expression defines what is considered a valid user-ID.</div>
+                     <span class="CommentLine">This regular expression defines what is considered a valid user-ID.</span>
                   </td>
                </tr>
             </table>
@@ -212,8 +214,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Authenticate users against the database.</div>
-                     <div class="CommentLine">If enabled, this is always performed before any other authentication.</div>
+                     <span class="CommentLine">Authenticate users against the database.</span>
+                     <span class="CommentLine">If enabled, this is always performed before any other authentication.</span>
                   </td>
                </tr>
                <tr id="Dependants_AUTH_DB">
@@ -236,9 +238,9 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">OPTIONAL. This prefix is used when creating/editing a local user-ID (in the DB "user" table), e.g. "calendar."</div>
-                                       <div class="CommentLine">If you only use auth_db just leave it an empty string.</div>
-                                       <div class="CommentLine">Its purpose is to avoid name-space conflicts with the users authenticated via LDAP or HTTP.</div>
+                                       <span class="CommentLine">OPTIONAL. This prefix is used when creating/editing a local user-ID (in the DB "user" table), e.g. "calendar."</span>
+                                       <span class="CommentLine">If you only use auth_db just leave it an empty string.</span>
+                                       <span class="CommentLine">Its purpose is to avoid name-space conflicts with the users authenticated via LDAP or HTTP.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -258,8 +260,8 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">OPTIONAL. This displays a text (or nothing) on the Update tab behind the user user management options.</div>
-                                       <div class="CommentLine">It could be used if you employ both, AUTH_DB and AUTH_LDAP at the same time to let users know that they should create local users only if they are not in the LDAP.</div>
+                                       <span class="CommentLine">OPTIONAL. This displays a text (or nothing) on the Update tab behind the user user management options.</span>
+                                       <span class="CommentLine">It could be used if you employ both, AUTH_DB and AUTH_LDAP at the same time to let users know that they should create local users only if they are not in the LDAP.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -288,8 +290,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Authenticate users against a LDAP server.</div>
-                     <div class="CommentLine">If enabled, HTTP authenticate will be ignored.</div>
+                     <span class="CommentLine">Authenticate users against a LDAP server.</span>
+                     <span class="CommentLine">If enabled, HTTP authenticate will be ignored.</span>
                   </td>
                </tr>
                <tr id="Dependants_AUTH_LDAP">
@@ -311,8 +313,8 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">Check this box if you would like to verify the LDAP settings when submitting this form.</div>
-                                       <div class="CommentLine">Uncheck this box if you know the settings are correct, but your LDAP server is currently unavailable.</div>
+                                       <span class="CommentLine">Check this box if you would like to verify the LDAP settings when submitting this form.</span>
+                                       <span class="CommentLine">Uncheck this box if you know the settings are correct, but your LDAP server is currently unavailable.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -335,7 +337,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">If you are using OpenLDAP 2.x.x you can specify a URL ('ldap://host/') instead of the hostname ('host').</div>
+                                       <span class="CommentLine">If you are using OpenLDAP 2.x.x you can specify a URL ('ldap://host/') instead of the hostname ('host').</span>
                                     </td>
                                  </tr>
                               </table>
@@ -355,7 +357,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The port to connect to. Ignored if LDAP Host Name is a URL.</div>
+                                       <span class="CommentLine">The port to connect to. Ignored if LDAP Host Name is a URL.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -378,7 +380,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The attribute which contains the username.</div>
+                                       <span class="CommentLine">The attribute which contains the username.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -419,7 +421,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">OPTIONAL. A filter to add to the LDAP search.</div>
+                                       <span class="CommentLine">OPTIONAL. A filter to add to the LDAP search.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -441,8 +443,8 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">Before authenticating the user, we first check if the username exists.</div>
-                                       <div class="CommentLine">If your LDAP server does not allow anonymous searches, you will need to specify a username and password to bind as.</div>
+                                       <span class="CommentLine">Before authenticating the user, we first check if the username exists.</span>
+                                       <span class="CommentLine">If your LDAP server does not allow anonymous searches, you will need to specify a username and password to bind as.</span>
                                     </td>
                                  </tr>
                                  <tr id="Dependants_LDAP_BIND">
@@ -508,9 +510,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Authenticate users by sending an HTTP request to a server.</div>
-                     <div class="CommentLine">A HTTP status code of 200 will authorize the user. Otherwise, they will not be authorized.</div>
-                     <div class="CommentLine">If LDAP authentication is enabled, this will be ignored.</div>
+                     <span class="CommentLine">Authenticate users by sending an HTTP request to a server.</span>
+                     <span class="CommentLine">A HTTP status code of 200 will authorize the user. Otherwise, they will not be authorized.</span>
+                     <span class="CommentLine">If LDAP authentication is enabled, this will be ignored.</span>
                   </td>
                </tr>
                <tr id="Dependants_AUTH_HTTP">
@@ -533,7 +535,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The URL to use for the BASIC HTTP Authentication.</div>
+                                       <span class="CommentLine">The URL to use for the BASIC HTTP Authentication.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -568,9 +570,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">OPTIONAL. If you are hosting more than one VTCalendar on your server, you may want to set this to this calendar's path.</div>
-                     <div class="CommentLine">Otherwise, the cookie will be submitted with a default path.</div>
-                     <div class="CommentLine">This must start and end with a forward slash (/), unless the it is exactly "/".</div>
+                     <span class="CommentLine">OPTIONAL. If you are hosting more than one VTCalendar on your server, you may want to set this to this calendar's path.</span>
+                     <span class="CommentLine">Otherwise, the cookie will be submitted with a default path.</span>
+                     <span class="CommentLine">This must start and end with a forward slash (/), unless the it is exactly "/".</span>
                   </td>
                </tr>
             </table>
@@ -593,8 +595,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">OPTIONAL. If you are hosting more than one VTCalendar on your server, you may want to set this to your server's host name.</div>
-                     <div class="CommentLine">Otherwise, the cookie will be submitted with a default host name.</div>
+                     <span class="CommentLine">OPTIONAL. If you are hosting more than one VTCalendar on your server, you may want to set this to your server's host name.</span>
+                     <span class="CommentLine">Otherwise, the cookie will be submitted with a default host name.</span>
                   </td>
                </tr>
             </table>
@@ -622,8 +624,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">This is the absolute URL where your calendar software is located.</div>
-                     <div class="CommentLine">This MUST end with a slash "/"</div>
+                     <span class="CommentLine">This is the absolute URL where your calendar software is located.</span>
+                     <span class="CommentLine">This MUST end with a slash "/"</span>
                   </td>
                </tr>
             </table>
@@ -646,9 +648,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">This is the absolute path where the secure version of the calendar is located.</div>
-                     <div class="CommentLine">If you are not using URL, set this to the same address as BASEURL.</div>
-                     <div class="CommentLine">This MUST end with a slash "/"</div>
+                     <span class="CommentLine">This is the absolute path where the secure version of the calendar is located.</span>
+                     <span class="CommentLine">If you are not using URL, set this to the same address as BASEURL.</span>
+                     <span class="CommentLine">This MUST end with a slash "/"</span>
                   </td>
                </tr>
             </table>
@@ -1236,7 +1238,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The timezone in which the calendar will set the local time for. All new events, logs, etc will be affected by this setting.</div>
+                     <span class="CommentLine">The timezone in which the calendar will set the local time for. All new events, logs, etc will be affected by this setting.</span>
                   </td>
                </tr>
             </table>
@@ -1260,7 +1262,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Defines the week starting day</div>
+                     <span class="CommentLine">Defines the week starting day</span>
                   </td>
                </tr>
             </table>
@@ -1282,7 +1284,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Defines time format e.g. 1am-11pm (true) or 1:00-23:00 (false)</div>
+                     <span class="CommentLine">Defines time format e.g. 1am-11pm (true) or 1:00-23:00 (false)</span>
                   </td>
                </tr>
             </table>
@@ -1311,8 +1313,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Which side the little calendar, 'jump to', 'today is', etc. will be on.</div>
-                     <div class="CommentLine">RIGHT is more user friendly for users with low resolutions.</div>
+                     <span class="CommentLine">Which side the little calendar, 'jump to', 'today is', etc. will be on.</span>
+                     <span class="CommentLine">RIGHT is more user friendly for users with low resolutions.</span>
                   </td>
                </tr>
             </table>
@@ -1334,7 +1336,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Whether or not the upcoming tab will be shown.</div>
+                     <span class="CommentLine">Whether or not the upcoming tab will be shown.</span>
                   </td>
                </tr>
                <tr id="Dependants_SHOW_UPCOMING_TAB">
@@ -1354,7 +1356,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The maximum number of upcoming events displayed.</div>
+                                       <span class="CommentLine">The maximum number of upcoming events displayed.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -1383,9 +1385,61 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Whether or not events in month view on days that are not actually part of the current month should be shown.</div>
-                     <div class="CommentLine">For example, if the first day of the month starts on a Wednesday, then Sunday-Tuesday are from the previous month.</div>
-                     <div class="CommentLine">Values must be true or false.</div>
+                     <span class="CommentLine">Whether or not events in month view on days that are not actually part of the current month should be shown.</span>
+                     <span class="CommentLine">
+                        <br/>For example, if the first day of the month starts on a Wednesday, then Sunday-Tuesday are from the previous month.</span>
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      <tr>
+         <td class="VariableName" nowrap="nowrap" valign="top">
+            <b>Combined 'Jump To' Drop-Down:</b>
+         </td>
+         <td class="VariableBody">
+            <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
+               <tr>
+                  <td class="DataField">
+                     <div class="DataFieldInput"><input type="checkbox" id="CheckBox_COMBINED_JUMPTO" name="COMBINED_JUMPTO" value="true"
+										<?php if ($GLOBALS['Form_COMBINED_JUMPTO'] == 'true') echo ' checked="checked"'; ?>/><label for="CheckBox_COMBINED_JUMPTO"> Yes</label>
+                        <span id="DataFieldInputExtra_COMBINED_JUMPTO"> </span>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Comment">
+                     <span class="CommentLine">Whether or not the 'jump to' drop-down in the column will be combined into a single drop-down box or not.</span>
+                     <span class="CommentLine">When set to true, the list will contain all possible month/years combinations for the next X years (where X is ALLOWED_YEARS_AHEAD).</span>
+                     <span class="CommentLine">Only the last 3 months will be included in this list.</span>
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      <tr>
+         <td class="VariableName" nowrap="nowrap" valign="top">
+            <b>Use Custom Login Page:</b>
+         </td>
+         <td class="VariableBody">
+            <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
+               <tr>
+                  <td class="DataField">
+                     <div class="DataFieldInput"><input type="checkbox" id="CheckBox_CUSTOM_LOGIN_HTML" name="CUSTOM_LOGIN_HTML" value="true"
+										<?php if ($GLOBALS['Form_CUSTOM_LOGIN_HTML'] == 'true') echo ' checked="checked"'; ?>/><label for="CheckBox_CUSTOM_LOGIN_HTML"> Yes</label>
+                        <span id="DataFieldInputExtra_CUSTOM_LOGIN_HTML"> </span>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="Comment">
+                     <span class="CommentLine">By default the login page includes the login form and a message about how to request a login to the calendar.</span>
+                     <span class="CommentLine">When set to true, a file at ./static-includes/loginform.txt will be used as a custom login page:</span>
+                     <ul>
+                        <li>It must include @@LOGIN_FORM@@ which will be replaced with the login form itself.</li>
+                        <li>You can also include @@LOGIN_HEADER@@ which will be replaced with the "Login" header text for the translation you specified.</li>
+                        <li>See the ./static-includes/loginform-EXAMPLE.txt file for an example.</li>
+                     </ul>
                   </td>
                </tr>
             </table>
@@ -1407,9 +1461,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Include the file located at ./static-includes/subcalendar-pre-header.txt before the calendar header HTML for all calendars.</div>
-                     <div class="CommentLine">This allows you to enforce a standard header for all calendars.</div>
-                     <div class="CommentLine">This does not affect the default calendar.</div>
+                     <span class="CommentLine">Include the file located at ./static-includes/subcalendar-pre-header.txt before the calendar header HTML for all calendars.</span>
+                     <span class="CommentLine">This allows you to enforce a standard header for all calendars.</span>
+                     <span class="CommentLine">This does not affect the default calendar.</span>
                   </td>
                </tr>
             </table>
@@ -1431,9 +1485,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Include the file located at ./static-includes/subcalendar-post-header.txt after the calendar header HTML for all calendars.</div>
-                     <div class="CommentLine">This allows you to enforce a standard header for all calendars.</div>
-                     <div class="CommentLine">This does not affect the default calendar.</div>
+                     <span class="CommentLine">Include the file located at ./static-includes/subcalendar-post-header.txt after the calendar header HTML for all calendars.</span>
+                     <span class="CommentLine">This allows you to enforce a standard header for all calendars.</span>
+                     <span class="CommentLine">This does not affect the default calendar.</span>
                   </td>
                </tr>
             </table>
@@ -1455,9 +1509,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Include the file located at ./static-includes/subcalendar-pre-footer.txt before the calendar footer HTML for all calendars.</div>
-                     <div class="CommentLine">This allows you to enforce a standard footer for all calendars.</div>
-                     <div class="CommentLine">This does not affect the default calendar.</div>
+                     <span class="CommentLine">Include the file located at ./static-includes/subcalendar-pre-footer.txt before the calendar footer HTML for all calendars.</span>
+                     <span class="CommentLine">This allows you to enforce a standard footer for all calendars.</span>
+                     <span class="CommentLine">This does not affect the default calendar.</span>
                   </td>
                </tr>
             </table>
@@ -1479,9 +1533,9 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Include the file located at ./static-includes/subcalendar-post-footer.txt after the calendar footer HTML for all calendars.</div>
-                     <div class="CommentLine">This allows you to enforce a standard footer for all calendars.</div>
-                     <div class="CommentLine">This does not affect the default calendar.</div>
+                     <span class="CommentLine">Include the file located at ./static-includes/subcalendar-post-footer.txt after the calendar footer HTML for all calendars.</span>
+                     <span class="CommentLine">This allows you to enforce a standard footer for all calendars.</span>
+                     <span class="CommentLine">This does not affect the default calendar.</span>
                   </td>
                </tr>
             </table>
@@ -1506,7 +1560,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Cache the list of category names in memory if the calendar has less than or equal to this number.</div>
+                     <span class="CommentLine">Cache the list of category names in memory if the calendar has less than or equal to this number.</span>
                   </td>
                </tr>
             </table>
@@ -1514,22 +1568,80 @@
       </tr>
       <tr>
          <td class="VariableName" nowrap="nowrap" valign="top">
-            <b>Cache 'Subscribe &amp; Download' ICS Files:</b>
+            <b>'Subscribe &amp; Download' Links to Static Files:</b>
          </td>
          <td class="VariableBody">
             <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
                <tr>
                   <td class="DataField">
-                     <div class="DataFieldInput"><input type="checkbox" id="CheckBox_CACHE_ICS" name="CACHE_ICS" value="true"
-										<?php if ($GLOBALS['Form_CACHE_ICS'] == 'true') echo ' checked="checked"'; ?>/><label for="CheckBox_CACHE_ICS"> Yes</label>
-                        <span id="DataFieldInputExtra_CACHE_ICS"> </span>
+                     <div class="DataFieldInput"><input type="checkbox" id="CheckBox_CACHE_SUBSCRIBE_LINKS" name="CACHE_SUBSCRIBE_LINKS" value="true"
+										onclick="ToggleDependant('CACHE_SUBSCRIBE_LINKS');" onchange="ToggleDependant('CACHE_SUBSCRIBE_LINKS');"<?php if ($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS'] == 'true') echo ' checked="checked"'; ?>/><label for="CheckBox_CACHE_SUBSCRIBE_LINKS"> Yes</label>
+                        <span id="DataFieldInputExtra_CACHE_SUBSCRIBE_LINKS"> </span>
                      </div>
                   </td>
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">When a lot of users subscribe to your calendar via the 'Subscribe &amp; Download' page, this can put a heavy load on your server.</div>
-                     <div class="CommentLine">To avoid this, you can either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the ICS files to disk for each category </div>
+                     <span class="CommentLine">When a lot of users subscribe to your calendar via the 'Subscribe &amp; Download' page, this can put a heavy load on your server.</span>
+                     <span class="CommentLine">To avoid this you can enable this feature and either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the files linked to from the 'Subscribe &amp; Download' page.</span>
+                     <span class="CommentLine">The 'Subscribe &amp; Download' page will then link to the static files rather than the export page.</span>
+                     <ul>
+                        <li>This also affects the RSS &lt;link&gt; in the HTML header.</li>
+                        <li>Enabling this feature does not stop users from accessing the export page.</li>
+                        <li>This has no effect on calendars that require users to login before viewing events.</li>
+                     </ul>
+                     <span class="CommentLine">For detailed instructions see http://vtcalendar.sourceforge.net/jump.php?name=cachesubscribe</span>
+                  </td>
+               </tr>
+               <tr id="Dependants_CACHE_SUBSCRIBE_LINKS">
+                  <td>
+                     <table class="VariableTable" border="0" cellspacing="0" cellpadding="6">
+                        <tr>
+                           <td class="VariableName" nowrap="nowrap" valign="top">
+                              <b>URL Extension to Static Files:</b>
+                           </td>
+                           <td class="VariableBody">
+                              <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
+                                 <tr>
+                                    <td class="DataField">
+                                       <div class="DataFieldInput"><input type="text" id="Input_CACHE_SUBSCRIBE_LINKS_PATH" name="CACHE_SUBSCRIBE_LINKS_PATH" value="<?php echo htmlentities($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS_PATH']); ?>" size="60"/> <span id="DataFieldInputExtra_CACHE_SUBSCRIBE_LINKS_PATH"> </span>
+                                       </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="Comment">
+                                       <span class="CommentLine">The path from the VTCalendar URL to the static 'Subscribe &amp; Download' files.</span>
+                                       <span class="CommentLine">It will be appended to the BASEURL (e.g. http://localhost/vtcalendar/cache/subscribe/)</span>
+                                       <span class="CommentLine">Must end with a slash.</span>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td class="VariableName" nowrap="nowrap" valign="top">
+                              <b>Static Files Output Directory:</b>
+                           </td>
+                           <td class="VariableBody">
+                              <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
+                                 <tr>
+                                    <td class="DataField">
+                                       <div class="DataFieldInput"><input type="text" id="Input_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR" name="CACHE_SUBSCRIBE_LINKS_OUTPUTDIR" value="<?php echo htmlentities($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR']); ?>" size="60"/> <span id="DataFieldInputExtra_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR"> </span>
+                                       </div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="Comment">
+                                       <span class="CommentLine">The directory path where the static 'Subscribe &amp; Download' files will be outputted by the ./cache/export script.</span>
+                                       <span class="CommentLine">Must be an absolute path (e.g. /var/www/htdocs/vtcalendar/cache/subscribe/).</span>
+                                       <span class="CommentLine">Must end with a slash.</span>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                     </table>
+                     <script type="text/javascript">ToggleDependant('CACHE_SUBSCRIBE_LINKS');</script>
                   </td>
                </tr>
             </table>
@@ -1542,7 +1654,7 @@
    <table class="VariableTable" border="0" cellspacing="0" cellpadding="6">
       <tr>
          <td class="VariableName" nowrap="nowrap" valign="top">
-            <b>:</b>
+            <b>Export Path:</b>
          </td>
          <td class="VariableBody">
             <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
@@ -1554,7 +1666,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The URL extension to the export script. Must NOT being with a slash (/).</div>
+                     <span class="CommentLine">The URL extension to the export script. Must NOT being with a slash (/).</span>
                   </td>
                </tr>
             </table>
@@ -1574,8 +1686,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The maximum number of events that can be exported using the subscribe, download or export pages.</div>
-                     <div class="CommentLine">Calendar and main admins can export all data using the VTCalendar (XML) format.</div>
+                     <span class="CommentLine">The maximum number of events that can be exported using the subscribe, download or export pages.</span>
+                     <span class="CommentLine">Calendar and main admins can export all data using the VTCalendar (XML) format.</span>
                   </td>
                </tr>
             </table>
@@ -1595,7 +1707,7 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The number of minutes that a browser will be told to cache exported data.</div>
+                     <span class="CommentLine">The number of minutes that a browser will be told to cache exported data.</span>
                   </td>
                </tr>
             </table>
@@ -1603,7 +1715,7 @@
       </tr>
       <tr>
          <td class="VariableName" nowrap="nowrap" valign="top">
-            <b>Allow Export in VTCalendar (XML) Format:</b>
+            <b>Allow Public to Export in VTCalendar (XML) Format:</b>
          </td>
          <td class="VariableBody">
             <table class="ContentTable" width="100%" border="0" cellspacing="0" cellpadding="6">
@@ -1617,8 +1729,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">The VTCalendar (XML) export format contains all information about an event, which you may not want to allow the public to view.</div>
-                     <div class="CommentLine">However, users that are part of the admin sponsor, or are main admins, can always export in this format.</div>
+                     <span class="CommentLine">The VTCalendar (XML) export format contains all information about an event, which you may not want to allow the public to view.</span>
+                     <span class="CommentLine">However, users that are part of the admin sponsor, or are main admins, can always export in this format.</span>
                   </td>
                </tr>
             </table>
@@ -1645,8 +1757,8 @@
                </tr>
                <tr>
                   <td class="Comment">
-                     <div class="CommentLine">Send e-mail using Pear::Mail rather than the built-in PHP Mail function.</div>
-                     <div class="CommentLine">This should be used if you are on Windows or do not have sendmail installed.</div>
+                     <span class="CommentLine">Send e-mail using Pear::Mail rather than the built-in PHP Mail function.</span>
+                     <span class="CommentLine">This should be used if you are on Windows or do not have sendmail installed.</span>
                   </td>
                </tr>
                <tr id="Dependants_EMAIL_USEPEAR">
@@ -1666,7 +1778,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The SMTP host name to connect to.</div>
+                                       <span class="CommentLine">The SMTP host name to connect to.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -1686,7 +1798,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The SMTP port number to connect to.</div>
+                                       <span class="CommentLine">The SMTP port number to connect to.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -1708,7 +1820,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">Whether or not to use SMTP authentication.</div>
+                                       <span class="CommentLine">Whether or not to use SMTP authentication.</span>
                                     </td>
                                  </tr>
                                  <tr id="Dependants_EMAIL_SMTP_AUTH">
@@ -1728,7 +1840,7 @@
                                                    </tr>
                                                    <tr>
                                                       <td class="Comment">
-                                                         <div class="CommentLine">The username to use for SMTP authentication.</div>
+                                                         <span class="CommentLine">The username to use for SMTP authentication.</span>
                                                       </td>
                                                    </tr>
                                                 </table>
@@ -1748,7 +1860,7 @@
                                                    </tr>
                                                    <tr>
                                                       <td class="Comment">
-                                                         <div class="CommentLine">The password to use for SMTP authentication.</div>
+                                                         <span class="CommentLine">The password to use for SMTP authentication.</span>
                                                       </td>
                                                    </tr>
                                                 </table>
@@ -1775,7 +1887,7 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The value to give when sending EHLO or HELO.</div>
+                                       <span class="CommentLine">The value to give when sending EHLO or HELO.</span>
                                     </td>
                                  </tr>
                               </table>
@@ -1795,8 +1907,8 @@
                                  </tr>
                                  <tr>
                                     <td class="Comment">
-                                       <div class="CommentLine">The SMTP connection timeout.</div>
-                                       <div class="CommentLine">Set the value to 0 to have no timeout.</div>
+                                       <span class="CommentLine">The SMTP connection timeout.</span>
+                                       <span class="CommentLine">Set the value to 0 to have no timeout.</span>
                                     </td>
                                  </tr>
                               </table>

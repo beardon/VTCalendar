@@ -20,6 +20,9 @@ function isValidInput($value, $type) {
 	elseif ($type=='calendarHeader') { // needs refinement
 		return TRUE;
 	}
+	elseif ($type=='calendarHTMLHeader') { // needs refinement
+		return TRUE;
+	}
 	elseif ($type=='calendarid') {
 		if (preg_match('/^[A-Z0-9\-\.]{1,'.MAXLENGTH_CALENDARID.'}$/i',$value)) { return TRUE; }
 	}

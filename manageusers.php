@@ -29,7 +29,7 @@ contentsection_begin(lang('manage_users'),true);
 <select name="userid" size="<?php echo $numLines; ?>" style="width:200px">
 <?php
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_user ORDER BY id" ); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_user ORDER BY id" ); 
 if (is_string($result)) {
 	DBErrorBox($result);
 }
@@ -40,8 +40,8 @@ else {
 	} // end: for ($i=0; $i<$result->numRows(); $i++)
 	
 	?></select><br>
-	<input type="submit" name="edit" value="<?php echo lang('button_edit'); ?>">
-	<input type="submit" name="delete" value="<?php echo lang('button_delete'); ?>"><br>
+	<input type="submit" name="edit" value="<?php echo lang('edit'); ?>">
+	<input type="submit" name="delete" value="<?php echo lang('delete'); ?>"><br>
 	<br>
 	<b><?php echo $result->numRows(); ?> Users total</b>
 	</form>

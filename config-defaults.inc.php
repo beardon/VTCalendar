@@ -40,14 +40,14 @@ if (!defined("ALLOWED_YEARS_AHEAD")) define("ALLOWED_YEARS_AHEAD", 3);
 // It has the format: "mysql://user:password@host/databasename" or "pgsql://user:password@host/databasename"
 if (!defined("DATABASE")) define("DATABASE", "");
 
-// Config: Table Prefix
+// Config: Schema Name
 // Example: public
 // In some databases (such as PostgreSQL) you may have multiple sets of VTCalendar tables within the same database, but in different schemas.
 // If this is the case for you, enter the name of the schema here.
-// It will be prefixed to the table name like so: TABLEPREFIX.vtcal_calendars.
-// If necessary include quotes. Use a backtick (`) for MySQL or double quotes (") for PostgreSQL.
+// It will be prefixed to the table name like so: SCHEMANAME.vtcal_calendars.
+// If necessary quote the schema name using a backtick (`) for MySQL or double quotes (") for PostgreSQL.
 // Note: If specified, the table prefix MUST end with a period.
-if (!defined("TABLEPREFIX")) define("TABLEPREFIX", "");
+if (!defined("SCHEMANAME")) define("SCHEMANAME", "");
 
 // Config: SQL Log File
 // Example: /var/log/vtcalendarsql.log
@@ -204,8 +204,21 @@ if (!defined("MAX_UPCOMING_EVENTS")) define("MAX_UPCOMING_EVENTS", 75);
 // Config: Show Month Overlap
 // Whether or not events in month view on days that are not actually part of the current month should be shown.
 // For example, if the first day of the month starts on a Wednesday, then Sunday-Tuesday are from the previous month.
-// Values must be true or false.
 if (!defined("SHOW_MONTH_OVERLAP")) define("SHOW_MONTH_OVERLAP", true);
+
+// Config: Combined 'Jump To' Drop-Down
+// Whether or not the 'jump to' drop-down in the column will be combined into a single drop-down box or not.
+// When set to true, the list will contain all possible month/years combinations for the next X years (where X is ALLOWED_YEARS_AHEAD).
+// Only the last 3 months will be included in this list.
+if (!defined("COMBINED_JUMPTO")) define("COMBINED_JUMPTO", true);
+
+// Config: Use Custom Login Page
+// By default the login page includes the login form and a message about how to request a login to the calendar.
+// When set to true, a file at ./static-includes/loginform.txt will be used as a custom login page:
+//  * It must include @@LOGIN_FORM@@ which will be replaced with the login form itself.
+//  * You can also include @@LOGIN_HEADER@@ which will be replaced with the "Login" header text for the translation you specified.
+//  * See the ./static-includes/loginform-EXAMPLE.txt file for an example.
+if (!defined("CUSTOM_LOGIN_HTML")) define("CUSTOM_LOGIN_HTML", false);
 
 // Config: Include Static Pre-Header HTML
 // Include the file located at ./static-includes/subcalendar-pre-header.txt before the calendar header HTML for all calendars.
@@ -239,16 +252,33 @@ if (!defined("INCLUDE_STATIC_POST_FOOTER")) define("INCLUDE_STATIC_POST_FOOTER",
 // Cache the list of category names in memory if the calendar has less than or equal to this number.
 if (!defined("MAX_CACHESIZE_CATEGORYNAME")) define("MAX_CACHESIZE_CATEGORYNAME", 100);
 
-// Config: Cache 'Subscribe & Download' ICS Files
+// Config: 'Subscribe & Download' Links to Static Files
 // When a lot of users subscribe to your calendar via the 'Subscribe & Download' page, this can put a heavy load on your server.
-// To avoid this, you can either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the ICS files to disk for each category 
-if (!defined("CACHE_ICS")) define("CACHE_ICS", false);
+// To avoid this you can enable this feature and either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the files linked to from the 'Subscribe & Download' page.
+// The 'Subscribe & Download' page will then link to the static files rather than the export page.
+//  * This also affects the RSS <link> in the HTML header.
+//  * Enabling this feature does not stop users from accessing the export page.
+//  * This has no effect on calendars that require users to login before viewing events.
+// For detailed instructions see http://vtcalendar.sourceforge.net/jump.php?name=cachesubscribe
+if (!defined("CACHE_SUBSCRIBE_LINKS")) define("CACHE_SUBSCRIBE_LINKS", false);
+
+// Config: URL Extension to Static Files
+// The path from the VTCalendar URL to the static 'Subscribe & Download' files.
+// It will be appended to the BASEURL (e.g. http://localhost/vtcalendar/cache/subscribe/)
+// Must end with a slash.
+if (!defined("CACHE_SUBSCRIBE_LINKS_PATH")) define("CACHE_SUBSCRIBE_LINKS_PATH", 'cache/subscribe/');
+
+// Config: Static Files Output Directory
+// The directory path where the static 'Subscribe & Download' files will be outputted by the ./cache/export script.
+// Must be an absolute path (e.g. /var/www/htdocs/vtcalendar/cache/subscribe/).
+// Must end with a slash.
+if (!defined("CACHE_SUBSCRIBE_LINKS_OUTPUTDIR")) define("CACHE_SUBSCRIBE_LINKS_OUTPUTDIR", "");
 
 // =====================================
 // Export
 // =====================================
 
-// Config: 
+// Config: Export Path
 // The URL extension to the export script. Must NOT being with a slash (/).
 if (!defined("EXPORT_PATH")) define("EXPORT_PATH", 'export/export.php');
 
@@ -261,7 +291,7 @@ if (!defined("MAX_EXPORT_EVENTS")) define("MAX_EXPORT_EVENTS", 100);
 // The number of minutes that a browser will be told to cache exported data.
 if (!defined("EXPORT_CACHE_MINUTES")) define("EXPORT_CACHE_MINUTES", 5);
 
-// Config: Allow Export in VTCalendar (XML) Format
+// Config: Allow Public to Export in VTCalendar (XML) Format
 // The VTCalendar (XML) export format contains all information about an event, which you may not want to allow the public to view.
 // However, users that are part of the admin sponsor, or are main admins, can always export in this format.
 if (!defined("PUBLIC_EXPORT_VTCALXML")) define("PUBLIC_EXPORT_VTCALXML", false);

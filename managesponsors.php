@@ -12,7 +12,7 @@ if ( isset($edit) ) {
 	redirect2URL("editsponsor.php?id=".$id); exit;
 }
 elseif ( isset($delete) ) {
-	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" ); 
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($id)."'" ); 
 	if (is_string($result)) { DBErrorBox($result); exit; }
 	$sponsor =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	
@@ -27,7 +27,9 @@ elseif ( isset($delete) ) {
 pageheader(lang('manage_sponsors'), "Update");
 contentsection_begin(lang('manage_sponsors'),true);
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
+echo '<p>'.lang('manage_sponsors_description').'</p>';
+
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
 
 if (is_string($result)) {
 	DBErrorBox($result);
@@ -53,8 +55,8 @@ else {
 		} // end: for ($i=0; $i<$result->numRows(); $i++)
 	?>	
 	</select><br>
-	<input type="submit" name="edit" value="<?php echo lang('button_edit'); ?>">
-	<input type="submit" name="delete" value="<?php echo lang('button_delete'); ?>"><br>
+	<input type="submit" name="edit" value="<?php echo lang('edit'); ?>">
+	<input type="submit" name="delete" value="<?php echo lang('delete'); ?>"><br>
 	<p><?php echo lang('sponsor_twin_asterisk_note'); ?></p>
 	<p><b><?php echo $result->numRows(); ?> <?php echo lang('sponsors_total'); ?></b></p>
 	</form>

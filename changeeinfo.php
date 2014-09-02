@@ -95,8 +95,8 @@ if (isset($cancel)) {
 
 // Check that the event ID is valid, if one was passed.
 if (!empty($eventid)) {
-	$query = "SELECT sponsorid FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
-	if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".TABLEPREFIX."vtcal_event" . $result); exit; }
+	$query = "SELECT sponsorid FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+	if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".SCHEMANAME."vtcal_event" . $result); exit; }
 	
 	// Check that the record exists in "vtcal_event".
 	if ($result->numRows() > 0) {
@@ -105,8 +105,8 @@ if (!empty($eventid)) {
 	
 	// If it doesn't, check that it exists in "vtcal_event_public"
 	else {
-		$query = "SELECT * FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
-		if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".TABLEPREFIX."vtcal_event_public" . $result); exit; }
+		$query = "SELECT * FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+		if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".SCHEMANAME."vtcal_event_public" . $result); exit; }
 		
 		
 		// If the event exists in "event_public", then insert it into "event" since it is missing...

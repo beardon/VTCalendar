@@ -213,7 +213,7 @@ $lang['url_invalid'] = '"URL:en är ogiltig. Vänligen se till att du inleder denn
 
 $lang['email_account_updated_subject'] = 'kontoinformation uppdaterad';
 $lang['email_account_updated_body'] = "Kalenderadministratören har uppdaterat uppgifterna för ditt användarkonto.\n\nAktuella uppgifter är:\n";
-$lang['email'] = 'E-post:';
+$lang['email'] = 'E-post';
 
 $lang['user_id_already_exists'] = 'En användare med detta användarnamn finns redan. Vänligen välj ett annat användarnamn.';
 $lang['choose_password'] = 'Välj ett lösenord.';
@@ -262,7 +262,6 @@ $lang['delete_user'] = 'Ta bort användare';
 $lang['delete_user_confirm'] = 'Följande användare kommer att tas bort:';
 
 $lang['calendar'] = 'Kalender';
-$lang['administration'] = 'Administration';
 $lang['category1'] = 'Kategori 1';
 $lang['category2'] = 'Kategori 2';
 $lang['category3'] = 'Kategori 3';
@@ -288,7 +287,7 @@ $lang['keyword_already_exists'] = 'Detta nyckelord finns redan.';
 $lang['featured_text'] = 'Föreslagen text (eller HTML-kod):';
 $lang['featured_text_cannot_be_empty'] = 'Den föreslagna texten får inte lämnas tom.';
 
-$lang['homepage'] = 'Hemsida:';
+$lang['homepage'] = 'Hemsida';
 $lang['email_add_event_instructions'] = 'Kortfattade instruktioner för att lägga till en händelse:
 - Logga in med ditt personliga användarnamn och lösenord
 - Klicka på "Lägg till händelse"

@@ -64,24 +64,6 @@ if (isset($_POST['SaveConfig'])) {
 			$FormErrors[count($FormErrors)] = "Could not connect to the database using the supplied Database Connection String.<br/>Error: <code>" . htmlentities($CONNECTION) . "</code>";
 	}*/
 	
-	// Check Database Authentication fields.
-	if ($Form_AUTH_DB) {
-	
-		// Check the DB main admin username/password
-		/*if ($Form_AUTH_DB_CREATEADMIN) {
-			if (empty($Form_AUTH_DB_CREATEADMIN_USERNAME)) {
-				$FormErrors[count($FormErrors)] = "You must specify the username of the Main Admin Account under Database Authentication.";
-			}
-			elseif ($validUserIDReg && preg_match($Form_REGEXVALIDUSERID, $Form_AUTH_DB_CREATEADMIN_USERNAME) == 0) {
-				$FormErrors[count($FormErrors)] = "The Main Admin Account under Database Authentication must match the User ID Regular Expression.";
-			}
-			
-			if (empty($Form_AUTH_DB_CREATEADMIN_PASSWORD)) {
-				$FormErrors[count($FormErrors)] = "You must specify the password for Main Admin Account under Database Authentication.";
-			}
-		}*/
-	}
-	
 	// Check LDAP Authentication fields.
 	if ($Form_AUTH_LDAP) {
 		if (!function_exists("ldap_connect")) {
@@ -169,35 +151,10 @@ if (isset($_POST['SaveConfig'])) {
 		if (empty($Form_AUTH_HTTP_URL)) {
 			$FormErrors[count($FormErrors)] = "You must specify the HTTP Authorizaton URL.";
 		}
-		
-		//ProcessMainAdminAccountList($Form_AUTH_HTTP_MAINADMINS, $assignMainAdmins);
 	}
 	
 	// Do not make any changes if errors occurred.
 	if (count($FormErrors) == 0) {
-		/*if ($Form_AUTH_DB_CREATEADMIN) {
-			// Add the account
-			if (is_string($return = AddUser($Form_AUTH_DB_CREATEADMIN_USERNAME, $Form_AUTH_DB_CREATEADMIN_PASSWORD))) {
-				$FormErrors[count($FormErrors)] = $return;
-			}
-			
-			// Add the account as a main admin
-			if (is_string($return = AddMainAdmin($Form_AUTH_DB_CREATEADMIN_USERNAME))) {
-				$FormErrors[count($FormErrors)] = $return;
-			}
-		}
-		
-		// Add the specified accounts as a main admins
-		for ($i = 0; $i < count($assignMainAdmins); $i++) {
-			
-			// Add the account as a main admin
-			if (is_string($return = AddMainAdmin($assignMainAdmins[$i]))) {
-				$FormErrors[count($FormErrors)] = $return;
-			}
-		}*/
-		
-		// Close the DB connection
-		//DBClose();
 		
 		// Do not save the file if any errors were encountered after the DB changes
 		if (count($FormErrors) == 0) {

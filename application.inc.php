@@ -83,7 +83,7 @@ if (isset($calendarid) && !defined("NOLOADDB")) {
 /* ============================================================
                   Fixes for slow browsers
 ============================================================ */
-if ( $_SERVER["HTTP_USER_AGENT"] == "Mozilla/4.0 (compatible; MSIE 5.22; Mac_PowerPC)" ) {
+if ( isset($_SERVER["HTTP_USER_AGENT"]) && $_SERVER["HTTP_USER_AGENT"] == "Mozilla/4.0 (compatible; MSIE 5.22; Mac_PowerPC)" ) {
 	$enableViewMonth = false;
 } 
 else { 

@@ -14,7 +14,16 @@ function pageheader($title, $navbaractive) {
 		<?php } else { ?>
 			<meta name="robots" content="noindex,follow">
 		<?php } ?>
-		<link rel="alternate" type="application/rss+xml" title="<?php lang('rss_feed_title'); ?>" href="export/export.php?calendarid=<?php echo urlencode($_SESSION['CALENDAR_ID']); ?>&format=rss2_0">
+		<link rel="alternate" type="application/rss+xml" title="<?php lang('rss_feed_title'); ?>" href="<?php
+		
+		if (CACHE_SUBSCRIBE_LINKS && $_SESSION['CALENDAR_VIEWAUTHREQUIRED'] == 0) {
+			echo BASEURL . CACHE_SUBSCRIBE_LINKS_PATH . htmlentities($_SESSION['CALENDAR_ID']) . '.xml';
+		}
+		else {
+			echo BASEURL . EXPORT_PATH . '?calendarid=' . urlencode($_SESSION['CALENDAR_ID']) . '&format=rss2_0&timebegin=upcoming';
+		}
+		
+		?>">
 		<script type="text/javascript" src="scripts/browsersniffer.js"></script>
 		<script type="text/javascript" src="scripts/general.js"></script>
 		<script type="text/javascript" src="scripts/update.js"></script>
@@ -36,12 +45,19 @@ function pageheader($title, $navbaractive) {
 		<!--[if lte IE 6]><style>
 		#RightColumn #MonthTable div.DayNumber a { height: 1em; }
 		</style><![endif]-->
+		
+<!-- Start Calendar HTML Header -->
+<?php echo $_SESSION['CALENDAR_HTMLHEADER']."\n"; ?>
+<!-- End Calendar HTML Header -->
+
 	</head>
 	<body leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
 	
 	<?php if (INCLUDE_STATIC_PRE_HEADER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-pre-header.txt')); ?>
 	
-	<!-- Start Calendar Header --><?php echo $_SESSION['CALENDAR_HEADER']; ?><!-- End Calendar Header -->
+<!-- Start Calendar Header -->
+<?php echo $_SESSION['CALENDAR_HEADER']."\n"; ?>
+<!-- End Calendar Header -->
 
 	<?php if (INCLUDE_STATIC_POST_HEADER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-post-header.txt')); ?>
 	
@@ -81,15 +97,14 @@ function pageheader($title, $navbaractive) {
 									
 									echo ")";
 								}
-								?>&nbsp;<?php //echo lang('is_logged_on'); ?></td>
-							<td valign="bottom" class="NaviBar-Tab"><div><a href="logout.php"><?php echo lang('logout'); ?></a></div></td>
+								?>&nbsp;</td>
+								<td valign="bottom" class="NaviBar-Tab"><div><a href="logout.php"><?php echo lang('logout'); ?></a></div></td>
 								<?php
 							}
 							else {
 								?><td width="100%">&nbsp;</td><?php
 							}
-						
-						?></td>
+						?>
 						<td valign="bottom" <?php if ($navbaractive=="Update") { echo 'id="NaviBar-Selected"'; }  ?> class="NaviBar-Tab"><div><a href="<?php echo SECUREBASEURL; ?>update.php"><?php echo lang('update'); ?></a></div></td>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
@@ -108,9 +123,9 @@ function pagefooter() {
 
 	<?php if (INCLUDE_STATIC_PRE_FOOTER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-pre-footer.txt')); ?>
 
-	<!-- Start Calendar Footer -->
-	<?php echo $_SESSION['CALENDAR_FOOTER']; ?>
-	<!-- End Calendar Footer -->
+<!-- Start Calendar Footer -->
+<?php echo $_SESSION['CALENDAR_FOOTER']."\n"; ?>
+<!-- End Calendar Footer -->
 
 	<?php if (INCLUDE_STATIC_POST_FOOTER && $_SESSION['CALENDAR_ID'] != 'default') @(readfile('static-includes/subcalendar-post-footer.txt')); ?>
 

@@ -1,9 +1,6 @@
 <?php
 require_once('application.inc.php');
 
-$lang['no_managed_events'] = 'You have not submitted any events for the month of ';
-$lang['show_events_for'] = 'Show events for';
-
 if (!authorized()) { exit; }
 
 pageheader(lang('manage_events'), "Update");
@@ -11,6 +8,13 @@ contentsection_begin(lang('manage_events'),true);
 
 if (!isset($_GET['year']) || !setVar($year,$_GET['year'],'timebegin_year')) { $year = date("Y", NOW); }
 if (!isset($_GET['month']) || !setVar($month,$_GET['month'],'timebegin_month')) { $month = date("n", NOW); }
+if (!isset($_GET['timebegin']) || !setVar($timebegin,$_GET['timebegin'],'timebegin')) { unset($timebegin); }
+
+if (isset($timebegin)) {
+	$year = intval(substr($timebegin, 0, 4));
+	$month = intval(substr($timebegin, 5, 2));
+	echo "A";
+}
 
 // Create timestamps for the selected month.
 $startTimestamp = datetime2timestamp($year, $month, 1, DAY_BEG_H, 0, "am");
@@ -22,8 +26,8 @@ $today['timestamp_daybegin']=datetime2timestamp($today['year'],$today['month'],$
 
 // Output list with events
 $query =
-	"SELECT calendarid = 'default' as isdefaultcal, calendarid as calendarid, id AS id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email"
-	." FROM ".TABLEPREFIX."vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'"
+	"SELECT calendarid = '".sqlescape($_SESSION['CALENDAR_ID'])."' as isdefaultcal, calendarid as calendarid, id AS id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email"
+	." FROM ".SCHEMANAME."vtcal_event WHERE sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'"
 	." AND timebegin >= '".sqlescape($startTimestamp)."' AND timeend < '".sqlescape($endTimestamp)."'"
 	." ORDER BY timebegin DESC, wholedayevent DESC, id, isdefaultcal";
 
@@ -35,28 +39,74 @@ if (is_string($result)) {
 else {
 	?>
 	<form method="get" action="manageevents.php">
-		<table  border="0" cellspacing="0" cellpadding="2">
+		<table border="0" cellspacing="0" cellpadding="2">
 				<tr>
 					<td><?php echo lang('show_events_for'); ?>:</td>
-					<td><select name="month">
-						<?php
-						for ($m = 1; $m <= 12; $m++) {
-							echo '<option value="' . $m . '"';
-							if ($month == $m) echo " SELECTED";
-							echo '>' . Month_to_Text($m) . '</option>';
-						}
+					
+					<?php
+					$dateresults =& DBQuery("SELECT substr(timebegin,1,7) as yearmonth, count(*) as eventcount FROM vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' GROUP BY 1 ORDER BY 1 DESC");
+					if (is_string($dateresults)) {
 						?>
-			 			</select></td>
-						<td><select name="year">
+							<td><select name="month">
+								<?php
+								for ($m = 1; $m <= 12; $m++) {
+									echo '<option value="' . $m . '"';
+									if ($month == $m) echo " SELECTED";
+									echo '>' . Month_to_Text($m) . '</option>';
+								}
+								?>
+							</select></td>
+							<td><select name="year">
+								<?php
+								$currentyear = date("Y", NOW);
+								for ($y = 1990; $y <= $currentyear + 10; $y++) {
+									echo '<option';
+									if ($year == $y) echo " SELECTED";
+									echo '>' . $y . '</option>';
+								}
+								?>
+							</select></td>
 						<?php
-						$currentyear = date("Y", NOW);
-						for ($y = 1990; $y <= $currentyear + 10; $y++) {
-							echo '<option';
-							if ($year == $y) echo " SELECTED";
-							echo '>' . $y . '</option>';
-						}
+					}
+					else {
 						?>
-						</select></td>
+						<td><select name="timebegin">
+								<?php
+								$currentMonth = date("Y-m", NOW);
+								for ($i=0; $i<$dateresults->numRows(); $i++) {
+									$dateinfo =& $dateresults->fetchRow(DB_FETCHMODE_ASSOC,$i);
+									
+									if ($currentMonth !== true) {
+										if ($currentMonth == $dateinfo['yearmonth']) {
+											$currentMonth = true;
+										}
+										elseif ($currentMonth > $dateinfo['yearmonth']) {
+											echo "AXX";
+											echo '<option value="' . $currentMonth . '-01 00:00:00"';
+											if ($year == substr($currentMonth, 0, 4) && $month == intval(substr($currentMonth, 5, 2))) echo " SELECTED";
+											echo '>' . Month_to_Text(intval(substr($currentMonth, 5, 2))) . ', ' . substr($currentMonth, 0, 4) . ' (0)</option>';
+											$currentMonth = true;
+										}
+									}
+									
+									echo '<option value="' . $dateinfo['yearmonth'] . '-01 00:00:00"';
+									if ($year == substr($dateinfo['yearmonth'], 0, 4) && $month == intval(substr($dateinfo['yearmonth'], 5, 2))) echo " SELECTED";
+									echo '>' . Month_to_Text(intval(substr($dateinfo['yearmonth'], 5, 2))) . ', ' . substr($dateinfo['yearmonth'], 0, 4) . ' (' . $dateinfo['eventcount'] . ')</option>';
+								}
+								$dateresults->free();
+								
+								if ($currentMonth !== true) {
+									echo '<option value="' . $currentMonth . '-01 00:00:00"';
+									if ($year == substr($currentMonth, 0, 4) && $month == intval(substr($currentMonth, 5, 2))) echo " SELECTED";
+									echo '>' . Month_to_Text(intval(substr($currentMonth, 5, 2))) . ', ' . substr($currentMonth, 0, 4) . ' (0)</option>';
+									$currentMonth = true;
+								}
+								?>
+							</select></td>
+						<?php
+					}
+					?>
+					
 					<td><input type="submit" value="Show"></td>
 		 		</tr>
 				</table>

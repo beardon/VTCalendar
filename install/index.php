@@ -24,7 +24,7 @@
 <h1>VTCalendar Installation</h1>
 
 <p style="padding: 8px; background-color: #FFEEEE; border: 1px solid #FF3333;"><font size="3"><b>Security Warning:</b></font><br />
-	Once you complete the wizards below, you should remove or secure the <code>install</code> folder. </p>
+	Once you complete the wizards below, you should remove or secure the <code>install</code> folder.</p>
 
 <h2>Wizards</h2>
 
@@ -41,7 +41,7 @@
 		</ul>
 	</blockquote>
 	
-	<p><font size="3"><b>2. <a href="upgradedb.php">Install or Upgrade  Database (MySQL Only)</a></b></font></p>
+	<p><font size="3"><b>2. <a href="upgradedb.php">Install or Upgrade  Database (MySQL 4.2+ or PostgreSQL 8+)</a></b></font></p>
 	<blockquote>
 		<p>If this is a <b>fresh VTCalendar install</b> this wizard will create the necessary VTCalendar tables.</p>
 	    <p>If you are <b>upgrading VTCalendar</b> this wizard will upgrade the database, adding any missing tables, columns or indexes.</p>

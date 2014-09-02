@@ -70,28 +70,35 @@ function SpecificSponsorChanged() {
 	    	<tr>
 	    		<td colspan="2"><b><?php echo lang('export_format_standard'); ?>:</b></td>
 	   		</tr>
-	   		<?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) { ?>
 	    	<tr>
-	    		<td><input name="format" type="radio" value="xml" id="format_xml" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "xml") echo "CHECKED"; ?>></td>
-	    		<td><label for="format_xml">VTCalendar (XML)</td>
+	    		<td><input name="format" type="radio" value="ical" id="format_ical" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "ical") echo "CHECKED"; ?>></td>
+	    		<td><label for="format_ical">iCalendar (ICS)</label></td>
 	   		</tr>
-	   		<?php } ?>
 	    	<tr>
 	    		<td><input name="format" type="radio" value="rss" id="format_rss" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "rss") echo "CHECKED"; ?>></td>
-	    		<td><label for="format_rss">RSS 0.91 (XML)</td>
+	    		<td><label for="format_rss">RSS 0.91 (XML)</label></td>
 	   		</tr>
 	    	<tr>
 	    		<td><input name="format" type="radio" value="rss1_0" id="format_rss1_0" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "rss1_0") echo "CHECKED"; ?>></td>
-	    		<td><label for="format_rss1_0">RSS 1.0 (XML)</td>
+	    		<td><label for="format_rss1_0">RSS 1.0 (XML)</label></td>
 	   		</tr>
 	    	<tr>
 	    		<td><input name="format" type="radio" value="rss2_0" id="format_rss2_0" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "rss2_0") echo "CHECKED"; ?>></td>
-	    		<td><label for="format_rss2_0">RSS 2.0 (XML)</td>
+	    		<td><label for="format_rss2_0">RSS 2.0 (XML)</label></td>
 	   		</tr>
 	    	<tr>
 	    		<td><input name="format" type="radio" value="vxml" id="format_vxml" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "vxml") echo "CHECKED"; ?>></td>
-	    		<td><label for="format_vxml">VoiceXML 2.0 (XML)</td>
+	    		<td><label for="format_vxml">VoiceXML 2.0 (XML)</label></td>
 	   		</tr>
+	    	<tr>
+	    		<td colspan="2" style="padding-top: 16px;"><b><?php echo lang('export_format_backup'); ?>:</b></td>
+	   		</tr>
+	   		<?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) { ?>
+	    	<tr>
+	    		<td valign="top"><input name="format" type="radio" value="xml" id="format_xml" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "xml") echo "CHECKED"; ?>></td>
+	    		<td><label for="format_xml">VTCalendar (XML)</label><br/><?php echo lang('export_xml_description'); ?></td>
+	   		</tr>
+	   		<?php } ?>
 	    	<tr>
 	    		<td colspan="2" style="padding-top: 16px;"><b><?php echo lang('export_format_advanced'); ?>:</b></td>
 	   		</tr>
@@ -101,7 +108,7 @@ function SpecificSponsorChanged() {
 	    	</tr>
 	    	<tr>
 	    		<td><input name="format" type="radio" value="js" id="format_js" onclick="ToggleHTMLSections();" <?php if (isset($FormData['format']) && $FormData['format'] == "js") echo "CHECKED"; ?>></td>
-		   		<td><label for="format_js">JavaScript Array (e.g. <code>vtcalevents[0]['date']</code>)</td>
+		   		<td><label for="format_js">JavaScript Array (e.g. <code>vtcalevents[0]['date']</code>)</label></td>
 	    	</tr>
 	    </table>
 	</blockquote>
@@ -157,7 +164,7 @@ function SpecificSponsorChanged() {
 		}
 		
 		// Determine how many categories are in each column.
-		$percolumn = ceil($numcategories / 3);
+		$percolumn = ceil($numcategories / 2);
 		
 		for ($c=0; $c<$numcategories; $c++) {
 			$categoryselected = !isset($FormData['categories']) || count($FormData['categories']) == 0 || array_key_exists($categories_id[$c], $selectedCategoryKeys);
@@ -170,13 +177,16 @@ function SpecificSponsorChanged() {
 			?>
 	    	<tr>
 	    		<td><input type="checkbox" name="c[]" value="<?php echo $categories_id[$c]; ?>" id="category<?php echo $categories_id[$c]; ?>" <?php if ($categoryselected) echo "CHECKED"; ?>></td>
-	    		<td><label for="category<?php echo $categories_id[$c]; ?>"><?php echo htmlentities($categories_name[$c]); ?></label></td>
+	    		<td><label for="category<?php echo $categories_id[$c]; ?>"><?php echo htmlentities($categories_name[$c]); ?></label><?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) echo ' (<code>'.htmlentities($categories_id[$c]).'</code>)'; ?></td>
 	    	</tr>
 	    	<?php
 		}
 		?>
 		</table>
 		</td></tr></table>
+		<?php if (PUBLIC_EXPORT_VTCALXML || ISCALADMIN) { ?>
+	    <p><?php echo lang('export_categoryid_note'); ?></p>
+	    <?php } ?>
 	</blockquote>
 	
 	<p><b><?php echo lang('export_sponsor'); ?>:</b></p>

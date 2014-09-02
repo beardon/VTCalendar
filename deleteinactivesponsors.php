@@ -17,7 +17,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$limitdate['year']=$limitdate['year']-$duration;
 	$limitdate['timestamp']=datetime2timestamp($limitdate['year'],$limitdate['month'],$limitdate['day'],12,0,"am");
 
-	$query = "SELECT timebegin, sponsorid FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
+	$query = "SELECT timebegin, sponsorid FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
 	$query.= " ORDER BY sponsorid, timebegin ASC";
 	$result = DBQuery($query ); 
 	$sponsors_latest_event = array();
@@ -27,7 +27,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	}
 	
 	// go through whole sponsor list and delete the ones that don't have new events
-	$query = "SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
+	$query = "SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
 	$result = DBQuery($query ); 
 	$s = 0;
 	for ($i=0; $i<$result->numRows(); $i++) {
@@ -43,7 +43,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	}		
 
 	// delete from sponsor table
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deletesponsor); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="id='".sqlescape($deletesponsor[$i])."'";
@@ -61,7 +61,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$result = DBQuery($query ); 
 
 	// delete from template table
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deletesponsor); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="sponsorid='".sqlescape($deletesponsor[$i])."'";
@@ -70,7 +70,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$result = DBQuery($query ); 
 
 	// delete from event table
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deletesponsor); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="sponsorid='".sqlescape($deletesponsor[$i])."'";
@@ -79,7 +79,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$result = DBQuery($query ); 
 
 	// delete from event_public table
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deletesponsor); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="sponsorid='".sqlescape($deletesponsor[$i])."'";
@@ -88,7 +88,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	$result = DBQuery($query ); 
 			
 	// go through events and remember all the repeat-id's used
-	$query = "SELECT repeatid FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
+	$query = "SELECT repeatid FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
 	$result = DBQuery($query );
 	for ($i=0; $i<$result->numRows(); $i++) {
 		$event = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
@@ -97,7 +97,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 
 	// go through repeat table and remove all un-used records
 	$r = 0;
-	$query = "SELECT id FROM ".TABLEPREFIX."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
+	$query = "SELECT id FROM ".SCHEMANAME."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'";
 	$result = DBQuery($query );
 	for ($i=0; $i<$result->numRows(); $i++) {
 		$repeat = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
@@ -108,7 +108,7 @@ if (isset($save) && isset($duration) && ($duration==1 || $duration==2 ||$duratio
 	}
 	
 	// delete from repeat table
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND (";
 	for ($i=0; $i<count($deleterepeat); $i++) {
 		if ($i>0) { $query.=" OR "; }
 		$query.="id='".sqlescape($deleterepeat[$i])."'";

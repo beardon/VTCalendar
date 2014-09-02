@@ -7,12 +7,13 @@ if (!defined('FILE_APPEND')) define('FILE_APPEND', 8);
 // PHP < 4.3.0 Compatibility Function
 // Modified version from  http://us.php.net/manual/en/function.file-get-contents.php#80707 by jose.nobile@gmail.com
 if (!function_exists('file_get_contents')) {
-	function file_get_contents($filename, $flags = false, $resource_context = null, $offset = 0, $maxlen = 0) {
-		if ($maxlen == 0) return "";
-		
-		if ($maxlen < 0) {
-			trigger_error('file_get_contents() length must be greater than or equal to zero', E_USER_WARNING);
-			return false;
+	function file_get_contents($filename, $flags = false, $resource_context = null, $offset = 0, $maxlen = NULL) {
+		if ($maxlen !== NULL) {
+			if ($maxlen === 0) return "";
+			if ($maxlen < 0) {
+				trigger_error('file_get_contents() length must be greater than or equal to zero', E_USER_WARNING);
+				return false;
+			}
 		}
 		
 		if (is_bool($flags)) {
@@ -22,35 +23,53 @@ if (!function_exists('file_get_contents')) {
 			$use_include_path = ($flags & FILE_USE_INCLUDE_PATH) ? true : false;
 		}
 		
-		if ($resource_context === null) {
-			$fh = fopen($filename, 'rb', $use_include_path);
+		// Use a quicker way to read the file if we want the entire file.
+		if ($offset == 0 && $maxlen === NULL) {
+			ob_start();
+			readfile($filename, $use_include_path);
+		    $data = ob_get_contents();
+		    ob_end_clean();
+		    return $data;
 		}
+		
+		// Otherwise, use a slower method to get only part of the file.
 		else {
-			$fh = fopen($filename, 'rb', $use_include_path, $resource_context);		
-		}
-		
-		if (false === $fh) {
-			trigger_error('file_get_contents() failed to open stream: No such file or directory', E_USER_WARNING);
-			return false;
-		}
-		
-		if ($offset > 0) {
-			fseek($fh, $offset);
-		}
-		
-		clearstatcache();
-		if ($fsize = @(filesize($filename))) {
-			$data = fread($fh, ($fsize > $maxlen ? $maxlen : $fsize));
-		}
-		else {
-			$data = '';
-			while (!feof($fh) && strlen($data) < $maxlen) {
-				$data .= fread($fh, 8192);
+			if ($resource_context === null) {
+				$fh = fopen($filename, 'rb', $use_include_path);
+			}
+			else {
+				$fh = fopen($filename, 'rb', $use_include_path, $resource_context);
+			}
+			
+			if (false === $fh) {
+				trigger_error('file_get_contents() failed to open stream: No such file or directory', E_USER_WARNING);
+				return false;
+			}
+			
+			if ($offset > 0) {
+				fseek($fh, $offset);
+			}
+			
+			clearstatcache();
+			if ($fsize = @(filesize($filename))) {
+				$data = fread($fh, ($maxlen !== NULL && $fsize > $maxlen ? $maxlen : $fsize));
+			}
+			else {
+				$data = '';
+				while (!feof($fh) && ($maxlen === NULL || strlen($data) < $maxlen)) {
+					$data .= fread($fh, 8192);
+				}
+			}
+			
+			fclose($fh);
+			
+			if ($maxlen !== NULL) {
+				return substr($data, 0, $maxlen);
+			}
+			else {
+				return substr($data, 0);
 			}
 		}
-		
-		fclose($fh);
-		return substr($data, 0, $maxlen);
 	}
 }
 

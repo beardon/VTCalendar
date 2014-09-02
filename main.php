@@ -19,7 +19,7 @@ if ( $view == "day" ) {
 if (empty($_SESSION['CATEGORY_NAMES'])) {
 
 	// Retrieve all categories from the DB
-	$result =& DBQuery("SELECT id, name FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" );
+	$result =& DBQuery("SELECT id, name FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" );
 	
 	if (is_string($result)) {
 		DBErrorBox($result);

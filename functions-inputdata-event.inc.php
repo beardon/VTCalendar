@@ -15,7 +15,7 @@ function defaultevent(&$event,$sponsorid) {
 	$event['timeend_ampm']="pm";
 
 	// find sponsor name
-	$result = DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($sponsorid)."'" ); 
+	$result = DBQuery("SELECT name,url FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($sponsorid)."'" ); 
 	$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 	$event['sponsorid']=$sponsorid;
@@ -227,7 +227,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 	$defaultButtonPressed = isset($event['defaultdisplayedsponsor']) || isset($event['defaultdisplayedsponsorurl']) || isset($event['defaultallsponsor']);
 
 	// read sponsor name from DB
-	//$result = DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($sponsorid)."'" ); 
+	//$result = DBQuery("SELECT name,url FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($sponsorid)."'" ); 
 	//$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	
 	// switch from "recurring event" to "repeat ..."
@@ -235,7 +235,7 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 	
 	if ($displaydatetime) {
 		?>
-		<div style="padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;"><h3 style="margin: 0; padding: 0;">Date &amp; Time:</h3></div>
+		<div style="padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;"><h3 style="margin: 0; padding: 0;"><?php echo lang('date_and_time_header'); ?>:</h3></div>
 		
 		<div style="padding-left: 18px;">
 		
@@ -277,13 +277,13 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 		else {
 			?>
 			<table border="0" cellpadding="2" cellspacing="0">
-			<tr><td class="bodytext" valign="top"><strong><?php echo lang('date'); ?>:</strong><?php
+			<tr><td valign="top"><strong><?php echo lang('date'); ?>:</strong><?php
 			
 			if ($inputrequired) {
 				?><span class="WarningText">*</span><?php
 			}
 			
-			?></td><td class="bodytext" valign="top"><?php
+			?></td><td valign="top"><?php
 			
 			if ($inputrequired && $check && $repeat['mode'] == 0 && !checkeventdate($event,$repeat) && !$defaultButtonPressed) {
 				feedback(lang('date_invalid'),FEEDBACKNEG);
@@ -320,13 +320,13 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 			
 			?></td></tr>
 			
-			<tr><td class="bodytext" valign="top"><strong><?php echo lang('time'); ?>:</strong><?php
+			<tr><td valign="top"><strong><?php echo lang('time'); ?>:</strong><?php
 			
 			if ($inputrequired) {
 					?><span class="WarningText">*</span><?php
 			}
 			
-			?></td><td class="bodytext" valign="top"><?php
+			?></td><td valign="top"><?php
 			
 			if ($inputrequired && $check && $event['wholedayevent']==0 && (!isset($event['timebegin_hour']) || $event['timebegin_hour']==0) && !$defaultButtonPressed) {
 				feedback(lang('specify_all_day_or_starting_time'),FEEDBACKNEG);
@@ -446,32 +446,29 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 	} // End of date/time block.
 	?>
 	
-	<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;"><h3 style="margin: 0; padding: 0;">Basic Event Information:</h3></div>
+	<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;"><h3 style="margin: 0; padding: 0;"><?php echo lang('basic_event_info_header'); ?>:</h3></div>
 	<div style="padding-left: 18px;">
-	<table border="0" cellpadding="2" cellspacing="0">
+	<table border="0" cellpadding="3" cellspacing="0">
 	<tr>
-	<td class="bodytext" valign="top">
+	<td valign="top" nowrap="nowrap">
 	<strong><?php echo lang('category'); ?>:</strong>
 	<?php
 	if ($inputrequired) {
 		?><span class="WarningText">*</span><?php
 	}
-	
 	?>
 	</td>
-	<td class="bodytext" valign="top">
+	<td valign="top">
 	<?php
-
 	if ($inputrequired && $check && ($event['categoryid']==0) && !$defaultButtonPressed) {
 		feedback(lang('choose_category'),FEEDBACKNEG);
 	}
-	
 	?>
 	<select name="event[categoryid]" size="1">
 	<?php
 	
 	// read event categories from DB
-	$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
+	$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
 
 	// print list with categories and select the one read from the DB
 
@@ -486,17 +483,16 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 		echo "value=\"".htmlentities($category['id'])."\">".htmlentities($category['name'])."</option>\n";
 	}
 ?>
-			</select>
-		</td>
+			</select><br/><?php echo lang('category_description'); ?></td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php echo lang('title'); ?>:</strong><?php
 	if ($inputrequired) {
 		?><span class="WarningText">*</span><?php
 	}
 	?></td>
-		<td class="bodytext" valign="top"><?php
+		<td valign="top"><?php
 	if ($inputrequired && $check && (empty($event['title'])) && !$defaultButtonPressed) {
 		feedback(lang('choose_title'),FEEDBACKNEG);
 	}
@@ -506,97 +502,107 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 		if ($check) { $event['title']=$event['title']; }
 		echo HTMLSpecialChars($event['title']);
 	}
-?>">
-			<i><?php echo lang('title_example'); ?></i><br>
+?>"><br/><?php echo lang('title_description'); ?>
+			<br>
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php echo lang('description'); ?>:</strong>
 		</td>
-		<td class="bodytext" valign="top">
-			<textarea name="event[description]" rows="10" cols="60" wrap=virtual><?php
+		<td valign="top">
+			<textarea id="Description_Box" name="event[description]" rows="10" cols="60" wrap="virtual" onkeyup="UpdateDescriptionLength()" onchange="UpdateDescriptionLength()"><?php
 	if (isset($event['description'])) {
 		if ($check) { $event['description']=$event['description']; }
 		echo HTMLSpecialChars($event['description']);
 	}
 ?></textarea>
-			<br>
-			<i>Note:</i> Web and e-mail addresses are automatically linked.
+			<br/>
+			<?php echo lang('description_description'); ?>
+			<script type="text/javascript">
+			function UpdateDescriptionLength() {
+				if (document.getElementById) {
+					var textbox = document.getElementById("Description_Box");
+					var current = document.getElementById("Description_CurrentChars");
+					if (textbox && current) {
+						current.innerHTML = textbox.value.length;
+					}
+				}
+			}
+			if (document.getElementById) {
+				var container = document.getElementById("Description_CharLine");
+				var max = document.getElementById("Description_MaxChars");
+				if (container&& max) {
+					container.style.display = "";
+					max.innerHTML = "<?php echo MAXLENGTH_DESCRIPTION; ?>";
+				}
+			}
+			UpdateDescriptionLength();
+			</script>
 		</td>
 	</tr>
 	</table>
 	</div>
 	
 	<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;">
-		<h3 style="margin: 0; padding: 0;">Additional Event Information:</h3>
+		<h3 style="margin: 0; padding: 0;"><?php echo lang('additional_event_info_header'); ?>:</h3>
 	</div>
 	<div style="padding-left: 18px;">
-	<table border="0" cellpadding="2" cellspacing="0">
+	<table border="0" cellpadding="3" cellspacing="0">
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('location'); ?>:</strong>
-		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top" nowrap="nowrap"><strong><?php echo lang('location'); ?>:</strong></td>
+		<td valign="top">
 			<input type="text" size="24" name="event[location]" maxlength=<?php echo MAXLENGTH_LOCATION; ?> value="<?php
 	if (isset($event['location'])) {
 		if ($check) { $event['location']=$event['location']; }
 		echo HTMLSpecialChars($event['location']);
 	}
-?>"> <i><?php echo lang('location_example'); ?></i><br>
+?>"><br>
+<?php echo lang('location_description'); ?>
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('price'); ?>:</strong>
-		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top" nowrap="nowrap"><strong><?php echo lang('price'); ?>:</strong></td>
+		<td valign="top">
 			<input type="text" size="24" name="event[price]" maxlength=<?php echo MAXLENGTH_PRICE; ?>  value="<?php
 	if (isset($event['price'])) {
 		if ($check) { $event['price']=$event['price']; }
 		echo HTMLSpecialChars($event['price']);
 	}
-?>"> <i><?php echo lang('price_example'); ?></i><br>
+?>"><br/><?php echo lang('price_description'); ?>
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('contact_name'); ?>:</strong>
-		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top" nowrap="nowrap"><strong><?php echo lang('contact_name'); ?>:</strong></td>
+		<td valign="top">
 			<input type="text" size="24" name="event[contact_name]" maxlength=<?php echo MAXLENGTH_CONTACT_NAME; ?> value="<?php
 	if (isset($event['contact_name'])) {
 		if ($check) { $event['contact_name']=$event['contact_name']; }
 		echo HTMLSpecialChars($event['contact_name']);
 	}
-?>"> <i><?php echo lang('contact_name_example'); ?></i>
-		</td>
+?>"><br/><?php echo lang('contact_name_description'); ?></td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
-			<strong><?php echo lang('contact_phone'); ?>:</strong>
-		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top" nowrap="nowrap"><strong><?php echo lang('contact_phone'); ?>:</strong></td>
+		<td valign="top">
 			<input type="text" size="24" name="event[contact_phone]" maxlength=<?php echo MAXLENGTH_CONTACT_PHONE; ?> value="<?php
 	if (isset($event['contact_phone'])) {
 		if ($check) { $event['contact_phone']=$event['contact_phone']; }
 		echo HTMLSpecialChars($event['contact_phone']);
 	}
-?>"> <i><?php echo lang('contact_phone_example'); ?></i>
-		</td>
+?>"><br/><?php echo lang('contact_phone_description'); ?></td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			 <strong><?php echo lang('contact_email'); ?>:</strong>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<input type="text" size="24" name="event[contact_email]" maxlength=<?php echo MAXLENGTH_EMAIL; ?> value="<?php
 	if (isset($event['contact_email'])) {
 		if ($check) { $event['contact_email']=$event['contact_email']; }
 		echo HTMLSpecialChars(urldecode($event['contact_email']));
 	}
-?>"> <i><?php echo lang('contact_email_example'); ?></i>
-		</td>
+?>"><br/><?php echo lang('contact_email_description'); ?></td>
 	</tr>
 	</table>
 	</div>
@@ -608,17 +614,16 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 	else {
 		?>
 		<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;">
-			<h3 style="margin: 0; padding: 0;">Owner of this Event:</h3>
-			<div style="padding: 2px; padding-left: 15px;">This is the sponsor who owns this event in the calendar system.<br>
-			The sponsor who owns this event is able to copy and delete it, as well as submit new versions for approval.</div>
+			<h3 style="margin: 0; padding: 0;"><?php echo lang('event_owner_info_header'); ?>:</h3>
+			<div style="padding: 2px; padding-left: 15px;"><?php echo lang('event_owner_info_description'); ?></div>
 			</div>
 		<div style="padding-left: 18px;">
-		<table border="0" cellpadding="2" cellspacing="0">
+		<table border="0" cellpadding="3" cellspacing="0">
 		<tr>
-			<td class="bodytext">
+			<td>
 				<strong><?php echo lang('sponsor'); ?>:</strong>
 			</td>
-			<td class="bodytext"><?php
+			<td><?php
 				if ($_SESSION['CALENDAR_ID'] == "default" && isset($event['showondefaultcal']) && $event['showondefaultcal'] == '1' && (!isset($copy) || $copy != 1)) {
 					?><input type="hidden" id="selectedsponsorid" name="event[sponsorid]" value="<?php echo $event['sponsorid']; ?>">
 					<input type="hidden" name="event[showondefaultcal]" value="<?php echo $event['showondefaultcal']; ?>">
@@ -631,10 +636,9 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 					<select id="selectedsponsorid" name="event[sponsorid]" size="1">
 						<?php
 						// read sponsors from DB
-						$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
+						$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" ); 
 						
 						// print list with sponsors and select the one read from the DB
-						
 						for ($i=0;$i<$result->numRows();$i++) {
 							$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
 							
@@ -647,41 +651,39 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 				 <?php
 				}
 				?>
-				<!--<input type="submit" name="event[defaultallsponsor]" value="<?php echo lang('button_restore_all_sponsor_defaults'); ?>">-->
 			</td>
 		</tr>
 		</table>
 		</div>
 		<?php
-	} // end: if ($_SESSION['AUTH_ISCALENDARADMIN'])
+	}
 	?>
 	
 	<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;">
-		<h3 style="margin: 0; padding: 0;">Information About the Event's Sponsor:</h3>
-		<div style="padding: 2px; padding-left: 15px;">This is information about the department or organization that is the official sponsor of the event.<br>
-		For example, if this event was Commencement then the sponsor would be the Office of the Secretary.</div>
+		<h3 style="margin: 0; padding: 0;"><?php echo lang('event_sponsor_info_header'); ?>:</h3>
+		<div style="padding: 2px; padding-left: 15px;"><?php echo lang('event_sponsor_info_description'); ?></div>
 		</div>
 	<div style="padding-left: 18px;">
-	<table border="0" cellpadding="2" cellspacing="0">
+	<table border="0" cellpadding="3" cellspacing="0">
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php echo lang('displayed_sponsor_name'); ?>:</strong>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<input type="text" id="defaultsponsornametext" size="50" name="event[displayedsponsor]" maxlength=<?php echo MAXLENGTH_DISPLAYEDSPONSOR; ?> value="<?php
 	if (isset($event['displayedsponsor'])) {
 		if ($check) { $event['displayedsponsor']=$event['displayedsponsor']; }
 		echo HTMLSpecialChars($event['displayedsponsor']);
 	}
 ?>">
-			<input type="submit" id="defaultsponsornamebutton" name="event[defaultdisplayedsponsor]" value="Restore default" onclick="return SetSponsorDefault(1);">
+			<input type="submit" id="defaultsponsornamebutton" name="event[defaultdisplayedsponsor]" value="<?php echo lang('button_restore_default'); ?>" onclick="return SetSponsorDefault(1);">
 		</td>
 	</tr>
 	<tr>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 			<strong><?php echo lang('sponsor_page_web_address'); ?>:</strong>
 		</td>
-		<td class="bodytext" valign="top">
+		<td valign="top">
 <?php
 	if ($check && isset($event['displayedsponsorurl']) && !checkURL($event['displayedsponsorurl']) && !$defaultButtonPressed) {
 		feedback(lang('url_invalid'),FEEDBACKNEG);
@@ -704,8 +706,8 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 		$defaultcalendarname = getCalendarName('default');
 		?>
 		<div style="margin-top: 16px; padding: 4px; margin-bottom: 6px; border-top: 1px solid <?php echo $_SESSION['COLOR_BORDER']; ?>; background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>;">
-			<h3 style="margin: 0; padding: 0;">Submit to the &quot;<?php echo $defaultcalendarname; ?>&quot; calendar.:</h3>
-			<div style="padding: 2px; padding-left: 15px;">Submit this event for approval to be added to the &quot;<?php echo $defaultcalendarname; ?>&quot; calendar.</div>
+			<h3 style="margin: 0; padding: 0;"><?php echo str_replace('DEFAULTCALENDARNAME', $defaultcalendarname, lang('submit_to_default_calendar_header')); ?>:</h3>
+			<div style="padding: 2px; padding-left: 15px;"><?php echo str_replace('DEFAULTCALENDARNAME', $defaultcalendarname, lang('submit_to_default_calendar_description')); ?></div>
 		</div>
 		<div style="padding-left: 18px;">
 		<table border="0" cellpadding="0" cellspacing="0">
@@ -715,16 +717,15 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 						 (!isset($event['showondefaultcal']) && $_SESSION['CALENDAR_FORWARD_EVENT_BY_DEFAULT']=="1")
 				) { echo " checked"; }
 				?>></td>
-			<td valign="top"><b>Yes</b>,&nbsp;</td>
-			<td>submit this event to the &quot;<?php echo $defaultcalendarname; ?>&quot; calendar and
+			<td>
 				<table border="0" cellpadding="2" cellspacing="0">
+					<tr><td><?php echo lang('submit_to_default_calendar_text'); ?>:</td></tr>
 					<tr>
-						<td>assign it to the</td>
 						<td>
 							<select name="event[showincategory]" size="1">
 								<?php
 									// read event categories from DB
-									$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='default' ORDER BY name ASC" );
+									$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='default' ORDER BY name ASC" );
 								
 									// print list with categories and select the one read from the DB
 									if (empty($event['showincategory'])) {
@@ -740,14 +741,15 @@ function inputeventdata(&$event,$sponsorid,$inputrequired,$check,$displaydatetim
 								?>
 							</select>
 						</td>
-						<td>category on that calendar.</td>
 					</tr>
-				</table>
 				<?php
 				if ($check && !empty($event['showondefaultcal']) && $event['showondefaultcal']==1 && (empty($event['showincategory']) || $event['showincategory']==0) && !$defaultButtonPressed) {
+					echo "<tr><td>";
 					feedback(lang('choose_category'),FEEDBACKNEG);
+					echo "</td></tr>";
 				}
 				?>
+				</table>
 			</td>
 		</tr>
 		</table>

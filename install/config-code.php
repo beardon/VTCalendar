@@ -7,7 +7,7 @@ $Form_TITLESUFFIX = '';
 $Form_LANGUAGE = 'en';
 $Form_ALLOWED_YEARS_AHEAD = '3';
 $Form_DATABASE = '';
-$Form_TABLEPREFIX = '';
+$Form_SCHEMANAME = '';
 $Form_SQLLOGFILE = '';
 $Form_REGEXVALIDUSERID = '/^[A-Za-z][\\._A-Za-z0-9\\-\\\\]{1,49}$/';
 $Form_AUTH_DB = true;
@@ -36,12 +36,16 @@ $Form_COLUMNSIDE = 'RIGHT';
 $Form_SHOW_UPCOMING_TAB = true;
 $Form_MAX_UPCOMING_EVENTS = '75';
 $Form_SHOW_MONTH_OVERLAP = true;
+$Form_COMBINED_JUMPTO = true;
+$Form_CUSTOM_LOGIN_HTML = false;
 $Form_INCLUDE_STATIC_PRE_HEADER = false;
 $Form_INCLUDE_STATIC_POST_HEADER = false;
 $Form_INCLUDE_STATIC_PRE_FOOTER = false;
 $Form_INCLUDE_STATIC_POST_FOOTER = false;
 $Form_MAX_CACHESIZE_CATEGORYNAME = '100';
-$Form_CACHE_ICS = false;
+$Form_CACHE_SUBSCRIBE_LINKS = false;
+$Form_CACHE_SUBSCRIBE_LINKS_PATH = 'cache/subscribe/';
+$Form_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR = '';
 $Form_EXPORT_PATH = 'export/export.php';
 $Form_MAX_EXPORT_EVENTS = '100';
 $Form_EXPORT_CACHE_MINUTES = '5';
@@ -62,7 +66,7 @@ if (isset($_POST['SaveConfig'])) {
 	$Form_LANGUAGE = $_POST['LANGUAGE'];
 	$Form_ALLOWED_YEARS_AHEAD = $_POST['ALLOWED_YEARS_AHEAD'];
 	$Form_DATABASE = $_POST['DATABASE'];
-	$Form_TABLEPREFIX = $_POST['TABLEPREFIX'];
+	$Form_SCHEMANAME = $_POST['SCHEMANAME'];
 	$Form_SQLLOGFILE = $_POST['SQLLOGFILE'];
 	$Form_REGEXVALIDUSERID = $_POST['REGEXVALIDUSERID'];
 	$Form_AUTH_DB = isset($_POST['AUTH_DB']);
@@ -101,12 +105,18 @@ if (isset($_POST['SaveConfig'])) {
 		$Form_MAX_UPCOMING_EVENTS = $_POST['MAX_UPCOMING_EVENTS'];
 	}
 	$Form_SHOW_MONTH_OVERLAP = isset($_POST['SHOW_MONTH_OVERLAP']);
+	$Form_COMBINED_JUMPTO = isset($_POST['COMBINED_JUMPTO']);
+	$Form_CUSTOM_LOGIN_HTML = isset($_POST['CUSTOM_LOGIN_HTML']);
 	$Form_INCLUDE_STATIC_PRE_HEADER = isset($_POST['INCLUDE_STATIC_PRE_HEADER']);
 	$Form_INCLUDE_STATIC_POST_HEADER = isset($_POST['INCLUDE_STATIC_POST_HEADER']);
 	$Form_INCLUDE_STATIC_PRE_FOOTER = isset($_POST['INCLUDE_STATIC_PRE_FOOTER']);
 	$Form_INCLUDE_STATIC_POST_FOOTER = isset($_POST['INCLUDE_STATIC_POST_FOOTER']);
 	$Form_MAX_CACHESIZE_CATEGORYNAME = $_POST['MAX_CACHESIZE_CATEGORYNAME'];
-	$Form_CACHE_ICS = isset($_POST['CACHE_ICS']);
+	$Form_CACHE_SUBSCRIBE_LINKS = isset($_POST['CACHE_SUBSCRIBE_LINKS']);
+	if ($Form_CACHE_SUBSCRIBE_LINKS) {
+		$Form_CACHE_SUBSCRIBE_LINKS_PATH = $_POST['CACHE_SUBSCRIBE_LINKS_PATH'];
+		$Form_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR = $_POST['CACHE_SUBSCRIBE_LINKS_OUTPUTDIR'];
+	}
 	$Form_EXPORT_PATH = $_POST['EXPORT_PATH'];
 	$Form_MAX_EXPORT_EVENTS = $_POST['MAX_EXPORT_EVENTS'];
 	$Form_EXPORT_CACHE_MINUTES = $_POST['EXPORT_CACHE_MINUTES'];
@@ -159,15 +169,15 @@ function BuildOutput(&$ConfigOutput) {
 	$ConfigOutput .= '// It has the format: "mysql://user:password@host/databasename" or "pgsql://user:password@host/databasename"'."\n";
 	$ConfigOutput .= 'define("DATABASE", \''. escapephpstring($GLOBALS['Form_DATABASE']) .'\');'."\n\n";
 
-	// Output Table Prefix
-	$ConfigOutput .= '// Config: Table Prefix'."\n";
+	// Output Schema Name
+	$ConfigOutput .= '// Config: Schema Name'."\n";
 	$ConfigOutput .= '// Example: public'."\n";
 	$ConfigOutput .= '// In some databases (such as PostgreSQL) you may have multiple sets of VTCalendar tables within the same database, but in different schemas.'."\n";
 	$ConfigOutput .= '// If this is the case for you, enter the name of the schema here.'."\n";
-	$ConfigOutput .= '// It will be prefixed to the table name like so: TABLEPREFIX.vtcal_calendars.'."\n";
-	$ConfigOutput .= '// If necessary include quotes. Use a backtick (`) for MySQL or double quotes (") for PostgreSQL.'."\n";
+	$ConfigOutput .= '// It will be prefixed to the table name like so: SCHEMANAME.vtcal_calendars.'."\n";
+	$ConfigOutput .= '// If necessary quote the schema name using a backtick (`) for MySQL or double quotes (") for PostgreSQL.'."\n";
 	$ConfigOutput .= '// Note: If specified, the table prefix MUST end with a period.'."\n";
-	$ConfigOutput .= 'define("TABLEPREFIX", \''. escapephpstring($GLOBALS['Form_TABLEPREFIX']) .'\');'."\n\n";
+	$ConfigOutput .= 'define("SCHEMANAME", \''. escapephpstring($GLOBALS['Form_SCHEMANAME']) .'\');'."\n\n";
 
 	// Output SQL Log File
 	$ConfigOutput .= '// Config: SQL Log File'."\n";
@@ -343,8 +353,25 @@ function BuildOutput(&$ConfigOutput) {
 	$ConfigOutput .= '// Default: true'."\n";
 	$ConfigOutput .= '// Whether or not events in month view on days that are not actually part of the current month should be shown.'."\n";
 	$ConfigOutput .= '// For example, if the first day of the month starts on a Wednesday, then Sunday-Tuesday are from the previous month.'."\n";
-	$ConfigOutput .= '// Values must be true or false.'."\n";
 	$ConfigOutput .= 'define("SHOW_MONTH_OVERLAP", ' . ($GLOBALS['Form_SHOW_MONTH_OVERLAP'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output Combined 'Jump To' Drop-Down
+	$ConfigOutput .= '// Config: Combined \'Jump To\' Drop-Down'."\n";
+	$ConfigOutput .= '// Default: true'."\n";
+	$ConfigOutput .= '// Whether or not the \'jump to\' drop-down in the column will be combined into a single drop-down box or not.'."\n";
+	$ConfigOutput .= '// When set to true, the list will contain all possible month/years combinations for the next X years (where X is ALLOWED_YEARS_AHEAD).'."\n";
+	$ConfigOutput .= '// Only the last 3 months will be included in this list.'."\n";
+	$ConfigOutput .= 'define("COMBINED_JUMPTO", ' . ($GLOBALS['Form_COMBINED_JUMPTO'] ? 'true' : 'false') .');'."\n\n";
+
+	// Output Use Custom Login Page
+	$ConfigOutput .= '// Config: Use Custom Login Page'."\n";
+	$ConfigOutput .= '// Default: false'."\n";
+	$ConfigOutput .= '// By default the login page includes the login form and a message about how to request a login to the calendar.'."\n";
+	$ConfigOutput .= '// When set to true, a file at ./static-includes/loginform.txt will be used as a custom login page:'."\n";
+	$ConfigOutput .= '// * It must include @@LOGIN_FORM@@ which will be replaced with the login form itself.'."\n";
+	$ConfigOutput .= '// * You can also include @@LOGIN_HEADER@@ which will be replaced with the "Login" header text for the translation you specified.'."\n";
+	$ConfigOutput .= '// * See the ./static-includes/loginform-EXAMPLE.txt file for an example.'."\n";
+	$ConfigOutput .= 'define("CUSTOM_LOGIN_HTML", ' . ($GLOBALS['Form_CUSTOM_LOGIN_HTML'] ? 'true' : 'false') .');'."\n\n";
 
 	// Output Include Static Pre-Header HTML
 	$ConfigOutput .= '// Config: Include Static Pre-Header HTML'."\n";
@@ -384,15 +411,35 @@ function BuildOutput(&$ConfigOutput) {
 	$ConfigOutput .= '// Cache the list of category names in memory if the calendar has less than or equal to this number.'."\n";
 	$ConfigOutput .= 'define("MAX_CACHESIZE_CATEGORYNAME", \''. escapephpstring($GLOBALS['Form_MAX_CACHESIZE_CATEGORYNAME']) .'\');'."\n\n";
 
-	// Output Cache 'Subscribe & Download' ICS Files
-	$ConfigOutput .= '// Config: Cache \'Subscribe & Download\' ICS Files'."\n";
+	// Output 'Subscribe & Download' Links to Static Files
+	$ConfigOutput .= '// Config: \'Subscribe & Download\' Links to Static Files'."\n";
 	$ConfigOutput .= '// Default: false'."\n";
 	$ConfigOutput .= '// When a lot of users subscribe to your calendar via the \'Subscribe & Download\' page, this can put a heavy load on your server.'."\n";
-	$ConfigOutput .= '// To avoid this, you can either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the ICS files to disk for each category '."\n";
-	$ConfigOutput .= 'define("CACHE_ICS", ' . ($GLOBALS['Form_CACHE_ICS'] ? 'true' : 'false') .');'."\n\n";
+	$ConfigOutput .= '// To avoid this you can enable this feature and either use a server or add-on that supports caching (i.e. Apache 2.2, squid-cache) or you can use a script to periodically retrieve and cache the files linked to from the \'Subscribe & Download\' page.'."\n";
+	$ConfigOutput .= '// The \'Subscribe & Download\' page will then link to the static files rather than the export page.'."\n";
+	$ConfigOutput .= '// * This also affects the RSS <link> in the HTML header.'."\n";
+	$ConfigOutput .= '// * Enabling this feature does not stop users from accessing the export page.'."\n";
+	$ConfigOutput .= '// * This has no effect on calendars that require users to login before viewing events.'."\n";
+	$ConfigOutput .= '// For detailed instructions see http://vtcalendar.sourceforge.net/jump.php?name=cachesubscribe'."\n";
+	$ConfigOutput .= 'define("CACHE_SUBSCRIBE_LINKS", ' . ($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS'] ? 'true' : 'false') .');'."\n\n";
 
-	// Output 
-	$ConfigOutput .= '// Config: '."\n";
+	// Output URL Extension to Static Files
+	$ConfigOutput .= '// Config: URL Extension to Static Files'."\n";
+	$ConfigOutput .= '// Default: cache/subscribe/'."\n";
+	$ConfigOutput .= '// The path from the VTCalendar URL to the static \'Subscribe & Download\' files.'."\n";
+	$ConfigOutput .= '// It will be appended to the BASEURL (e.g. http://localhost/vtcalendar/cache/subscribe/)'."\n";
+	$ConfigOutput .= '// Must end with a slash.'."\n";
+	$ConfigOutput .= 'define("CACHE_SUBSCRIBE_LINKS_PATH", \''. escapephpstring($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS_PATH']) .'\');'."\n\n";
+
+	// Output Static Files Output Directory
+	$ConfigOutput .= '// Config: Static Files Output Directory'."\n";
+	$ConfigOutput .= '// The directory path where the static \'Subscribe & Download\' files will be outputted by the ./cache/export script.'."\n";
+	$ConfigOutput .= '// Must be an absolute path (e.g. /var/www/htdocs/vtcalendar/cache/subscribe/).'."\n";
+	$ConfigOutput .= '// Must end with a slash.'."\n";
+	$ConfigOutput .= 'define("CACHE_SUBSCRIBE_LINKS_OUTPUTDIR", \''. escapephpstring($GLOBALS['Form_CACHE_SUBSCRIBE_LINKS_OUTPUTDIR']) .'\');'."\n\n";
+
+	// Output Export Path
+	$ConfigOutput .= '// Config: Export Path'."\n";
 	$ConfigOutput .= '// Default: export/export.php'."\n";
 	$ConfigOutput .= '// The URL extension to the export script. Must NOT being with a slash (/).'."\n";
 	$ConfigOutput .= 'define("EXPORT_PATH", \''. escapephpstring($GLOBALS['Form_EXPORT_PATH']) .'\');'."\n\n";
@@ -410,8 +457,8 @@ function BuildOutput(&$ConfigOutput) {
 	$ConfigOutput .= '// The number of minutes that a browser will be told to cache exported data.'."\n";
 	$ConfigOutput .= 'define("EXPORT_CACHE_MINUTES", \''. escapephpstring($GLOBALS['Form_EXPORT_CACHE_MINUTES']) .'\');'."\n\n";
 
-	// Output Allow Export in VTCalendar (XML) Format
-	$ConfigOutput .= '// Config: Allow Export in VTCalendar (XML) Format'."\n";
+	// Output Allow Public to Export in VTCalendar (XML) Format
+	$ConfigOutput .= '// Config: Allow Public to Export in VTCalendar (XML) Format'."\n";
 	$ConfigOutput .= '// Default: false'."\n";
 	$ConfigOutput .= '// The VTCalendar (XML) export format contains all information about an event, which you may not want to allow the public to view.'."\n";
 	$ConfigOutput .= '// However, users that are part of the admin sponsor, or are main admins, can always export in this format.'."\n";

@@ -7,7 +7,7 @@ if (!$_SESSION['AUTH_ISMAINADMIN']) { exit; } // additional security
 pageheader(lang('manage_main_admins'), "Update");
 contentsection_begin(lang('manage_main_admins'),true);
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_adminuser ORDER BY id" ); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_adminuser ORDER BY id" ); 
 
 if (is_string($result))	{
 	DBErrorBox($result);

@@ -2,9 +2,6 @@
 require_once('application.inc.php');
 require_once('changecolors-functions.inc.php');
 
-$lang['click_for_color_picker'] = "Use Color Picker";
-$lang['reset_to_default_color'] = "Reset to the Default Calendar Color";
-
 if (!authorized()) { exit; }
 if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 
@@ -21,7 +18,7 @@ $VariableErrors = array();
 LoadVariables();
 
 if (isset($save) && count($VariableErrors) == 0) {
-	$result =& DBQuery("SELECT count(*) as reccount FROM ".TABLEPREFIX."vtcal_colors WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "'");
+	$result =& DBQuery("SELECT count(*) as reccount FROM ".SCHEMANAME."vtcal_colors WHERE calendarid='" . sqlescape($_SESSION['CALENDAR_ID']) . "'");
 	if (is_string($result)) { DBErrorBox($result); exit; }
 	
 	$count =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);

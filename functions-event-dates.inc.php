@@ -101,7 +101,7 @@ END;
 } // end: function inputdate
 
 function readinrepeat($repeatid, &$event, &$repeat) {
-	$query = "SELECT * FROM ".TABLEPREFIX."vtcal_event_repeat WHERE id = '".sqlescape($repeatid)."'";
+	$query = "SELECT * FROM ".SCHEMANAME."vtcal_event_repeat WHERE id = '".sqlescape($repeatid)."'";
 	if (is_string($result =& DBQuery($query))) return $result;
 	$r =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 

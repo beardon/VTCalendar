@@ -10,7 +10,7 @@ if (!isset($sponsorid)) {
 	echo "INVALID_SPONSOR_ID:", $_GET['sponsorid'];
 }
 else {
-	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE id='".sqlescape($sponsorid)."'" );
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE id='".sqlescape($sponsorid)."'" );
 	if (is_string($result)) {
 		echo "ERROR:" . $result;
 	}

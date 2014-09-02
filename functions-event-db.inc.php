@@ -2,14 +2,14 @@
 /* Remove an event from the event table (aka: still under review) for the current calendar,
 and from the default calendar if the event was submitted to it. */
 function deletefromevent($eventid) {
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 	$result =& DBQuery($query); 
 	if (is_string($result)) return $result;
 
 	// delete event from default calendar if it had been forwarded
 	if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 		// delete existing events in default calendar with same id
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
 		$result =& DBQuery($query ); 
 		if (is_string($result)) return $result;
 	}
@@ -19,7 +19,7 @@ function deletefromevent($eventid) {
 
 /* Remove an event from the event_public table (aka: the event will no longer be public) */
 function deletefromevent_public($eventid) {
-	$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
+	$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'";
 	$result =& DBQuery($query ); 
 }
 
@@ -27,14 +27,14 @@ function deletefromevent_public($eventid) {
 and from the default calendar if the event was submitted to it. */
 function repeatdeletefromevent($repeatid) {
 	if (!empty($repeatid)) {
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND repeatid='".sqlescape($repeatid)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND repeatid='".sqlescape($repeatid)."'";
 		$result =& DBQuery($query); 
 		if (is_string($result)) return $result;
 	
 		// delete event from default calendar if it had been forwarded
 		if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 			// delete existing events in default calendar with same id
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='default' AND repeatid='".sqlescape($repeatid)."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='default' AND repeatid='".sqlescape($repeatid)."'";
 			$result =& DBQuery($query);
 			if (is_string($result)) return $result;
 		}
@@ -46,14 +46,14 @@ function repeatdeletefromevent($repeatid) {
 and from the default calendar if the event was submitted to it. */
 function repeatdeletefromevent_public($repeatid) {
 	if (!empty($repeatid)) {
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='".$_SESSION['CALENDAR_ID']."' AND repeatid='".sqlescape($repeatid)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='".$_SESSION['CALENDAR_ID']."' AND repeatid='".sqlescape($repeatid)."'";
 		$result =& DBQuery($query); 
 		if (is_string($result)) return $result;
 
 		// delete event from default calendar if it had been forwarded
 		if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 			// delete existing events in default calendar with same id
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($repeatid)."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND repeatid='".sqlescape($repeatid)."'";
 			$result =& DBQuery($query); 
 			if (is_string($result)) return $result;
 		}
@@ -64,7 +64,7 @@ function repeatdeletefromevent_public($repeatid) {
 /* Remove all repeating entries from the event table (aka: still under review) for the current calendar. */
 function deletefromrepeat($repeatid) {
 	if (!empty($repeatid)) {
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($repeatid)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event_repeat WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($repeatid)."'";
 		$result =& DBQuery($query); 
 		if (is_string($result)) return $result;
 	}
@@ -77,7 +77,7 @@ function insertintoevent($eventid, &$event) {
 
 function insertintoeventsql($calendarid, $eventid, &$event) {
 	$changed = date("Y-m-d H:i:s", NOW);
-	$query = "INSERT INTO ".TABLEPREFIX."vtcal_event (calendarid,id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser,showondefaultcal,showincategory) ";
+	$query = "INSERT INTO ".SCHEMANAME."vtcal_event (calendarid,id,approved,rejectreason,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser,showondefaultcal,showincategory) ";
 	$query.= "VALUES ('".sqlescape($calendarid)."','".sqlescape($eventid)."',0,'";
 	if (!empty($event['rejectreason'])) {
 		$query.= sqlescape($event['rejectreason']);
@@ -106,7 +106,7 @@ function insertintoeventsql($calendarid, $eventid, &$event) {
 
 function insertintoevent_public(&$event) {
 	$changed = date ("Y-m-d H:i:s", NOW);
-	$query = "INSERT INTO ".TABLEPREFIX."vtcal_event_public (calendarid,id,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser) VALUES ";
+	$query = "INSERT INTO ".SCHEMANAME."vtcal_event_public (calendarid,id,timebegin,timeend,repeatid,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser) VALUES ";
 	$query.= "('".sqlescape($_SESSION['CALENDAR_ID'])."','".(isset($event['id']) ? sqlescape($event['id']) : '')."','";
 	$query.= (isset($event['timebegin']) ? sqlescape($event['timebegin']) : '')."','";
 	$query.= (isset($event['timeend']) ? sqlescape($event['timeend']) : '')."','".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."','";
@@ -127,7 +127,7 @@ function insertintoevent_public(&$event) {
 
 function updateevent($eventid, &$event) {
 	$changed = date ("Y-m-d H:i:s", NOW);
-	$query = "UPDATE ".TABLEPREFIX."vtcal_event SET approved=0, rejectreason='".(isset($event['rejectreason']) ? sqlescape($event['rejectreason']) : '');
+	$query = "UPDATE ".SCHEMANAME."vtcal_event SET approved=0, rejectreason='".(isset($event['rejectreason']) ? sqlescape($event['rejectreason']) : '');
 	$query.= "',timebegin='".(isset($event['timebegin']) ? sqlescape($event['timebegin']) : '')."',timeend='".(isset($event['timeend']) ? sqlescape($event['timeend']) : '');
 	$query.= "',repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."',sponsorid='".(isset($event['sponsorid']) ? sqlescape($event['sponsorid']) : '');
 	$query.= "',displayedsponsor='".(isset($event['displayedsponsor']) ? sqlescape($event['displayedsponsor']) : '')."',displayedsponsorurl='".(isset($event['displayedsponsorurl']) ? sqlescape($event['displayedsponsorurl']) : '');
@@ -147,7 +147,7 @@ function updateevent($eventid, &$event) {
 
 function updateevent_public($eventid, &$event) {
 	$changed = date ("Y-m-d H:i:s", NOW);
-	$query = "UPDATE ".TABLEPREFIX."vtcal_event_public SET timebegin='".(isset($event['timebegin']) ? sqlescape($event['timebegin']) : '');
+	$query = "UPDATE ".SCHEMANAME."vtcal_event_public SET timebegin='".(isset($event['timebegin']) ? sqlescape($event['timebegin']) : '');
 	$query.= "',timeend='".(isset($event['timeend']) ? sqlescape($event['timeend']) : '')."',repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '');
 	$query.= "',sponsorid='".(isset($event['sponsorid']) ? sqlescape($event['sponsorid']) : '')."',displayedsponsor='".(isset($event['displayedsponsor']) ? sqlescape($event['displayedsponsor']) : '');
 	$query.= "',displayedsponsorurl='".(isset($event['displayedsponsorurl']) ? sqlescape($event['displayedsponsorurl']) : '')."',title='".(isset($event['title']) ? sqlescape($event['title']) : '');
@@ -166,7 +166,7 @@ function updateevent_public($eventid, &$event) {
 
 function insertintotemplate($template_name, &$event) {
 	$changed = date ("Y-m-d H:i:s", NOW);
-	$query = "INSERT INTO ".TABLEPREFIX."vtcal_template (calendarid,name,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser) ";
+	$query = "INSERT INTO ".SCHEMANAME."vtcal_template (calendarid,name,sponsorid,displayedsponsor,displayedsponsorurl,title,wholedayevent,categoryid,description,location,price,contact_name,contact_phone,contact_email,recordchangedtime,recordchangeduser) ";
 	$query.= "VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($template_name);
 	$query.= "','".(isset($event['sponsorid']) ? sqlescape($event['sponsorid']) : '')."','".(isset($event['displayedsponsor']) ? sqlescape($event['displayedsponsor']) : '');
 	$query.= "','".(isset($event['displayedsponsorurl']) ? sqlescape($event['displayedsponsorurl']) : '')."','".(isset($event['title']) ? sqlescape($event['title']) : '');
@@ -183,7 +183,7 @@ function insertintotemplate($template_name, &$event) {
 
 function updatetemplate($templateid, $template_name, &$event) {
 	$changed = date ("Y-m-d H:i:s", NOW);
-	$query = "UPDATE ".TABLEPREFIX."vtcal_template SET name='".sqlescape($template_name)."',sponsorid='".(isset($event['sponsorid']) ? sqlescape($event['sponsorid']) : '');
+	$query = "UPDATE ".SCHEMANAME."vtcal_template SET name='".sqlescape($template_name)."',sponsorid='".(isset($event['sponsorid']) ? sqlescape($event['sponsorid']) : '');
 	$query.= "',displayedsponsor='".(isset($event['displayedsponsor']) ? sqlescape($event['displayedsponsor']) : '')."',displayedsponsorurl='".(isset($event['displayedsponsorurl']) ? sqlescape($event['displayedsponsorurl']) : '');
 	$query.= "',title='".(isset($event['title']) ? sqlescape($event['title']) : '')."',wholedayevent='".(isset($event['wholedayevent']) ? sqlescape($event['wholedayevent']) : '');
 	$query.= "',categoryid='".(isset($event['categoryid']) ? sqlescape($event['categoryid']) : '')."',description='".(isset($event['description']) ? sqlescape($event['description']) : '');
@@ -205,7 +205,7 @@ function insertintorepeat($repeatid, &$event, &$repeat) {
 	$changed = date ("Y-m-d H:i:s", NOW);
 
 	// write record into repeat table
-	$query = "INSERT INTO ".TABLEPREFIX."vtcal_event_repeat (calendarid,id,repeatdef,startdate,enddate,recordchangedtime,recordchangeduser) ";
+	$query = "INSERT INTO ".SCHEMANAME."vtcal_event_repeat (calendarid,id,repeatdef,startdate,enddate,recordchangedtime,recordchangeduser) ";
 	$query.= "VALUES ('".sqlescape($_SESSION['CALENDAR_ID'])."','".sqlescape($repeatid)."','".sqlescape($repeatdef)."','".sqlescape($repeat['startdate'])."','".sqlescape($repeat['enddate'])."','".sqlescape($changed)."','".sqlescape($_SESSION["AUTH_USERID"])."')";
 	$result =& DBQuery($query);
 	if (is_string($result)) return $result;
@@ -220,7 +220,7 @@ function updaterepeat($repeatid, &$event, &$repeat) {
 	$repeatdef = repeatinput2repeatdef($event,$repeat);
 
 	// write record into repeat table
-	$query = "UPDATE ".TABLEPREFIX."vtcal_event_repeat SET repeatdef='".sqlescape($repeatdef)."',startdate='";
+	$query = "UPDATE ".SCHEMANAME."vtcal_event_repeat SET repeatdef='".sqlescape($repeatdef)."',startdate='";
 	$query.= sqlescape($repeat['startdate'])."',enddate='".sqlescape($repeat['enddate']);
 	$query.= "' WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($repeatid)."'";
 	$result =& DBQuery($query);
@@ -238,7 +238,7 @@ function publicizeevent($eventid, &$event) {
 	
 	// get repeatid from old entry in event_public (important if event changes from recurring to one-time)
 	else {
-		$result =& DBQuery("SELECT repeatid FROM ".TABLEPREFIX."vtcal_event_public WHERE id='".sqlescape($eventid)."'" );
+		$result =& DBQuery("SELECT repeatid FROM ".SCHEMANAME."vtcal_event_public WHERE id='".sqlescape($eventid)."'" );
 		if (is_string($result)) return $result;
 		
 		if ($result->numRows()>0) { 
@@ -254,13 +254,13 @@ function publicizeevent($eventid, &$event) {
 	
 	insertintoevent_public($event);
 
-	$result =& DBQuery("UPDATE ".TABLEPREFIX."vtcal_event SET approved=1 WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
+	$result =& DBQuery("UPDATE ".SCHEMANAME."vtcal_event SET approved=1 WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($eventid)."'" ); 
 	if (is_string($result)) return $result;
 
 	// forward event to default calendar if that's indicated
 	if ( $_SESSION['CALENDAR_ID'] != "default" ) {
 		// delete existing events in default calendar with same id
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
 		$result =& DBQuery($query );
 		if (is_string($result)) return $result;
 		
@@ -272,7 +272,7 @@ function publicizeevent($eventid, &$event) {
 			$event['categoryid'] = $eventcategoryid;
 		} 
 		else {
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($eventid)."'";
 			$result =& DBQuery($query ); 
 			if (is_string($result)) return $result;
 		}
@@ -296,24 +296,24 @@ function repeatpublicizeevent($eventid, &$event) {
 		if ( $dashpos ) { 
 			$e = substr($e,0,$dashpos); 
 		}
-		$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='default' AND id='".sqlescape($e)."'";
+		$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='default' AND id='".sqlescape($e)."'";
 		$result =& DBQuery($query ); 
 		if (is_string($result)) return $result;
 		
 		if (!empty($event['repeatid'])) {
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='default' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event WHERE calendarid='default' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
 			$result =& DBQuery($query ); 
 			if (is_string($result)) return $result;
 		}
 		
 		// remove events if checkmark for forwarding is removed
 		if ( $event['showondefaultcal'] != 1 ) {
-			$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($e)."'";
+			$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND id='".sqlescape($e)."'";
 			$result =& DBQuery($query ); 
 			if (is_string($result)) return $result;
 			
 			if (!empty($event['repeatid'])) {
-				$query = "DELETE FROM ".TABLEPREFIX."vtcal_event_public WHERE calendarid='default' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
+				$query = "DELETE FROM ".SCHEMANAME."vtcal_event_public WHERE calendarid='default' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
 				$result =& DBQuery($query ); 
 				if (is_string($result)) return $result;
 			}
@@ -321,7 +321,7 @@ function repeatpublicizeevent($eventid, &$event) {
 	}
 
 	// copy all events into event_public
-	$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'" );
+	$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_event WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'" );
 	if (is_string($result)) return $result;
 	
 	for ($i=0;$i<$result->numRows();$i++) {
@@ -341,7 +341,7 @@ function repeatpublicizeevent($eventid, &$event) {
 		}
 	}
 
-	$query = "UPDATE ".TABLEPREFIX."vtcal_event SET approved=1 WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND approved=0 AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
+	$query = "UPDATE ".SCHEMANAME."vtcal_event SET approved=1 WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND approved=0 AND repeatid='".(isset($event['repeatid']) ? sqlescape($event['repeatid']) : '')."'";
 	$result =& DBQuery($query ); 
 	if (is_string($result)) return $result;
 	

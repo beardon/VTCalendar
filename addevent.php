@@ -17,7 +17,7 @@ if (isset($_POST['cancel'])) {
 if (!isset($httpreferer)) { $httpreferer = $_SERVER["HTTP_REFERER"]; }
 
 // read sponsor name from DB
-$result =& DBQuery("SELECT name,url FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
+$result =& DBQuery("SELECT name,url FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
 
 // Output an error message if the query failed.
 if (is_string($result)) {
@@ -33,7 +33,7 @@ if (is_string($result)) {
 $sponsor =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 
 // test if any template exists already
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" );
 
 // Output an error message if the query failed.
 if (is_string($result)) {
@@ -62,7 +62,7 @@ if ($result->numRows() == 0) {
 pageheader(lang('choose_template'), "");
 contentsection_begin(lang('choose_template'));
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_template WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND sponsorid='".sqlescape($_SESSION["AUTH_SPONSORID"])."'" ); 
 
 // Output an error message if $result is a string.
 if (is_string($result)) {

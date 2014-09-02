@@ -1,11 +1,6 @@
 <?php
 require_once('application.inc.php');
 
-$lang['show_totals'] = 'Show Totals';
-$lang['upcoming_total'] = 'Upcoming / Total';
-$lang['dberror_nototals'] = 'Note: Event totals could not be calculated due to a database error';
-$lang['dberror_noupcomingtotals'] = 'Note: Upcoming event totals could not be calculated due to a database error';
-
 if (!authorized()) { exit; }
 if (!$_SESSION['AUTH_ISMAINADMIN'] ) { exit; } // additional security
 
@@ -20,7 +15,7 @@ $todayTimeStamp = datetime2timestamp($today['year'],$today['month'],$today['day'
 
 if ($calculateTotals) {
 	// Count all events.
-	$result =& DBQuery("SELECT count(id) as count, calendarid FROM ".TABLEPREFIX."vtcal_event_public v GROUP BY calendarid ORDER BY calendarid");
+	$result =& DBQuery("SELECT count(id) as count, calendarid FROM ".SCHEMANAME."vtcal_event_public v GROUP BY calendarid ORDER BY calendarid");
 	
 	if (is_string($result)) {
 		echo "<p>" . lang('dberror_nototals') . ": " . $result . "</p>";
@@ -41,7 +36,7 @@ if ($calculateTotals) {
 		
 		$result->free();
 		// Count only upcoming events.
-		$result =& DBQuery("SELECT count(id) as count, calendarid FROM ".TABLEPREFIX."vtcal_event_public v WHERE timebegin >= '".sqlescape($todayTimeStamp)."' GROUP BY calendarid ORDER BY calendarid");
+		$result =& DBQuery("SELECT count(id) as count, calendarid FROM ".SCHEMANAME."vtcal_event_public v WHERE timebegin >= '".sqlescape($todayTimeStamp)."' GROUP BY calendarid ORDER BY calendarid");
 		
 		if (is_string($result)) {
 			echo "<p>" . lang('dberror_noupcomingtotals') . ": " . $result . "</p>";
@@ -64,7 +59,7 @@ if ($calculateTotals) {
 	}
 }
 
-$result =& DBQuery("SELECT id, name FROM ".TABLEPREFIX."vtcal_calendar ORDER BY id");
+$result =& DBQuery("SELECT id, name FROM ".SCHEMANAME."vtcal_calendar ORDER BY id");
 
 if (is_string($result)) {
 	DBErrorBox($result);

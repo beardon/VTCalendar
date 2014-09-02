@@ -1,111 +1,5 @@
 <?php
 
-$lang['invalid_color'] = " is not a valid color. It must be in #XXXXXX format.";
-$lang['invalid_background'] = "";
-
-$lang['color_section_title_genericcolors'] = "Generic Colors";
-$lang['color_section_title_titletabs'] = "Title and Tabs";
-$lang['color_section_title_filternotice'] = "Filter Notice";
-$lang['color_section_description_filternotice'] = "The colors and background image for a message that appears when the events being displayed are filtered by category or search
-keyword.";
-$lang['color_section_title_eventbar'] = "Event Bar";
-$lang['color_section_description_eventbar'] = "A small bar that appears to the left of an event in day, week view as well as when viewing the event details.";
-$lang['color_section_title_monthdaylabels'] = "Month Day Labels";
-$lang['color_section_description_monthdaylabels'] = "Background colors that appear when you mouse over the day numbers in month view.";
-$lang['color_section_title_monthspecific'] = "Specific to Month View";
-$lang['color_section_title_littlecalendar'] = "Little Calendar";
-$lang['color_section_description_littlecalendar'] = "The little calendar appears in the column.";
-$lang['color_section_title_dateselector'] = "Date Selector";
-$lang['color_section_description_dateselector'] = "The date selector appears below the little calendar in the column.";
-$lang['color_section_title_adminbuttons'] = "Admin Buttons";
-
-$lang['color_label_bg'] = "Background";
-$lang['color_description_bg'] = "The default color of backgrounds inside the calendar.";
-$lang['color_label_text'] = "Text";
-$lang['color_description_text'] = "Default color for text inside the calendar.";
-$lang['color_label_text_faded'] = "Faded Text";
-$lang['color_description_text_faded'] = "Faded color for events that have passed.";
-$lang['color_label_text_warning'] = "Warning Text";
-$lang['color_description_text_warning'] = "Text that is an urgent message.";
-$lang['color_label_link'] = "Link";
-$lang['color_description_link'] = "Default link color.";
-$lang['color_label_body'] = "Body";
-$lang['color_description_body'] = "General body color of the calendar.";
-$lang['color_label_today'] = "Today";
-$lang['color_description_today'] = "Color that shows which day is today.";
-$lang['color_label_todaylight'] = "Today (Lighter)";
-$lang['color_description_todaylight'] = "Lighter color that shows which day is today.";
-$lang['color_label_light_cell_bg'] = "Light Cell Background";
-$lang['color_description_light_cell_bg'] = "Background color for table cells that have a decent amount of content.";
-$lang['color_label_table_header_text'] = "Table Header Text";
-$lang['color_description_table_header_text'] = "Background color for table headers.";
-$lang['color_label_table_header_bg'] = "Table Header Background";
-$lang['color_description_table_header_bg'] = "Background color for table headers.";
-$lang['color_label_border'] = "Border";
-$lang['color_description_border'] = "Faded color for past events.";
-$lang['color_label_keyword_highlight'] = "Keyword Highlight";
-$lang['color_description_keyword_highlight'] = "Color used to highlight keywords in search results.";
-$lang['color_label_h2'] = "Second Level Header";
-$lang['color_description_h2'] = "Second level header used primarily on update.php.";
-$lang['color_label_h3'] = "Third Level Header";
-$lang['color_description_h3'] = "Third level header used primarily on the changeeevent.php form.";
-$lang['color_label_title'] = "Title";
-$lang['color_description_title'] = "Calendar title displayed to the left of the tabs.";
-$lang['color_label_tabgrayed_text'] = "Grayed Tab Text";
-$lang['color_description_tabgrayed_text'] = "Text color for the navigation tabs that are not selected.";
-$lang['color_label_tabgrayed_bg'] = "Grayed Tab Background";
-$lang['color_description_tabgrayed_bg'] = "Background color for navigation tabs that are not selected.";
-$lang['color_label_filternotice_bg'] = "Background";
-$lang['color_description_filternotice_bg'] = "Background color for the filter and search keyword notice box.";
-$lang['color_label_filternotice_font'] = "Font";
-$lang['color_description_filternotice_font'] = "Font color for the filter and search keyword notice box.";
-$lang['color_label_filternotice_fontfaded'] = "Faded Font";
-$lang['color_description_filternotice_fontfaded'] = "Faded font color for the filter and search keyword notice box.";
-$lang['color_label_filternotice_bgimage'] = "Background Image";
-$lang['color_description_filternotice_bgimage'] = "Background image for the filter and search keyword notice box (leave blank for no background image).";
-$lang['color_label_eventbar_past'] = "Past";
-$lang['color_description_eventbar_past'] = "Colored bar displayed to the left of past event summaries";
-$lang['color_label_eventbar_current'] = "Current";
-$lang['color_description_eventbar_current'] = "Colored bar displayed to the left of current event summaries";
-$lang['color_label_eventbar_future'] = "Future";
-$lang['color_description_eventbar_future'] = "Colored bar displayed to the left of future event summaries";
-$lang['color_label_monthdaylabels_past'] = "Past";
-$lang['color_description_monthdaylabels_past'] = "Background colors that appear when the mouse hovers over the day number in month view.";
-$lang['color_label_monthdaylabels_current'] = "Current";
-$lang['color_description_monthdaylabels_current'] = "Background colors that appear when the mouse hovers over the day number in month view.";
-$lang['color_label_monthdaylabels_future'] = "Future";
-$lang['color_description_monthdaylabels_future'] = "Background colors that appear when the mouse hovers over the day number in month view.";
-$lang['color_label_othermonth'] = "Other Month";
-$lang['color_description_othermonth'] = "Background color for cells in month view that are not for the month currently being viewed.";
-$lang['color_label_littlecal_today'] = "Today";
-$lang['color_description_littlecal_today'] = "Color of the border around the current day in the little calendar";
-$lang['color_label_littlecal_highlight'] = "Highlight";
-$lang['color_description_littlecal_highlight'] = "Background color for days in the little calendar that are being displayed in the main calendar";
-$lang['color_label_littlecal_fontfaded'] = "Faded Font";
-$lang['color_description_littlecal_fontfaded'] = "Font color for days that are not part of the current month being displayed in the little calendar.";
-$lang['color_label_littlecal_line'] = "Line";
-$lang['color_description_littlecal_line'] = "A small line below the S/M/T/W/T/F/S row in the little calendar";
-$lang['color_label_gobtn_bg'] = "GO Button Background";
-$lang['color_description_gobtn_bg'] = "Background color for the date selector's GO button in the column";
-$lang['color_label_gobtn_border'] = "GO Button Border";
-$lang['color_description_gobtn_border'] = "Border color for the date selector's GO button in the column";
-$lang['color_label_newborder'] = "New Border";
-$lang['color_description_newborder'] = "Border color for 'New Event' Admin Buttons";
-$lang['color_label_newbg'] = "New Background";
-$lang['color_description_newbg'] = "Background color for 'New Event' Admin Buttons";
-$lang['color_label_approveborder'] = "Approve Border";
-$lang['color_description_approveborder'] = "Border color for 'Approve' Admin Buttons";
-$lang['color_label_approvebg'] = "Approve Background";
-$lang['color_description_approvebg'] = "Background color for 'Approve' Admin Buttons";
-$lang['color_label_copyborder'] = "Copy Border";
-$lang['color_description_copyborder'] = "Border color for 'Copy Event' Admin Buttons";
-$lang['color_label_copybg'] = "Copy Background";
-$lang['color_description_copybg'] = "Background color for 'Copy Event' Admin Buttons";
-$lang['color_label_deleteborder'] = "Delete Border";
-$lang['color_description_deleteborder'] = "Background color for 'Delete Event' Admin Buttons";
-$lang['color_label_deletebg'] = "Delete Background";
-$lang['color_description_deletebg'] = "Border color for 'Delete Event' Admin Buttons";
-
 function LoadVariables() {
 	global $VariableErrors;
 	if (!isset($_POST['bg']) || !setVar($GLOBALS['Color_bg'], $_POST['bg'],'color')) { if (isset($_POST['bg'])) $VariableErrors['bg'] = $_POST['bg']; $GLOBALS['Color_bg'] = $_SESSION['COLOR_BG']; };
@@ -155,7 +49,7 @@ function LoadVariables() {
 
 function MakeColorUpdateSQL($calendarid, $type) {
 	if ($type == 'insert') {
-		return "INSERT INTO ".TABLEPREFIX."vtcal_colors (calendarid"
+		return "INSERT INTO ".SCHEMANAME."vtcal_colors (calendarid"
 			. ", bg, text, text_faded, text_warning, link, body, today, todaylight, light_cell_bg, table_header_text, table_header_bg, border, keyword_highlight, h2, h3, title, tabgrayed_text, tabgrayed_bg, filternotice_bg, filternotice_font, filternotice_fontfaded, filternotice_bgimage, eventbar_past, eventbar_current, eventbar_future, monthdaylabels_past, monthdaylabels_current, monthdaylabels_future, othermonth, littlecal_today, littlecal_highlight, littlecal_fontfaded, littlecal_line, gobtn_bg, gobtn_border, newborder, newbg, approveborder, approvebg, copyborder, copybg, deleteborder, deletebg"
 		. ") VALUES ('" . sqlescape($calendarid) . "'"
 			. ",'" . sqlescape(strtoupper($GLOBALS['Color_bg'])) . "'"
@@ -204,7 +98,7 @@ function MakeColorUpdateSQL($calendarid, $type) {
 		. ")";
 	}
 	else {
-		return "UPDATE ".TABLEPREFIX."vtcal_colors SET "
+		return "UPDATE ".SCHEMANAME."vtcal_colors SET "
 			. "bg = '" . sqlescape(strtoupper($GLOBALS['Color_bg'])) . "'"
 			. ",text = '" . sqlescape(strtoupper($GLOBALS['Color_text'])) . "'"
 			. ",text_faded = '" . sqlescape(strtoupper($GLOBALS['Color_text_faded'])) . "'"

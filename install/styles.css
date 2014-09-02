@@ -42,7 +42,7 @@ div.Download, div.Question, div.Download32, div.Question32 {
 }
 
 div.Error, div.Success, div.Table, div.Field, div.PrimaryKey, div.Index,
-div.Download, div.Question {
+div.Download, div.Question, div.Record {
 	background-repeat: no-repeat;
 	background-position: 5px 5px;
 	padding-left: 30px !important;
@@ -62,6 +62,7 @@ div.Index { background-image: url(index.png); }
 div.Field { background-image: url(field.png); }
 div.Download { background-image: url(down.png); }
 div.Question { background-image: url(help.png); }
+div.Record { background-image: url(field.png); }
 
 div.Question32 { background-image: url(help32.png); }
 div.Download32 { background-image: url(down32.png); }

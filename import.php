@@ -153,6 +153,11 @@ function xmlcharacterdata_importevent($parser, $data) {
 	elseif (strtolower($xmlcurrentelement)=="contact_email") {
 		$event['contact_email'] .= $data;
 	}
+	
+	// Append the URL to the end of the description.
+	elseif (strtolower($xmlcurrentelement)=="url") {
+		$event['description'] .= "\n\n".lang('more_information').': '.$data;
+	}
 } // end: function characterdata_importevents
 
 // default error handler
@@ -168,7 +173,7 @@ $showinputbox = 1;
 if (isset($importurl)) {
 	if (checkurl($importurl)) {
 		// get list of valid category-IDs
-		$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" ); 
+		$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."'" ); 
 		for($i=0; $i<$result->numRows(); $i++) {
 			$category = $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
 			$validcategory[$category['id']] = true;
@@ -192,7 +197,7 @@ if (isset($importurl)) {
 			if (!$error) {
 				if ($eventnr > 0) {
 					// determine sponsor name & URL
-					$result = DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['sponsorid'])."'" ); 
+					$result = DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_sponsor WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND id='".sqlescape($event['sponsorid'])."'" ); 
 					$sponsor = $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 				
 					$id = getNewEventId();
@@ -222,20 +227,107 @@ if (isset($importurl)) {
 }
 if ($showinputbox) {
 	?>
-	<a target="main" href="helpimport.php"><img src="images/help.gif" width="16" height="16" alt="" border="0"> 
-	<?php echo lang('how_to_import'); ?></a>
-	<br>
-	<br>
 	<form method="get" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-	<b><?php echo lang('enter_import_url_message'); ?></b><br>
-	<br>
-	<input type="text" name="importurl" value="<?php 
+	<p><b><?php echo lang('enter_import_url_message'); ?></b></p>
+	<p><input type="text" name="importurl" value="<?php 
 	if (isset($importurl)) { echo $importurl; } ?>" size="60" maxlength="<?php echo MAXLENGTH_IMPORTURL; ?>"><br>
-	<?php echo lang('enter_import_url_example'); ?><br>
-	<br>
-	<input type="submit" name="startimport" value="<?php echo lang('ok_button_text'); ?>">
-	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>">
+	<?php echo lang('enter_import_url_example'); ?></p>
+	
+	<p><input type="submit" name="startimport" value="<?php echo lang('ok_button_text'); ?>">
+	<input type="submit" name="cancel" value="<?php echo lang('cancel_button_text'); ?>"></p>
 	</form>
+	
+	<div style="background-color: <?php echo $_SESSION['COLOR_LIGHT_CELL_BG']; ?>; padding: 4px;">
+	<h2><?php echo lang('how_to_import'); ?></h2>
+	<p><?php echo lang('help_import_intro'); ?></p>
+	
+<hr size="1">
+
+<pre style="font-size:10pt">
+&lt;events&gt;
+	&lt;event&gt;
+		&lt;displayedsponsor&gt;Athletics Department&lt;/displayedsponsor&gt;
+		&lt;displayedsponsorurl&gt;http://www.hokiesports.com/&lt;/displayedsponsorurl&gt;
+		&lt;date&gt;2000-03-15&lt;/date&gt;
+		&lt;timebegin&gt;15:00&lt;/timebegin&gt;
+		&lt;timeend&gt;&lt;/timeend&gt;
+		&lt;categoryid&gt;9&lt;/categoryid&gt;
+		&lt;title&gt;Baseball vs. Kent&lt;/title&gt;
+		&lt;description&gt;VT is playing vs. Kent...&lt;/description&gt;
+		&lt;location&gt;English Field&lt;/location&gt;
+		&lt;price&gt;free&lt;/price&gt;
+		&lt;contact_name&gt;Jennifer Meyers&lt;/contact_name&gt;
+		&lt;contact_phone&gt;231-4933&lt;/contact_phone&gt;
+		&lt;contact_email&gt;jmeyer@vt.edu&lt;/contact_email&gt;
+		&lt;url&gt;http://www.hokiesportsinfo.com/baseball/&lt;/url&gt;
+	&lt;/event&gt;
+	&lt;event&gt;
+		&lt;displayedsponsor&gt;Indian Student Association&lt;/displayedsponsor&gt;
+		&lt;displayedsponsorurl&gt;http://fbox.vt.edu:10021/org/isa/&lt;/displayedsponsorurl&gt;
+		&lt;date&gt;1999-11-06&lt;/date&gt;
+		&lt;timebegin&gt;17:00&lt;/timebegin&gt;
+		&lt;timeend&gt;21:00&lt;/timeend&gt;
+		&lt;categoryid&gt;9&lt;/categoryid&gt;
+		&lt;title&gt;Diwali '99&lt;/title&gt;
+		&lt;description&gt;A two and half hour cultural show at Buruss Auditorium. 
+		The show includes traditional Indian dance, a fashion show featuring traditional 
+		clothes from different parts of India, a live orchestra playing popular hindi songs, 
+		a tickle-your-belly skit based on the recent elections in India, a jam of guitar and 
+		Indian classical musical instruments, children's show among others events.
+		&lt;/description&gt;
+		&lt;location&gt;Buruss Auditorium&lt;/location&gt;
+		&lt;price&gt;free&lt;/price&gt;
+		&lt;contact_name&gt;Akash Rai&lt;/contact_name&gt;
+		&lt;contact_phone&gt;540-951-7764&lt;/contact_phone&gt;
+		&lt;contact_email&gt;arai@vt.edu&lt;/contact_email&gt;
+		&lt;url&gt;http://fbox.vt.edu:10021/org/isa/diwali99/&lt;/url&gt;
+	&lt;/event&gt;
+	&lt;event&gt;
+		...
+	&lt;/event&gt;
+	...  
+&lt;/events&gt;
+</pre>
+
+<hr size="1">
+
+<p><?php echo lang('help_import_data_format_intro'); ?></p>
+
+<?php
+// read event categories from DB
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name ASC" );
+if (is_string($result)) {
+	DBErrorBox($result); 
+}
+else {
+	?>
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+			<th><?php echo lang('help_categoryid_index'); ?></th>
+			<th><?php echo lang('help_categoryid_name'); ?></th>
+		</tr>
+	<?php
+	
+		// print list with categories and select the one read from the DB
+		for ($i=0;$i<$result->numRows();$i++) {
+			$category =& $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
+			echo "  <tr>\n";
+			echo "    <td>",$category['id'],"</td>";
+			echo "    <td>",$category['name'],"</td>";
+			echo "  </tr>";
+		}
+	?>
+	</table>
+	<?php
+}
+?>
+</li>            
+</ul>
+
+<p><?php echo lang('help_import_data_format'); ?></p>
+	
+	
+	</div>
 	<?php
 } // end: if ($showinputbox)
 

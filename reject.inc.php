@@ -4,13 +4,12 @@
 	pageheader(lang('reject_event_update'), "Update");
 	contentsection_begin(lang('reject_event_update'));
 
-	$query = "SELECT e.id AS id,e.timebegin,e.timeend,e.repeatid,e.sponsorid,e.displayedsponsor,e.displayedsponsorurl,e.title,e.wholedayevent,e.categoryid,e.description,e.location,e.price,e.contact_name,e.contact_phone,e.contact_email,c.id AS cid,c.name AS category_name,s.id AS sid,s.name AS sponsor_name,s.url AS sponsor_url FROM ".TABLEPREFIX."vtcal_event e, ".TABLEPREFIX."vtcal_category c, ".TABLEPREFIX."vtcal_sponsor s WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND s.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid=c.id AND e.sponsorid=s.id AND e.id='".sqlescape($eventid)."'";
-	if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".TABLEPREFIX."vtcal_event" . $result); exit; }
+	$query = "SELECT e.id AS id,e.timebegin,e.timeend,e.repeatid,e.sponsorid,e.displayedsponsor,e.displayedsponsorurl,e.title,e.wholedayevent,e.categoryid,e.description,e.location,e.price,e.contact_name,e.contact_phone,e.contact_email,c.id AS cid,c.name AS category_name,s.id AS sid,s.name AS sponsor_name,s.url AS sponsor_url FROM ".SCHEMANAME."vtcal_event e, ".SCHEMANAME."vtcal_category c, ".SCHEMANAME."vtcal_sponsor s WHERE e.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND c.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND s.calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' AND e.categoryid=c.id AND e.sponsorid=s.id AND e.id='".sqlescape($eventid)."'";
+	if (is_string($result =& DBQuery($query))) { DBErrorBox("Error retrieving record from ".SCHEMANAME."vtcal_event" . $result); exit; }
 	$event =& $result->fetchRow(DB_FETCHMODE_ASSOC,0);
 	
 	disassemble_timestamp($event);
 
-	echo '<span class="bodytext">';
 	if (!empty($event['repeatid'])) {
 		readinrepeat($event['repeatid'],$event,$repeat);
 		echo lang('recurring_event'),": ";
@@ -21,7 +20,6 @@
 			$repeatdef);
 		echo "<br>";
 	}
-	echo '</span>';
 ?>
 <br>
 <form method="post" action="approval.php">

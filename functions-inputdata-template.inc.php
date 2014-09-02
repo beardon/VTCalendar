@@ -3,10 +3,10 @@ function inputtemplatedata(&$event,$sponsorid,$check,$template_name) {
 	?>
 	<table border="0" cellpadding="2" cellspacing="0">
 		<tr>
-			<td class="bodytext" valign="top">
+			<td valign="top">
 				<strong><?php echo lang('template_name'); ?>:</strong> <span class="WarningText">*</span>
 			</td>
-			<td class="bodytext" valign="top">
+			<td valign="top">
 	<?php
 		if ($check && (empty($template_name))) {
 			feedback(lang('choose_template_name'),FEEDBACKNEG);

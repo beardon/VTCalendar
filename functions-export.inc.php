@@ -187,8 +187,8 @@ function GenerateXML(&$result, $calendarID, $calendarTitle, $calendarurl) {
 		unset($repeat);
 		// read in repeatid if necessary
 		if (!empty($event['repeatid'])) {
-			//$queryRepeat = "SELECT * FROM ".TABLEPREFIX."vtcal_event_repeat WHERE calendarid='".sqlescape($calendarID)."' AND id='".sqlescape($event['repeatid'])."'";
-			$queryRepeat = "SELECT * FROM ".TABLEPREFIX."vtcal_event_repeat WHERE id='".sqlescape($event['repeatid'])."'";
+			//$queryRepeat = "SELECT * FROM ".SCHEMANAME."vtcal_event_repeat WHERE calendarid='".sqlescape($calendarID)."' AND id='".sqlescape($event['repeatid'])."'";
+			$queryRepeat = "SELECT * FROM ".SCHEMANAME."vtcal_event_repeat WHERE id='".sqlescape($event['repeatid'])."'";
 			if (is_string($repeatresult =& DBQuery($queryRepeat))) { return ""; }
 			if ( $repeatresult->numRows () > 0 ) {
 				$repeat =& $repeatresult->fetchRow(DB_FETCHMODE_ASSOC,0);
@@ -238,7 +238,7 @@ function GenerateXML(&$result, $calendarID, $calendarTitle, $calendarurl) {
 	return $resultString;
 }
 
-function GenerateICal(&$result, $calendarName) {
+function GenerateICal(&$result, $calendarName, $calendarURL) {
 	$resultString = "";
 	
 	$icalname = "calendar";
@@ -258,7 +258,7 @@ function GenerateICal(&$result, $calendarName) {
 		
 		for ($i=0; $i < $result->numRows(); $i++) {
 			$event =& $result->fetchRow(DB_FETCHMODE_ASSOC,$i);
-			$resultString .= GenerateICal4Event($event);
+			$resultString .= GenerateICal4Event($event, $calendarURL);
 		}
 		$result->free();
 	}
@@ -520,7 +520,7 @@ function FormatICalText($text) {
 	return $ical;
 } // end: FormatICalText
 
-function GenerateICal4Event(&$event) {
+function GenerateICal4Event(&$event, $calendarURL) {
 	disassemble_timestamp($event);
 
 	$dtstart = date("Ymd\\THis", GetUTCTime(mktime(
@@ -541,7 +541,7 @@ function GenerateICal4Event(&$event) {
 
 	$ical = "BEGIN:VEVENT".CRLF;
 	$ical.= "DTSTAMP:".$dtstart."Z".CRLF;
-	$ical.= "UID:".$event['id']."@".$_SERVER["HTTP_HOST"].CRLF;
+	$ical.= "UID:".$event['id']."@".$calendarURL.CRLF;
 	$ical.= "CATEGORIES:".$event['category_name'].CRLF;
 	if ($event['wholedayevent']==1) {
 		$ical.= "DTSTART;VALUE=DATE:".substr($dtstart,0,8).CRLF;
@@ -569,7 +569,7 @@ function GenerateICal4Event(&$event) {
 		$ical.= "\\n".CRLF;
 	}
 	if (!(empty($event['sponsor_url']) || $event['sponsor_url']=="http://")) {
-		$ical.= " ".lang('homepage')." ";
+		$ical.= " ".lang('homepage').": ";
 		$ical.= FormatICalText($event['sponsor_url']);
 		$ical.= "\\n".CRLF;
 	}

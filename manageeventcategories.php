@@ -7,7 +7,7 @@ if (!$_SESSION['AUTH_ISCALENDARADMIN']) { exit; } // additional security
 pageheader(lang('manage_event_categories'), "Update");
 contentsection_begin(lang('manage_event_categories'),true);
 
-$result =& DBQuery("SELECT * FROM ".TABLEPREFIX."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
+$result =& DBQuery("SELECT * FROM ".SCHEMANAME."vtcal_category WHERE calendarid='".sqlescape($_SESSION['CALENDAR_ID'])."' ORDER BY name" ); 
 
 if (is_string($result)) {
 	DBErrorBox($result); 

@@ -1,4 +1,4 @@
-Please refer to the opensource website for 
+Please refer to the VTCalendar website for
 documentation and installation instructions:
 
-http://vtcalendar.sourceforge.net/
+http://vtcalendar.sourceforge.net/docs/

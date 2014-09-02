@@ -1,4 +1,4 @@
 <?php
-define('VERSION', '2.3.0.382');
-define('VERSION_EXTENSION', ' Alpha');
+define('VERSION', '2.3.0.505');
+define('VERSION_EXTENSION', ' Beta');
 ?>

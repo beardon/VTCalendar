@@ -19,7 +19,7 @@ require_once('application.inc.php');
 
 	if (isset($deleteconfirmed)) {
 		// get the user from the database
-		$result = DBQuery("DELETE FROM ".TABLEPREFIX."vtcal_adminuser WHERE id='".sqlescape($mainuserid)."'" );
+		$result = DBQuery("DELETE FROM ".SCHEMANAME."vtcal_adminuser WHERE id='".sqlescape($mainuserid)."'" );
 		redirect2URL("managemainadmins.php");
 		exit;
 	}
