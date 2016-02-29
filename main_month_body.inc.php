@@ -152,7 +152,17 @@
 							}
 							
 							// Output the event data.
-							echo '<p class="EventItem'.$event['classExtension'].'"><a href="main.php?calendarid='.urlencode($_SESSION['CALENDAR_ID']).'&view=event&eventid=',$event['eventid'],'&timebegin=';
+							echo '<p class="EventItem'.$event['classExtension'].'">';
+							disassemble_timestamp($event);
+							$event_timebegin  = timestamp2datetime($event['timebegin']);
+							$event_timeend    = timestamp2datetime($event['timeend']);
+							if ($event['wholedayevent']==0) {
+								echo timestring($event['timebegin_hour'],$event['timebegin_min'],$event['timebegin_ampm']);
+							}
+							else {
+								echo lang('all_day');
+							}
+							echo ' <a href="main.php?calendarid='.urlencode($_SESSION['CALENDAR_ID']).'&view=event&eventid=',$event['eventid'],'&timebegin=';
 							echo urlencode(datetime2timestamp($event_timebegin['year'],$event_timebegin['month'],$event_timebegin['day'],12,0,"am"));
 							echo '">',htmlentities($event['title']),'</a></p>';
 							
